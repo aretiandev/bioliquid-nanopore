@@ -19,6 +19,7 @@ ipython_config.py
 
 # Mac files
 Icon?
+default.profraw
 
 # Bioinformatics files
 *.bam
