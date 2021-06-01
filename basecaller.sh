@@ -10,8 +10,8 @@
 #   cpu_threads_per_caller: number of threads per CPU
 
 ALGO=$1
-num_callers=16
-cpu_threads_per_caller=4
+num_callers=8
+cpu_threads_per_caller=1
 
 if [ "$#" -eq 0 ];
 then
