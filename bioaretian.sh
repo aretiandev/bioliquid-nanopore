@@ -11,7 +11,7 @@ MODE=$1
 if ["$#" -eq 0 ];
 then 
     docker run --rm -p 8888:8888 -v /home/fer/nanopore:/home/jovyan/work -e JUPYTER_ENABLE_LAB=yes -e GRANT_SUDO=yes --user root --name bioaretian yufernando/bioaretian
-elif [ $MODE == "gpu" ];
+elif [ $MODE == "guppy-gpu" ];
 then
     echo "Running the bioaretian image for a GPU architecture."
     echo ""
