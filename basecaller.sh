@@ -21,6 +21,16 @@ elif [ $ALGO == "fast" ];
 then
     echo 'Running the guppy basecaller with the fast algorithm.'
     guppy_basecaller --input_path /home/fer/nanopore/fast5 --save_path /home/fer/nanopore/basecall-latest --min_qscore 7 -r --records_per_fastq 0 --cpu_threads_per_caller $cpu_threads_per_caller --num_callers $num_callers -c dna_r10.3_450bps_fast.cfg
+elif [ $ALGO == "gpu" ];
+then
+    echo 'Running the guppy basecaller with the gpu algorithm.'
+    guppy_basecaller \
+        --input_path /home/jovyan/work/data/fast5 \
+        --save_path /home/jovyan/work/data/basecall-latest \
+        --flowcell FLO-MIN111 --kit SQK-LSK110 \
+        --min_qscore 7 -r \
+        --records_per_fastq 0 \
+        --device 'auto'
 else
     echo 'Running the guppy basecaller with the high accuracy algorithm.'
     guppy_basecaller --input_path /home/fer/nanopore/fast5 --save_path /home/fer/nanopore/basecall-latest --flowcell FLO-MIN111 --kit SQK-LSK110 --min_qscore 7 -r --records_per_fastq 0 --cpu_threads_per_caller $cpu_threads_per_caller --num_callers $num_callers
