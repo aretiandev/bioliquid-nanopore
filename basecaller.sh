@@ -24,13 +24,14 @@ then
 elif [ $ALGO == "gpu" ];
 then
     echo 'Running the guppy basecaller with the gpu algorithm.'
-    guppy_basecaller \
-        --input_path /home/jovyan/work/data/fast5 \
-        --save_path /home/jovyan/work/data/basecall-latest \
+    /opt/ont-guppy/bin/guppy_basecaller \
+        --input_path /home/fer/nanopore/data/fast5 \
+        --save_path /home/fer/nanopore/data/basecall-latest \
         --flowcell FLO-MIN111 --kit SQK-LSK110 \
         --min_qscore 7 -r \
         --records_per_fastq 0 \
-        --device 'auto'
+        --device 'auto' \
+        --chunks_per_runner 512
 else
     echo 'Running the guppy basecaller with the high accuracy algorithm.'
     guppy_basecaller --input_path /home/fer/nanopore/fast5 --save_path /home/fer/nanopore/basecall-latest --flowcell FLO-MIN111 --kit SQK-LSK110 --min_qscore 7 -r --records_per_fastq 0 --cpu_threads_per_caller $cpu_threads_per_caller --num_callers $num_callers
