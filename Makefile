@@ -1,4 +1,4 @@
-.PHONY: extract remove_gaps cluster assign
+.PHONY: extract remove_gaps cluster assign create_bams
 
 extract:
 	@bash 03_extract_location.sh $(run) $(dis)
@@ -13,4 +13,4 @@ assign:
 	@/home/fer/miniconda3/envs/genomics/bin/python3 06_read_assignment.py $(run) $(dis)
 
 create_bams: assign
-	@/home/fer/miniconda3/envs/genomics/bin/python3 06_create_bams.py $(run) $(dis)
+	@/home/fer/miniconda3/envs/genomics/bin/python3 06_create_bams.sh $(run) $(dis)

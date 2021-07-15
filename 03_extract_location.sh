@@ -22,31 +22,31 @@ dis=$2
 
 case $dis in
     cf)
-        echo "Disease: $dis"
+        echo "Run: ${1}, disease: $dis"
         chrom="chr7"
         location=
         window_width=
         ;;
     sca)
-        echo "Disease: $dis"
+        echo "Run: ${1}, disease: $dis"
         chrom="chr11"
         location=5227002
         window_width=2000000
         ;;
     sma)
-        echo "Disease: $dis"
+        echo "Run: ${1}, disease: $dis"
         chrom="chr5"
         location=
         window_width=
         ;;
     thal)
-        echo "Disease: $dis"
+        echo "Run: ${1}, disease: $dis"
         chrom="chr16"
         location=
         window_width=
         ;;
     pompe)
-        echo "Disease: $dis"
+        echo "Run: ${1}, disease: $dis"
         chrom="chr17"
         location=
         window_width=
