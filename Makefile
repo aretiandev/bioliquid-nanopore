@@ -10,7 +10,7 @@
 #
 # Every other step in between will be run automatically. The reason to split the three blocks is that 05_clustering.py and 07_strspy.sh take a long time to run so you might want to avoid those depending on the case
 
-.PHONY: extract remove_gaps cluster assign create_bams strspy_config strspy tag_reads boolean_matrix str_cluster
+.PHONY: extract remove_gaps cluster assign create_bams strspy_config strspy tag_reads boolean_matrix str_cluster score
 
 extract:
 	@bash 03_extract_location.sh $(run) $(dis)
@@ -41,3 +41,6 @@ boolean_matrix: tag_reads
 
 str_cluster: boolean_matrix
 	@/usr/bin/Rscript 10_str_clustering.R $(run) $(dis)
+
+score: 
+	@/home/fer/miniconda3/envs/genomics/bin/python3 11_score.py $(run) $(dis)
