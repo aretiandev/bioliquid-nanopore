@@ -19,19 +19,18 @@ echo ""
 # Input variables
 run_number="run${1}"
 dis=$2
+window_width=2000000
 
 case $dis in
     cf)
         echo "Run: ${1}, disease: $dis"
         chrom="chr7"
         location=
-        window_width=
         ;;
     sca)
         echo "Run: ${1}, disease: $dis"
         chrom="chr11"
         location=5227002
-        window_width=2000000
         ;;
     sma)
         echo "Run: ${1}, disease: $dis"
@@ -48,8 +47,7 @@ case $dis in
     pompe)
         echo "Run: ${1}, disease: $dis"
         chrom="chr17"
-        location=
-        window_width=
+        location=25000000
         ;;
     *)
         echo "Disease should be in disease list: cf, sca, sma, thal, pompe."
