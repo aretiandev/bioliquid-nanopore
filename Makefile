@@ -10,7 +10,7 @@
 #
 # Every other step in between will be run automatically. The reason to split the three blocks is that 05_clustering.py and 07_strspy.sh take a long time to run so you might want to avoid those depending on the case
 
-.PHONY: extract remove_gaps cluster assign create_bams strspy_config strspy tag_reads boolean_matrix clustering
+.PHONY: extract remove_gaps cluster assign create_bams strspy_config strspy tag_reads boolean_matrix str_cluster
 
 extract:
 	@bash 03_extract_location.sh $(run) $(dis)
@@ -39,5 +39,5 @@ tag_reads:
 boolean_matrix: tag_reads
 	@/usr/bin/Rscript 09_boolean_matrix.R $(run) $(dis)
 
-clustering: boolean_matrix
-	@/usr/bin/Rscript 10_clustering.R $(run) $(dis)
+str_cluster: boolean_matrix
+	@/usr/bin/Rscript 10_str_clustering.R $(run) $(dis)
