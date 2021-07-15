@@ -1,4 +1,4 @@
-# 04 - Clustering
+# 05 - Clustering
 #
 # This script performs the clustering algorithm. It contains the following steps:
 #
