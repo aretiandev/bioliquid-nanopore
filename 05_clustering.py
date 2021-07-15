@@ -296,5 +296,6 @@ for left_bound in range(min(nanopore_reads['POS']),max(nanopore_reads['END_POS']
 #         break
         
 results_file.close()
+print("")
 print("Done padding and clustering.")
 print(f"Saved results: {datadir}/{run_number}_{chrom}_read_clusters.txt")

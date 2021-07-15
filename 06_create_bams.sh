@@ -1,3 +1,4 @@
+#!/usr/bin/env bash
 # 06 - Create Bams
 #
 # This script makes sure the clusters do not flip as the sliding window moves to the right. The script is based on 06_read_assignment.ipynb
@@ -11,11 +12,12 @@
 # OUTPUTS:
 #   reads without gaps: e.g. run1_chr11_sca_clean.csv
 #   reference genome without gaps: e.g. run1_chr11_reference_genome.json
-echo ""
+echo ''
 echo "06 - CREATE BAMS"
-echo ""
+echo ''
 
 # Input variables
+# -----------------------------------------------------------------------------
 run_number="run${1}"
 dis=$2
 
@@ -61,7 +63,8 @@ chrom_dis="${chrom}_${dis}"
 datadir="/mnt/aretian/genomics/nanopore/${run_number}"
 cd $datadir
 
-# Get reads
+# Create bam files
+# -----------------------------------------------------------------------------
 echo "Extracting SAM files for person0 and person1 out of ${run_number}_${chrom_dis}.bam"
 /home/fer/miniconda3/envs/genomics/bin/samtools view "${run_number}_${chrom_dis}.bam" | grep -f "${run_number}_${chrom}_person0_uniqueids.txt" > "${run_number}_${chrom}_person0_reads.sam"
 /home/fer/miniconda3/envs/genomics/bin/samtools view "${run_number}_${chrom_dis}.bam" | grep -f "${run_number}_${chrom}_person1_uniqueids.txt" > "${run_number}_${chrom}_person1_reads.sam"
