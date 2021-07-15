@@ -1,6 +1,6 @@
-# 06 - Read Assignment
+# 06 - Create Bams
 #
-# This script makes sure the clusters do not flip as the sliding window moves to the right. The script is based on 05_read_assignment.ipynb
+# This script makes sure the clusters do not flip as the sliding window moves to the right. The script is based on 06_read_assignment.ipynb
 #
 # INPUTS:
 #   run_number
