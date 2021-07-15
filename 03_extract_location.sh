@@ -3,39 +3,42 @@
 # Extract location
 #
 # This file extracts the location of interest for each disease.
+echo ""
+echo "03 - EXTRACT LOCATION"
+echo ""
 
 # Input variables
-run_number=$1
+run_number="run${1}"
 dis=$2
 
 case $dis in
     cf)
-        echo "Disease: $dis."
-        chrom=""
+        echo "Disease: $dis"
+        chrom="chr7"
         location=
         window_width=
         ;;
     sca)
-        echo "Disease: $dis."
+        echo "Disease: $dis"
         chrom="chr11"
         location=5227002
         window_width=2000000
         ;;
     sma)
-        echo "Disease: $dis."
-        chrom=""
+        echo "Disease: $dis"
+        chrom="chr5"
         location=
         window_width=
         ;;
     thal)
-        echo "Disease: $dis."
-        chrom=""
+        echo "Disease: $dis"
+        chrom="chr16"
         location=
         window_width=
         ;;
     pompe)
-        echo "Disease: $dis."
-        chrom=""
+        echo "Disease: $dis"
+        chrom="chr17"
         location=
         window_width=
         ;;
@@ -53,10 +56,16 @@ output="${datadir}/${run_number}_${chrom_dis}.bam"
 begin=$(expr $location - $window_width)
 end=$(expr $location + $window_width)
 
-# Run Samtools
-echo "Extracting location $chrom:$begin-$end into $output."
+# Extract location of interest
+echo "Extracting location $chrom:$begin-$end..."
 /home/fer/miniconda3/envs/genomics/bin/samtools view -b $run_reads "chr11:$begin-$end" > $output
-
-# Index the file
+# Index
 /home/fer/miniconda3/envs/genomics/bin/samtools index $output
+
+# Convert to Sam
+output="${datadir}/${run_number}_${chrom_dis}.bam"
+output_sam="${datadir}/${run_number}_${chrom_dis}.sam"
+/home/fer/miniconda3/envs/genomics/bin/samtools view $output > $output_sam
+echo "Created $output"
+echo "Created $output_sam"
 echo "Done extracting location."
