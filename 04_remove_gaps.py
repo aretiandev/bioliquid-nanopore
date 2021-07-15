@@ -37,9 +37,9 @@ run_num = sys.argv[1]
 dis = sys.argv[2]
 print(f"Run: {run_num}, disease: {dis}.")
 
+# Setup
 run_number=f"run{run_num}"
 
-# Setup
 if dis =="cf":
     chrom = "chr7"
 elif dis == "sca":
