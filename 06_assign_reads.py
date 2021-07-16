@@ -1,18 +1,18 @@
-# 06 - Read Assignment
+# 06 - Assign Reads
 #
 # This script makes sure the clusters do not flip as the sliding window moves to the right. The script is based on 06_read_assignment.ipynb
 #
 # INPUTS:
 #   run_number
 #   disease
-#   nanopore reads for location: e.g. run1_chr11_sca.sam
-#   reference genome fasta for location: e.g. chr11_selected.fa
+#   clustered reads with windows: run1_chr11_read_clusters.txt
+#   reads without gaps: e.g. run1_chr11_sca_clean.csv
 # 
 # OUTPUTS:
-#   reads without gaps: e.g. run1_chr11_sca_clean.csv
 #   reference genome without gaps: e.g. run1_chr11_reference_genome.json
+#   List of read IDs for each person: e.g. run1_chr11_person0_uniqueids.txt
 print('')
-print('06 - READ ASSIGNMENT')
+print('06 - ASSIGN READS')
 print('')
 
 # Load Modules
@@ -198,6 +198,7 @@ loop_direction = 'left'
 for window in range(window_idxmax+1,-1,-1):
 # for window in results_file['window_num'].unique(): # iterate through instances of the sliding window 
     
+    print("", end="\r", flush=True)
     print(f" {window}", end="", flush=True)
     
     window_reads = results_file.loc[results_file['window_num']==window].copy() # get data only from this window
