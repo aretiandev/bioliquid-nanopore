@@ -7,7 +7,7 @@
 # INPUTS:
 #   run_number
 #   disease
-#   nanopore reads for location: e.g. run1_chr11_sca.sam
+#   nanopore reads for location: e.g. bioliquid_run2.bam
 # 
 # OUTPUTS:
 #   BAM file: e.g. run1_chr11_sca.bam
@@ -64,7 +64,7 @@ begin=$(expr $location - $window_width)
 end=$(expr $location + $window_width)
 
 # Extract location of interest
-echo "Extracting location $chrom:$begin-$end..."
+echo "Extracting location $chrom:$begin-$end from $run_reads"
 /home/fer/miniconda3/envs/genomics/bin/samtools view -b $run_reads "chr11:$begin-$end" > $output
 # Index
 /home/fer/miniconda3/envs/genomics/bin/samtools index $output
