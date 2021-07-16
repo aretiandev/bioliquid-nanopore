@@ -64,8 +64,7 @@ cd $datadir
 # Run STRspy
 # -----------------------------------------------------------------------------
 echo "Running STRspy."
-echo "Content of Config file /home/fer/genomics/strspy/config/${dis}_InputConfig.txt"
-cat /home/fer/genomics/strspy/config/${dis}_InputConfig.txt
+echo "Config file: /home/fer/genomics/strspy/config/${dis}_InputConfig.txt"
 
 rm -rf "${datadir}/strspy/${dis}/output"
 mkdir "${datadir}/strspy/${dis}/output"
