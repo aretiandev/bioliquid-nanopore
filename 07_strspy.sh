@@ -71,5 +71,5 @@ rm -rf "${datadir}/strspy/${dis}/output"
 mkdir "${datadir}/strspy/${dis}/output"
 cd /home/fer/genomics/strspy
 bash STRspy_run_v1.0.sh "config/${dis}_InputConfig.txt" config/UserToolsConfig.txt
-echo "Done."
+
 echo "Saved STRspy output in: ${datadir}/strspy/${dis}/output"

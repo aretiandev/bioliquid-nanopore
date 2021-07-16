@@ -27,3 +27,27 @@ echo "Extracting $chrom from ${datadir}/GCA_000001405.15_GRCh38_no_alt_analysis_
 echo "Writing to ${datadir}/${chrom}_selected.fa"
 /home/fer/miniconda3/envs/genomics/bin/samtools faidx "${datadir}/GCA_000001405.15_GRCh38_no_alt_analysis_set.fna.gz" $chrom > "${datadir}/${chrom}_selected.fa"
 
+# 07_strspy
+#-------------------------------------------------------------------------------------------
+# Create Hipstr reference file with full STRs
+# Load Full STR list
+df = pd.read_csv(f'{datadir}/hg38.hipstr_reference.bed', sep='\t', header=None)
+df.columns=['chr','start','end','NA','repeats','name','motif']
+
+### Create STR
+def create_str(row):
+    motif_len = len(row['motif']) # get length
+    # Get Base
+    int_repeat = int(np.floor(row['repeats'])) # 9
+    base = int_repeat * row['motif']
+    # Get Tail and append
+    dec_repeat = row['repeats']%1
+    nt_to_pull = round(dec_repeat * motif_len)
+    tail = row['motif'][:nt_to_pull]
+    base = base + tail
+    return base
+
+# Drop nans
+df = df.loc[df['motif'].notnull()]
+df['str'] = df.apply(lambda x: create_str(x), axis = 1)
+df.to_csv(f'{datadir}/hg38.hipstr_reference_full_strs.bed', sep='\t', header=None, index=None)

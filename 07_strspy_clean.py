@@ -66,43 +66,25 @@ subprocess.run(concatenate_cmd, shell=True)
 
 # Add necessary columns
 # -----------------------------------------------------------------------------
-print('Adding motif and full STR columns.')
-# This cell takes ~2 minutes to run
 def complete_str_df(person):
     # Load STRspy output
-    strspy_df = pd.read_csv(f'{datadir}/strspy/output/Countings/{run_number}_{chrom}_{person}_strs.txt', sep='\t', header=None)
+    strspy_df = pd.read_csv(f'{datadir}/strspy/{dis}/output/Countings/{run_number}_{chrom}_{person}_strs.txt', sep='\t', header=None)
     strspy_df.columns = ['name', 'count', 'normcount']
 
     # Load Full STR list
-    df = pd.read_csv(f'{datadir}/hg38.hipstr_reference.bed', sep='\t', header=None)
-    df.columns=['chr','start','end','NA','repeats','name','motif']
-
-    ### Create STR
-    def create_str(row):
-        motif_len = len(row['motif']) # get length
-        # Get Base
-        int_repeat = int(np.floor(row['repeats'])) # 9
-        base = int_repeat * row['motif']
-        # Get Tail and append
-        dec_repeat = row['repeats']%1
-        nt_to_pull = round(dec_repeat * motif_len)
-        tail = row['motif'][:nt_to_pull]
-        base = base + tail
-        return base
-
-    # Drop nans
-    df = df.loc[df['motif'].notnull()]
-    df['str'] = df.apply(lambda x: create_str(x), axis = 1)
+    df = pd.read_csv(f'{datadir}/hg38.hipstr_reference_full_strs.bed', sep='\t', header=None)
+    df.columns=['chr','start','end','NA','repeats','name','motif','str']
 
     # Append it to STRspy output
     output = strspy_df.merge(df, how='left', on='name')
-
     output = output[['name','count','chr','start','end','motif', 'str']]
 
     # Save
     return output
     
+print('Person0: Adding motif and full STR columns.')
 output0 = complete_str_df('person0')
+print('Person1: Adding motif and full STR columns.')
 output1 = complete_str_df('person1')
 
 # Save
