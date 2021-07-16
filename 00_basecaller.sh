@@ -10,23 +10,31 @@
 #   cpu_threads_per_caller: number of threads per CPU
 
 ALGO=$1
+fast5_folder=$2
+output_folder=$3
 num_callers=12
 cpu_threads_per_caller=1
 
 if [ "$#" -eq 0 ];
 then
     echo 'Running the guppy basecaller with the high accuracy algorithm.'
-    guppy_basecaller --input_path /home/jovyan/work/data/fast5 --save_path /home/jovyan/work/data/basecall-latest --flowcell FLO-MIN111 --kit SQK-LSK110 --min_qscore 7 -r --records_per_fastq 0 --cpu_threads_per_caller $cpu_threads_per_caller --num_callers $num_callers
+	echo 'Input folder: /home/fer/genomics/fast5'
+	echo 'Output folder: /home/fer/genomics/basecall-latest'
+    guppy_basecaller --input_path /home/fer/genomics/fast5 --save_path /home/fer/genomics/basecall-latest --flowcell FLO-MIN111 --kit SQK-LSK110 --min_qscore 7 -r --records_per_fastq 0 --cpu_threads_per_caller $cpu_threads_per_caller --num_callers $num_callers
 elif [ $ALGO == "fast" ];
 then
     echo 'Running the guppy basecaller with the fast algorithm.'
-    guppy_basecaller --input_path /home/jovyan/work/data/fast5 --save_path /home/jovyan/work/data/basecall-latest --min_qscore 7 -r --records_per_fastq 0 --cpu_threads_per_caller $cpu_threads_per_caller --num_callers $num_callers -c dna_r10.3_450bps_fast.cfg
+	echo 'Input folder:' $fast5_folder 
+	echo 'Output folder:' $output_folder
+    guppy_basecaller --input_path $fast5_folder --save_path $output_folder --min_qscore 7 -r --records_per_fastq 0 --cpu_threads_per_caller $cpu_threads_per_caller --num_callers $num_callers -c dna_r10.3_450bps_fast.cfg
 elif [ $ALGO == "gpu" ];
 then
     echo 'Running the guppy basecaller with the gpu algorithm.'
+	echo 'Input folder:' $fast5_folder 
+	echo 'Output folder:' $output_folder
     /opt/ont-guppy/bin/guppy_basecaller \
-        --input_path /home/jovyan/work/data/fast5 \
-        --save_path /home/jovyan/work/data/basecall-latest \
+        --input_path $fast5_folder \
+        --save_path $output_folder \
         --flowcell FLO-MIN111 --kit SQK-LSK110 \
         --min_qscore 7 -r \
         --records_per_fastq 0 \
@@ -34,7 +42,9 @@ then
         --chunks_per_runner 512
 else
     echo 'Running the guppy basecaller with the high accuracy algorithm.'
-    guppy_basecaller --input_path /home/jovyan/work/fast5 --save_path /home/jovyan/work/basecall-latest --flowcell FLO-MIN111 --kit SQK-LSK110 --min_qscore 7 -r --records_per_fastq 0 --cpu_threads_per_caller $cpu_threads_per_caller --num_callers $num_callers
+	echo 'Input folder: /home/fer/genomics/fast5'
+	echo 'Output folder: /home/fer/genomics/basecall-latest'
+    guppy_basecaller --input_path /home/fer/genomics/fast5 --save_path /home/fer/genomics/basecall-latest --flowcell FLO-MIN111 --kit SQK-LSK110 --min_qscore 7 -r --records_per_fastq 0 --cpu_threads_per_caller $cpu_threads_per_caller --num_callers $num_callers
 fi
 
 # Script Templates
