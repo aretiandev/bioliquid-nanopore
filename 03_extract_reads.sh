@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 #
-# 03 - Extract location
+# 03 - Extract Reads
 #
 # This file extracts the location of interest for each disease, converts to bam and sam, and indexes. The script is based on 03_extract_location.ipynb
 #
@@ -13,7 +13,7 @@
 #   BAM file: e.g. run1_chr11_sca.bam
 #   SAM file: e.g. run1_chr11_sca.sam
 echo ""
-echo "03 - EXTRACT LOCATION"
+echo "03 - EXTRACT READS"
 echo ""
 
 # Input variables
