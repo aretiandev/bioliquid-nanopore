@@ -87,6 +87,11 @@ $(boolean_matrix): $(tag_reads) 09_boolean_matrix.R
 str_cluster: $(str_cluster)
 $(str_cluster): $(boolean_matrix) 10_str_clustering.R
 	@/usr/bin/Rscript 10_str_clustering.R $(run) $(dis)
+	@cp $(datadir)/run$(run)_$(chr)_assigned_kmeans_clusters.png /home/fer/genomics/bioliquid-nanopore/cluster_plots/
+	@cp $(datadir)/run$(run)_$(chr)_real_sample_labels.png       /home/fer/genomics/bioliquid-nanopore/cluster_plots/
+	@echo Copying plots to home folder.
+	@echo Saved: /home/fer/genomics/bioliquid-nanopore/cluster_plots/run$(run)_$(chr)_assigned_kmeans_clusters.png
+	@echo Saved: /home/fer/genomics/bioliquid-nanopore/cluster_plots/run$(run)_$(chr)_real_sample_labels.png 
 
 .PHONY: score
 score: $(score)
