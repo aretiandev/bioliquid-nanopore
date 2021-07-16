@@ -3,6 +3,7 @@
 # It creates the base files that are inputs to the pipeline
 # - Get reference genome and index
 # - Extract locations of interest and index
+# - Add columns to list of STRs
 
 # Set variables
 run_number="run1"

@@ -91,7 +91,7 @@ fviz_cluster(kres, data = data_nolabels_noconstants, labelsize = 0,
              ylab = 'PC2',
              palette = 'Set2') + 
   theme_bw()
-# dev.off()
+dev.off()
 
 kres_lab <- kres # color by real group
 kres_lab$cluster <- data$sample
@@ -109,7 +109,7 @@ fviz_cluster(kres_lab, data = data_nolabels_noconstants, labelsize = 0,
              ylab = 'PC2',
              palette = 'Set1') + 
   theme_bw()
-# dev.off()
+dev.off()
 
 data$kmeans_clusters <- kres$cluster
 write.csv(data, paste0(datadir,'/',run_number,'_',chr,'_kmeans_clusters.csv'), row.names = FALSE)

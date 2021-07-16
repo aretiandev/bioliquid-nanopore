@@ -27,7 +27,6 @@ import subprocess
 # Input variables
 run_num = sys.argv[1]
 dis = sys.argv[2]
-windowwidth=2000000
 print(f"Run: {run_num}, disease: {dis}.")
 
 # Setup
@@ -37,7 +36,6 @@ if dis =="cf":
     chrom = "chr7"
 elif dis == "sca":
     chrom = "chr11"
-    location=5227002
 elif dis == "sma":
     chrom = "chr5"
 elif dis == "thal":

@@ -43,6 +43,7 @@ elif dis == "thal":
     chrom = "chr16"
 elif dis == "pompe":
     chrom = "chr17"
+    location=25000000
 else:
     print("Disease should be in disease list: cf, sca, sma, thal, pompe.")
 
