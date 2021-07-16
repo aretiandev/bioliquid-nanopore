@@ -5,6 +5,7 @@
 # INPUTS:
 #   run_number
 #   disease
+#   Identified STRs: e.g. {datadir}/strspy/${dis}/output/Countings
 #   nanopore reads for location: e.g. run1_chr11_sca.sam
 #   reference genome fasta for location: e.g. chr11_selected.fa
 # 

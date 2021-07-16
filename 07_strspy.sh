@@ -6,12 +6,10 @@
 # INPUTS:
 #   run_number
 #   disease
-#   nanopore reads for location: e.g. run1_chr11_sca.sam
-#   reference genome fasta for location: e.g. chr11_selected.fa
+#   BAM, BED and fasta files needed to run STRspy
 # 
 # OUTPUTS:
-#   reads without gaps: e.g. run1_chr11_sca_clean.csv
-#   reference genome without gaps: e.g. run1_chr11_reference_genome.json
+#   Identified STRs: e.g. {datadir}/strspy/${dis}/output/Countings
 echo ''
 echo "07 - STRSPY"
 echo ''
@@ -66,12 +64,12 @@ cd $datadir
 # Run STRspy
 # -----------------------------------------------------------------------------
 echo "Running STRspy."
-echo "Content of Config file /home/fer/genomics/strspy/config/${chrom_dis}_InputConfig.txt"
-cat /home/fer/genomics/strspy/config/${chrom_dis}_InputConfig.txt
+echo "Content of Config file /home/fer/genomics/strspy/config/${dis}_InputConfig.txt"
+cat /home/fer/genomics/strspy/config/${dis}_InputConfig.txt
 
-rm -rf "${datadir}/strspy/output"
-mkdir "${datadir}/strspy/output"
+rm -rf "${datadir}/strspy/${dis}/output"
+mkdir "${datadir}/strspy/${dis}/output"
 cd /home/fer/genomics/strspy
-bash STRspy_run_v1.0.sh "config/${chrom_dis}_InputConfig.txt" config/UserToolsConfig.txt
+bash STRspy_run_v1.0.sh "config/${dis}_InputConfig.txt" config/UserToolsConfig.txt
 echo "Done."
-echo "Saved STRspy output in: ${datadir}/strspy/output"
+echo "Saved STRspy output in: ${datadir}/strspy/${dis}/output"

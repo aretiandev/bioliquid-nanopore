@@ -5,12 +5,11 @@
 # INPUTS:
 #   run_number
 #   disease
-#   nanopore reads for location: e.g. run1_chr11_sca.sam
 #   reference genome fasta for location: e.g. chr11_selected.fa
+#   Full list of STRs
 # 
 # OUTPUTS:
-#   reads without gaps: e.g. run1_chr11_sca_clean.csv
-#   reference genome without gaps: e.g. run1_chr11_reference_genome.json
+#   BED and fasta files needed to run STRspy
 print('')
 print('07 - STRSPY CONFIG')
 print('')
@@ -49,7 +48,6 @@ else:
 
 chrom_dis=f"{chrom}_{dis}"
 datadir=f"/mnt/aretian/genomics/nanopore/{run_number}"
-results_file_path = f"{datadir}/{run_number}_{chrom}_read_clusters.txt"
 
 # Individual BED and Fasta files
 # -----------------------------------------------------------------------------
@@ -89,9 +87,9 @@ for n in range(len(selected_strs)):
 # for n in range(3):
     str_out = selected_strs.iloc[[n]]
     str_name = str_out['name'].values[0]
-    str_out.to_csv(f"{datadir}/strspy/input/db/{str_name}.bed", header=False, index=False, sep='\t')
+    str_out.to_csv(f"{datadir}/strspy/{dis}/input/db/{str_name}.bed", header=False, index=False, sep='\t')
     
-    myfasta = open(f"{datadir}/strspy/input/db/{str_name}.fa","w")
+    myfasta = open(f"{datadir}/strspy/{dis}/input/db/{str_name}.fa","w")
     start = str_out['start'].values[0]
     end = str_out['end'].values[0]
     # Extract reads
@@ -106,5 +104,5 @@ for n in range(len(selected_strs)):
 
 # Region BED file (all STRs)
 # -----------------------------------------------------------------------------
-selected_strs.to_csv(f'{datadir}/strspy/input/regions/all_strs.bed', header=False, index=False, sep='\t')
-print(f'Saved single BED file for all STRs: {datadir}/strspy/input/regions/all_strs.bed' )
+selected_strs.to_csv(f'{datadir}/strspy/{dis}/input/regions/all_strs.bed', header=False, index=False, sep='\t')
+print(f'Saved single BED file for all STRs: {datadir}/strspy/{dis}/input/regions/all_strs.bed' )
