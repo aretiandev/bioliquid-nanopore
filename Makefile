@@ -1,21 +1,21 @@
 # Bioliquid Pipeline
 #
-# Example routine: make extract run=1 dis=sca
+# Example routine:
+# 
+#   $make extract run=1 dis=sca
 #
-# Instructions:
-#
-# There are four blocks of code to be run in order:
+# There are three routines that take long:
 #
 #   $make cluster   run=1 dis=sca  :  10 mins
-#   $make strspy    run=1 dis=sca  :  5 mins
+#   $make strspy    run=1 dis=sca  :  36 mins
 #   $make tag_reads run=1 dis=sca  :  2 mins
-#   $make score     run=1 dis=sca  :  1 min
 #
-# Every other step in between will be run automatically. The reason to split the three blocks is that cluster, strspy and tag_reads take a long time to run so you might want to avoid those depending on the case.
+# Routines will only be run if dependencies have been updated. The full list is under 'Targets' below.
 
 # Set variables
 chr            := $(shell bash get_chrom.sh $(dis))
 datadir        := /mnt/aretian/genomics/nanopore/run$(run)
+# Targets
 extract        := $(datadir)/run$(run)_$(chr)_$(dis).sam
 remove_gaps    := $(datadir)/run$(run)_$(chr)_$(dis)_clean.csv
 cluster        := $(datadir)/run$(run)_$(chr)_read_clusters.txt
@@ -29,7 +29,7 @@ boolean_matrix := $(datadir)/run$(run)_$(chr)_bool_tagged_reads.csv
 str_cluster    := $(datadir)/run$(run)_$(chr)_kmeans_clusters.csv
 score          := $(datadir)/run$(run)_$(chr)_recall_score.csv
 
-.PHONY: extract remove_gaps cluster assign create_bams strspy_config strspy strspy_clean tag_reads boolean_matrix str_cluster score print
+.PHONY: extract remove_gaps cluster assign create_bams strspy_config strspy strspy_clean tag_reads boolean_matrix str_cluster score
 
 .PHONY: extract
 extract: $(extract)
