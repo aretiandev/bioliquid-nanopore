@@ -29,6 +29,8 @@ boolean_matrix := $(datadir)/run$(run)_$(chr)_bool_tagged_reads.csv
 str_cluster    := $(datadir)/run$(run)_$(chr)_kmeans_clusters.csv
 score          := $(datadir)/run$(run)_$(chr)_recall_score.csv
 
+all: score
+
 .PHONY: extract remove_gaps cluster assign create_bams strspy_config strspy strspy_clean tag_reads boolean_matrix str_cluster score
 
 .PHONY: extract
