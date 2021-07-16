@@ -16,17 +16,17 @@ cpu_threads_per_caller=1
 if [ "$#" -eq 0 ];
 then
     echo 'Running the guppy basecaller with the high accuracy algorithm.'
-    guppy_basecaller --input_path /home/fer/nanopore/data/fast5 --save_path /home/fer/nanopore/data/basecall-latest --flowcell FLO-MIN111 --kit SQK-LSK110 --min_qscore 7 -r --records_per_fastq 0 --cpu_threads_per_caller $cpu_threads_per_caller --num_callers $num_callers
+    guppy_basecaller --input_path /home/jovyan/work/data/fast5 --save_path /home/jovyan/work/data/basecall-latest --flowcell FLO-MIN111 --kit SQK-LSK110 --min_qscore 7 -r --records_per_fastq 0 --cpu_threads_per_caller $cpu_threads_per_caller --num_callers $num_callers
 elif [ $ALGO == "fast" ];
 then
     echo 'Running the guppy basecaller with the fast algorithm.'
-    guppy_basecaller --input_path /home/fer/nanopore/fast5 --save_path /home/fer/nanopore/basecall-latest --min_qscore 7 -r --records_per_fastq 0 --cpu_threads_per_caller $cpu_threads_per_caller --num_callers $num_callers -c dna_r10.3_450bps_fast.cfg
+    guppy_basecaller --input_path /home/jovyan/work/data/fast5 --save_path /home/jovyan/work/data/basecall-latest --min_qscore 7 -r --records_per_fastq 0 --cpu_threads_per_caller $cpu_threads_per_caller --num_callers $num_callers -c dna_r10.3_450bps_fast.cfg
 elif [ $ALGO == "gpu" ];
 then
     echo 'Running the guppy basecaller with the gpu algorithm.'
     /opt/ont-guppy/bin/guppy_basecaller \
-        --input_path /home/fer/nanopore/data/fast5 \
-        --save_path /home/fer/nanopore/data/basecall-latest \
+        --input_path /home/jovyan/work/data/fast5 \
+        --save_path /home/jovyan/work/data/basecall-latest \
         --flowcell FLO-MIN111 --kit SQK-LSK110 \
         --min_qscore 7 -r \
         --records_per_fastq 0 \
@@ -34,7 +34,7 @@ then
         --chunks_per_runner 512
 else
     echo 'Running the guppy basecaller with the high accuracy algorithm.'
-    guppy_basecaller --input_path /home/fer/nanopore/fast5 --save_path /home/fer/nanopore/basecall-latest --flowcell FLO-MIN111 --kit SQK-LSK110 --min_qscore 7 -r --records_per_fastq 0 --cpu_threads_per_caller $cpu_threads_per_caller --num_callers $num_callers
+    guppy_basecaller --input_path /home/jovyan/work/fast5 --save_path /home/jovyan/work/basecall-latest --flowcell FLO-MIN111 --kit SQK-LSK110 --min_qscore 7 -r --records_per_fastq 0 --cpu_threads_per_caller $cpu_threads_per_caller --num_callers $num_callers
 fi
 
 # Script Templates
