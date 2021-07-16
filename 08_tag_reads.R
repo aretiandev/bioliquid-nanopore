@@ -44,10 +44,10 @@ chr = dis_params %>% filter(disease == dis) %>% select(chr) %>% pull
 
 datadir = paste0('/mnt/aretian/genomics/nanopore/',run_number)
 
-P0bam <- paste0(datadir,'/strspy/input/',run_number,'_', chr,'_','person0.bam')
-P0ind <- paste0(datadir,'/strspy/input/',run_number,'_', chr,'_','person0.bam.bai')
-P1bam <- paste0(datadir,'/strspy/input/',run_number,'_', chr,'_','person1.bam')
-P1ind <- paste0(datadir,'/strspy/input/',run_number,'_', chr,'_','person1.bam.bai')
+P0bam <- paste0(datadir,'/strspy/',dis,'/input/',run_number,'_', chr,'_','person0.bam')
+P0ind <- paste0(datadir,'/strspy/',dis,'/input/',run_number,'_', chr,'_','person0.bam.bai')
+P1bam <- paste0(datadir,'/strspy/',dis,'/input/',run_number,'_', chr,'_','person1.bam')
+P1ind <- paste0(datadir,'/strspy/',dis,'/input/',run_number,'_', chr,'_','person1.bam.bai')
 
 Person0Bam <- BamFile(file = P0bam, index = P0ind)
 Person1Bam <- BamFile(file = P1bam, index = P1ind)
@@ -134,7 +134,7 @@ update_reads <- function(reads, vcf, str) {
 
 # Implementation
 # -----------------------------------------------------------------------------
-print(paste0('Tagging reads. Saving in ',datadir,'/strs'))
+print(paste0('Tagging reads. Saving: ',datadir,'/strs'))
 # for each STR
 for (str in c(1:nrow(vcf))) { #
                                  
