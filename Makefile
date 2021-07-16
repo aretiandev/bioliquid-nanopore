@@ -18,6 +18,7 @@ datadir        := /mnt/aretian/genomics/nanopore/run$(run)
 # Targets
 #basecall       := $(datadir)/bioliquid_run$(run).fastq
 #align
+extract_ref    := $(datadir)/$(chr)_selected.fa
 extract        := $(datadir)/run$(run)_$(chr)_$(dis).sam
 remove_gaps    := $(datadir)/run$(run)_$(chr)_$(dis)_clean.csv
 cluster        := $(datadir)/run$(run)_$(chr)_read_clusters.txt
@@ -33,7 +34,7 @@ score          := $(datadir)/run$(run)_$(chr)_recall_score.csv
 
 all: score
 
-.PHONY: basecall extract remove_gaps cluster assign create_bams strspy_config strspy strspy_clean tag_reads boolean_matrix str_cluster score
+.PHONY: basecall align extract_ref extract remove_gaps cluster assign create_bams strspy_config strspy strspy_clean tag_reads boolean_matrix str_cluster score
 
 # BASECALL: run from aretian-genomics-gpu server. First get fast5 files from s3.
 .PHONY: basecall
@@ -58,9 +59,14 @@ align:
 	@samtools index ~/work/bioliquid_run$(run).bam
 	@samtools flagstat ~/work/bioliquid_run$(run).bam > ~/work/bioliquid_run$(run).bam.flag
 
+.PHONY: extract_ref
+extract_ref: $(extract_ref) 
+$(extract_ref): 0_extract_reference.sh
+	@bash 0_extract_reference.sh $(run) $(dis)
+
 .PHONY: extract
 extract: $(extract) 
-$(extract): 03_extract_location.sh
+$(extract): $(extract_ref) 03_extract_reads.sh
 	@bash 03_extract_location.sh $(run) $(dis)
 
 .PHONY: remove_gaps
