@@ -16,8 +16,8 @@
 chr            := $(shell bash get_chrom.sh $(dis))
 datadir        := /mnt/aretian/genomics/nanopore/run$(run)
 # Targets
-basecall       := $(datadir)/bioliquid_run$(run).fastq
-align
+#basecall       := $(datadir)/bioliquid_run$(run).fastq
+#align
 extract        := $(datadir)/run$(run)_$(chr)_$(dis).sam
 remove_gaps    := $(datadir)/run$(run)_$(chr)_$(dis)_clean.csv
 cluster        := $(datadir)/run$(run)_$(chr)_read_clusters.txt
