@@ -67,7 +67,7 @@ $(extract_ref): 0_extract_reference.sh
 .PHONY: extract
 extract: $(extract) 
 $(extract): $(extract_ref) 03_extract_reads.sh
-	@bash 03_extract_location.sh $(run) $(dis)
+	@bash 03_extract_reads.sh $(run) $(dis)
 
 .PHONY: remove_gaps
 remove_gaps: $(remove_gaps)
