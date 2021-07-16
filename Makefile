@@ -32,61 +32,61 @@ score          := $(datadir)/run$(run)_$(chr)_recall_score.csv
 .PHONY: extract remove_gaps cluster assign create_bams strspy_config strspy strspy_clean tag_reads boolean_matrix str_cluster score
 
 .PHONY: extract
-extract: $(extract)
-$(extract):
+extract: $(extract) 
+$(extract): 03_extract_location.sh
 	@bash 03_extract_location.sh $(run) $(dis)
 
 .PHONY: remove_gaps
 remove_gaps: $(remove_gaps)
-$(remove_gaps): $(extract)
+$(remove_gaps): $(extract) 04_remove_gaps.py
 	@/home/fer/miniconda3/envs/genomics/bin/python3 04_remove_gaps.py $(run) $(dis)
 
 .PHONY: cluster
 cluster: $(cluster)
-$(cluster): $(remove_gaps)
+$(cluster): $(remove_gaps) 05_clustering.py
 	@/home/fer/miniconda3/envs/genomics/bin/python3 05_clustering.py $(run) $(dis)
 
 .PHONY: assign
 assign: $(assign)
-$(assign): $(cluster)
+$(assign): $(cluster) 06_assign_reads.py
 	@/home/fer/miniconda3/envs/genomics/bin/python3 06_assign_reads.py $(run) $(dis)
 
 .PHONY: create_bams
 create_bams: $(create_bams)
-$(create_bams): $(assign)
+$(create_bams): $(assign) 06_create_bams.sh
 	@bash 06_create_bams.sh $(run) $(dis)
 
 .PHONY: strspy_config
 strspy_config: $(strspy_config)
-$(strspy_config): $(create_bams)
+$(strspy_config): $(create_bams) 07_strspy_config.py
 	@/home/fer/miniconda3/envs/genomics/bin/python3 07_strspy_config.py $(run) $(dis)
 
 .PHONY: strspy
 strspy: $(strspy)
-$(strspy): $(strspy_config)
+$(strspy): $(strspy_config) 07_strspy.sh
 	@bash 07_strspy.sh $(run) $(dis)
 
 .PHONY: strspy_clean
 strspy_clean: $(strspy_clean)
-$(strspy_clean): $(strspy)
+$(strspy_clean): $(strspy) 07_strspy_clean.py
 	@/home/fer/miniconda3/envs/genomics/bin/python3 07_strspy_clean.py $(run) $(dis)
 
 .PHONY: tag_reads
 tag_reads: $(tag_reads)
-$(tag_reads): $(strspy_clean)
+$(tag_reads): $(strspy_clean) 08_tag_reads.R
 	@/usr/bin/Rscript 08_tag_reads.R $(run) $(dis)
 
 .PHONY: boolean_matrix
 boolean_matrix: $(boolean_matrix)
-$(boolean_matrix): $(tag_reads)
+$(boolean_matrix): $(tag_reads) 09_boolean_matrix.R
 	@/usr/bin/Rscript 09_boolean_matrix.R $(run) $(dis)
 
 .PHONY: str_cluster
 str_cluster: $(str_cluster)
-$(str_cluster): $(boolean_matrix)
+$(str_cluster): $(boolean_matrix) 10_str_clustering.R
 	@/usr/bin/Rscript 10_str_clustering.R $(run) $(dis)
 
 .PHONY: score
 score: $(score)
-$(score): $(str_cluster)
+$(score): $(str_cluster) 11_score.py
 	@/home/fer/miniconda3/envs/genomics/bin/python3 11_score.py $(run) $(dis)
