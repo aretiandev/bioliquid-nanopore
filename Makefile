@@ -68,6 +68,10 @@ strspy: $(strspy)
 $(strspy): $(strspy_config) 09_strspy.sh
 	@bash 09_strspy.sh $(run) $(dis)
 
+.PHONY: clean_strspy
+clean_strspy:
+	rm -rf $(strspy)
+
 .PHONY: strspy_clean
 strspy_clean: $(strspy_clean)
 $(strspy_clean): $(strspy) 10_strspy_clean.py
