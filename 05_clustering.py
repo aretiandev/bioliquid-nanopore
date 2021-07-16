@@ -10,12 +10,11 @@
 # INPUTS:
 #   run_number
 #   disease
-#   nanopore reads for location: e.g. run1_chr11_sca.sam
-#   reference genome fasta for location: e.g. chr11_selected.fa
-# 
-# OUTPUTS:
 #   reads without gaps: e.g. run1_chr11_sca_clean.csv
 #   reference genome without gaps: e.g. run1_chr11_reference_genome.json
+# 
+# OUTPUTS:
+#   Clustered reads with windows: run1_chr11_read_clusters.txt
 print('')
 print('05 - CLUSTERING')
 print('')

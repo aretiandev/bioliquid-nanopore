@@ -1,17 +1,16 @@
 #!/usr/bin/env bash
 # 06 - Create Bams
 #
-# This script makes sure the clusters do not flip as the sliding window moves to the right. The script is based on 06_read_assignment.ipynb
+# This script extracts the reads for each cluster and creates two BAM files. The script is based on 06_read_assignment.ipynb
 #
 # INPUTS:
 #   run_number
 #   disease
-#   nanopore reads for location: e.g. run1_chr11_sca.sam
-#   reference genome fasta for location: e.g. chr11_selected.fa
+#   List of read IDs for each person: e.g. run1_chr11_person0_uniqueids.txt
+#   nanopore reads for location: e.g. run1_chr11_sca.bam
 # 
 # OUTPUTS:
-#   reads without gaps: e.g. run1_chr11_sca_clean.csv
-#   reference genome without gaps: e.g. run1_chr11_reference_genome.json
+#   BAM files: e.g. run1_chr11_person0.bam" 
 echo ''
 echo "06 - CREATE BAMS"
 echo ''
@@ -76,11 +75,11 @@ cat "${run_number}_${chrom}_person_header.txt" "${run_number}_${chrom}_person1_r
 echo "Saved: ${datadir}/${run_number}_${chrom}_person0.sam"
 echo "Saved: ${datadir}/${run_number}_${chrom}_person1.sam"
 # Convert to bam file
-/home/fer/miniconda3/envs/genomics/bin/samtools view -b "${run_number}_${chrom}_person0.sam" > "strspy/input/${run_number}_${chrom}_person0.bam"
-/home/fer/miniconda3/envs/genomics/bin/samtools view -b "${run_number}_${chrom}_person1.sam" > "strspy/input/${run_number}_${chrom}_person1.bam"
+/home/fer/miniconda3/envs/genomics/bin/samtools view -b "${run_number}_${chrom}_person0.sam" > "strspy/${dis}/input/${run_number}_${chrom}_person0.bam"
+/home/fer/miniconda3/envs/genomics/bin/samtools view -b "${run_number}_${chrom}_person1.sam" > "strspy/${dis}/input/${run_number}_${chrom}_person1.bam"
 # Index bam file
-/home/fer/miniconda3/envs/genomics/bin/samtools index "strspy/input/${run_number}_${chrom}_person0.bam"
-/home/fer/miniconda3/envs/genomics/bin/samtools index "strspy/input/${run_number}_${chrom}_person1.bam"
-echo "Saved: ${datadir}/${run_number}_${chrom}_person0.bam"
-echo "Saved: ${datadir}/${run_number}_${chrom}_person1.bam"
+/home/fer/miniconda3/envs/genomics/bin/samtools index "strspy/${dis}/input/${run_number}_${chrom}_person0.bam"
+/home/fer/miniconda3/envs/genomics/bin/samtools index "strspy/${dis}/input/${run_number}_${chrom}_person1.bam"
+echo "Saved: ${datadir}/strspy/${dis}/input/${run_number}_${chrom}_person0.bam"
+echo "Saved: ${datadir}/strspy/${dis}/input/${run_number}_${chrom}_person1.bam"
 echo "Indexed BAM files."
