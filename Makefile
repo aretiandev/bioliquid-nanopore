@@ -14,17 +14,20 @@
 # Every other step in between will be run automatically. The reason to split the three blocks is that cluster, strspy and tag_reads take a long time to run so you might want to avoid those depending on the case.
 
 # Set variables
-chr           := $(shell bash get_chrom.sh $(dis))
-datadir       := /mnt/aretian/genomics/nanopore/run$(run)
-extract       := $(datadir)/run$(run)_$(chr)_$(dis).sam
-remove_gaps   := $(datadir)/run$(run)_$(chr)_$(dis)_clean.csv
-cluster       := $(datadir)/run$(run)_$(chr)_read_clusters.txt
-assign        := $(datadir)/run$(run)_$(chr)_person0_uniqueids.txt
-create_bams   := $(datadir)/strspy/$(dis)/input/run$(run)_$(chr)_person0.bam
-strspy_config := $(datadir)/strspy/$(dis)/input/regions/all_strs.bed
-strspy        := $(datadir)/strspy/$(dis)/output
-strspy_clean  := $(datadir)/run$(run)_$(chr)_person_full.txt
-tag_reads     := $(datadir)/run$(run)_$(chr)_tagged_reads.csv
+chr            := $(shell bash get_chrom.sh $(dis))
+datadir        := /mnt/aretian/genomics/nanopore/run$(run)
+extract        := $(datadir)/run$(run)_$(chr)_$(dis).sam
+remove_gaps    := $(datadir)/run$(run)_$(chr)_$(dis)_clean.csv
+cluster        := $(datadir)/run$(run)_$(chr)_read_clusters.txt
+assign         := $(datadir)/run$(run)_$(chr)_person0_uniqueids.txt
+create_bams    := $(datadir)/strspy/$(dis)/input/run$(run)_$(chr)_person0.bam
+strspy_config  := $(datadir)/strspy/$(dis)/input/regions/all_strs.bed
+strspy         := $(datadir)/strspy/$(dis)/output
+strspy_clean   := $(datadir)/run$(run)_$(chr)_person_full.txt
+tag_reads      := $(datadir)/run$(run)_$(chr)_tagged_reads.csv
+boolean_matrix := $(datadir)/run$(run)_$(chr)_bool_tagged_reads.csv
+str_cluster    := $(datadir)/run$(run)_$(chr)_kmeans_clusters.csv
+score          := $(datadir)/run$(run)_$(chr)_recall_score.csv
 
 .PHONY: extract remove_gaps cluster assign create_bams strspy_config strspy strspy_clean tag_reads boolean_matrix str_cluster score print
 
@@ -70,16 +73,20 @@ $(strspy_clean): $(strspy)
 
 .PHONY: tag_reads
 tag_reads: $(tag_reads)
-$(tag_reads): $(strspy)
+$(tag_reads): $(strspy_clean)
 	@/usr/bin/Rscript 08_tag_reads.R $(run) $(dis)
 
-boolean_matrix:
+.PHONY: boolean_matrix
+boolean_matrix: $(boolean_matrix)
+$(boolean_matrix): $(tag_reads)
 	@/usr/bin/Rscript 09_boolean_matrix.R $(run) $(dis)
 
-#str_cluster: boolean_matrix
-str_cluster:
+.PHONY: str_cluster
+str_cluster: $(str_cluster)
+$(str_cluster): $(boolean_matrix)
 	@/usr/bin/Rscript 10_str_clustering.R $(run) $(dis)
 
-#score: str_cluster
-score:
+.PHONY: score
+score: $(score)
+$(score): $(str_cluster)
 	@/home/fer/miniconda3/envs/genomics/bin/python3 11_score.py $(run) $(dis)

@@ -10,12 +10,11 @@
 # INPUTS:
 #   run_number
 #   disease
-#   nanopore reads for location: e.g. run1_chr11_sca.sam
-#   reference genome fasta for location: e.g. chr11_selected.fa
+#   tagged reads: datadir/run_number_chr_tagged_reads.csv')
 # 
 # OUTPUTS:
-#   reads without gaps: e.g. run1_chr11_sca_clean.csv
-#   reference genome without gaps: e.g. run1_chr11_reference_genome.json
+#   boolean matrix of tagged reads: e.g. datadir/run_chr_bool_tagged_reads.csv'
+
 print('')
 print('09 - BOOLEAN MATRIX')
 print('')
