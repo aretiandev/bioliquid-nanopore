@@ -1,4 +1,4 @@
-# 10 - STR Clustering
+# 13 - STR Clustering
 #
 # This script performs clustering of the person-reads based on the boolean matrix.
 #
@@ -10,7 +10,7 @@
 # OUTPUTS:
 #   cluster results: datadir/run_chr_kmeans_clusters.csv'
 print('')
-print('10 - STR CLUSTERING')
+print('13 - STR CLUSTERING')
 print('')
 
 # Load Modules

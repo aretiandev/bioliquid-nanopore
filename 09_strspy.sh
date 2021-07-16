@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# 07 - STRspy
+# 09 - STRspy
 #
 # This script runs STRspy on the Bioliquid Nanopore data. The script is based on 07_STRspy.ipynb
 #
@@ -11,7 +11,7 @@
 # OUTPUTS:
 #   Identified STRs: e.g. {datadir}/strspy/${dis}/output/Countings
 echo ''
-echo "07 - STRSPY"
+echo "09 - STRSPY"
 echo ''
 
 # Input variables

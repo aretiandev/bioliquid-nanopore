@@ -1,4 +1,4 @@
-# 09 - Create Boolean Matrix
+# 12 - Create Boolean Matrix
 #
 # This scripts creates a matrix of boolean values per read based on str presence. Example:
 # 
@@ -16,7 +16,7 @@
 #   boolean matrix of tagged reads: e.g. datadir/run_chr_bool_tagged_reads.csv'
 
 print('')
-print('09 - BOOLEAN MATRIX')
+print('12 - BOOLEAN MATRIX')
 print('')
 
 # Load Modules

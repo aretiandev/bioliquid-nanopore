@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# 06 - Create Bams
+# 07 - Create Bams
 #
 # This script extracts the reads for each cluster and creates two BAM files. The script is based on 06_read_assignment.ipynb
 #
@@ -12,7 +12,7 @@
 # OUTPUTS:
 #   BAM files: e.g. run1_chr11_person0.bam" 
 echo ''
-echo "06 - CREATE BAMS"
+echo "07 - CREATE BAMS"
 echo ''
 
 # Input variables
@@ -71,6 +71,7 @@ cat "${run_number}_${chrom}_person_header.txt" "${run_number}_${chrom}_person1_r
 echo "Saved: ${datadir}/${run_number}_${chrom}_person0.sam"
 echo "Saved: ${datadir}/${run_number}_${chrom}_person1.sam"
 # Convert to bam file
+mkdir -p strspy/${dis}/input
 /home/fer/miniconda3/envs/genomics/bin/samtools view -b "${run_number}_${chrom}_person0.sam" > "strspy/${dis}/input/${run_number}_${chrom}_person0.bam"
 /home/fer/miniconda3/envs/genomics/bin/samtools view -b "${run_number}_${chrom}_person1.sam" > "strspy/${dis}/input/${run_number}_${chrom}_person1.bam"
 # Index bam file

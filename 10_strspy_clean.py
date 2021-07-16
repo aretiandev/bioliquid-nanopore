@@ -1,4 +1,4 @@
-# 07 - STRspy clean
+# 10 - STRspy clean
 #
 # This script edits the output of STRspy to the right format with additional columns. The script is based on 07_STRspy.ipynb
 #
@@ -11,7 +11,7 @@
 # OUTPUTS:
 #   VCF file with STRs present: {datadir}/{run_number}_{chrom}_person_full.txt
 print('')
-print('07 - STRSPY CLEAN')
+print('10 - STRSPY CLEAN')
 print('')
 
 # Load Modules

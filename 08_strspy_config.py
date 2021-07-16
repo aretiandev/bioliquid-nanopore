@@ -1,4 +1,4 @@
-# 07 - STRspy config
+# 08 - STRspy config
 #
 # This script creates the necessary config files to run STRspy on the Bioliquid Nanopore data. The script is based on 07_STRspy.ipynb
 #
@@ -11,7 +11,7 @@
 # OUTPUTS:
 #   BED and fasta files needed to run STRspy
 print('')
-print('07 - STRSPY CONFIG')
+print('08 - STRSPY CONFIG')
 print('')
 
 # Load Modules
@@ -83,7 +83,11 @@ df = df[['chr','start','end','name']]
 selected_strs = df.loc[(df['start']>location-windowwidth)&(df['end']<location+windowwidth)]
 
 # Loop: create single STR files
-print(f'Creating BED files for each STR:    {datadir}/strspy/input/db' )
+print(f'Creating BED files for each STR:    {datadir}/strspy/{dis}/input/db' )
+
+if not os.path.exists(f"{datadir}/strspy/{dis}/input/db"):
+	os.makedirs(f"{datadir}/strspy/{dis}/input/db")
+
 for n in range(len(selected_strs)):
 # for n in range(3):
     str_out = selected_strs.iloc[[n]]
@@ -105,5 +109,7 @@ for n in range(len(selected_strs)):
 
 # Region BED file (all STRs)
 # -----------------------------------------------------------------------------
+if not os.path.exists(f"{datadir}/strspy/{dis}/input/regions"):
+	os.makedirs(f"{datadir}/strspy/{dis}/input/regions")
 selected_strs.to_csv(f'{datadir}/strspy/{dis}/input/regions/all_strs.bed', header=False, index=False, sep='\t')
 print(f'Saved single BED file for all STRs: {datadir}/strspy/{dis}/input/regions/all_strs.bed' )

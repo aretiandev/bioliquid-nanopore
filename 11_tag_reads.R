@@ -1,4 +1,4 @@
-# 08 - Tag Reads
+# 11 - Tag Reads
 #
 # This script links each read for person0 and person1 with the presence or absence of STRs. The script is based on 08_tag_reads.ipynb
 #
@@ -13,7 +13,7 @@
 #   reads without gaps: e.g. run1_chr11_sca_clean.csv
 #   reference genome without gaps: e.g. run1_chr11_reference_genome.json
 print('')
-print('08 - TAG READS')
+print('11 - TAG READS')
 print('')
 
 # Load Modules

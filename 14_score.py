@@ -1,4 +1,4 @@
-# 11 - Score
+# 14 - Score
 #
 # This script evaluates clustering accuracy.. The script is based on 11_evaluate_clusters.ipynb
 #
@@ -10,7 +10,7 @@
 # OUTPUTS:
 #   recall scores: e.g. datadir/run_chr_recall_score.csv
 print('')
-print('11 - SCORE')
+print('14 - SCORE')
 print('')
 
 # Load Modules
