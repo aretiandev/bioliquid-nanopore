@@ -16,6 +16,8 @@
 chr            := $(shell bash get_chrom.sh $(dis))
 datadir        := /mnt/aretian/genomics/nanopore/run$(run)
 # Targets
+basecall       := $(datadir)/bioliquid_run$(run).fastq
+align
 extract        := $(datadir)/run$(run)_$(chr)_$(dis).sam
 remove_gaps    := $(datadir)/run$(run)_$(chr)_$(dis)_clean.csv
 cluster        := $(datadir)/run$(run)_$(chr)_read_clusters.txt
@@ -31,7 +33,30 @@ score          := $(datadir)/run$(run)_$(chr)_recall_score.csv
 
 all: score
 
-.PHONY: extract remove_gaps cluster assign create_bams strspy_config strspy strspy_clean tag_reads boolean_matrix str_cluster score
+.PHONY: basecall extract remove_gaps cluster assign create_bams strspy_config strspy strspy_clean tag_reads boolean_matrix str_cluster score
+
+# BASECALL: run from aretian-genomics-gpu server. First get fast5 files from s3.
+.PHONY: basecall
+#basecall: $(basecall) 
+#$(basecall): 00_basecaller.sh
+basecall:
+	@bash 00_basecaller.sh gpu /home/fer/genomics/fast5 /home/fer/genomics/basecall-latest
+	@cat ~/home/fer/genomics/basecall-latest/pass/*fastq > ~/home/fer/genomics/basecall-latest/bioliquid_run$(run).fastq
+
+# ALIGN: Run from inside docker container
+# $docker run -d -v /home/fer/genomics:/home/jovyan/work -e GRANT_SUDO=yes --user root --name bioaretian yufernando/bioaretian:guppy-gpu
+# $docker exec -it bioaretian /bin/bash
+# $cd ~/work/bioliquid-nanopore
+# $make align
+.PHONY: align
+#align: $(align) 
+#$(align): $(basecall)
+align:
+	@minimap2 -x map-ont -a ~/work/GCA_000001405.15_GRCh38_no_alt_analysis_set.fna.gz ~/work/basecall-latest/bioliquid_run#(run).fastq > ~/work/bioliquid_run$(run).sam
+	@samtools view -bSh ~/work/bioliquid_run$(run).sam > ~/work/bioliquid_run$(run)_unsorted.bam
+	@samtools sort -@ 32 ~/work/bioliquid_run$(run)_unsorted.bam > ~/work/bioliquid_run$(run).bam
+	@samtools index ~/work/bioliquid_run$(run).bam
+	@samtools flagstat ~/work/bioliquid_run$(run).bam > ~/work/bioliquid_run$(run).bam.flag
 
 .PHONY: extract
 extract: $(extract) 
