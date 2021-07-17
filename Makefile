@@ -65,7 +65,7 @@ align:
 .PHONY: get_ref
 get_ref: $(get_ref) 
 $(get_ref): 0_get_reference.sh
-	@bash 0_get_reference.sh
+	@bash 0_get_reference.sh $(run) $(dis)
 
 .PHONY: extract_ref
 extract_ref: $(extract_ref) 

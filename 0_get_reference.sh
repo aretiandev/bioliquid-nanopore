@@ -11,6 +11,9 @@
 #   Reference Genome
 echo ''
 echo "0 - GET REFERENCE"
+run_number="run${1}"
+dis=$2
+echo "Run: ${1}, disease: $dis"
 echo ''
 
 # Download reference genome

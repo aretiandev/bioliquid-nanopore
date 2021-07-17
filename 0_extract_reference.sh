@@ -12,13 +12,13 @@
 #   Selected fasta file: chr11_selected.fa
 echo ''
 echo "0 - EXTRACT REFERENCE"
+run_number="run${1}"
+dis=$2
+echo "Run: ${1}, disease: $dis"
 echo ''
 
 # Input variables
 # -----------------------------------------------------------------------------
-run_number="run${1}"
-dis=$2
-echo "Run: ${1}, disease: $dis"
 source src/setup_variables.sh $dis
 
 # Extract selected chromosome from reference genome
