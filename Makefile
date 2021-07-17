@@ -26,8 +26,8 @@ assign         := $(datadir)/run$(run)_$(chr)_person0_uniqueids.txt
 create_bams    := $(datadir)/strspy/$(dis)/input/run$(run)_$(chr)_person0.bam
 str_list       := $(rootdir)/hg38.hipstr_reference_full_strs.bed
 strspy_config  := $(datadir)/strspy/$(dis)/input/regions/all_strs.bed
-strspy         := $(datadir)/strspy/$(dis)/output/Countings
-strspy_post    := $(datadir)/run$(run)_$(chr)_person_full.txt
+strspy         := $(datadir)/strspy/$(dis)/output/Countings/${run_number}_${chrom}_person0_strs.txt
+add_strs       := $(datadir)/run$(run)_$(chr)_person_full.txt
 tag_reads      := $(datadir)/run$(run)_$(chr)_tagged_reads.csv
 boolean_matrix := $(datadir)/run$(run)_$(chr)_bool_tagged_reads.csv
 str_cluster    := $(datadir)/run$(run)_$(chr)_kmeans_clusters.csv
@@ -35,7 +35,7 @@ score          := $(datadir)/run$(run)_$(chr)_recall_score.csv
 
 all: score
 
-.PHONY: basecall align get_ref extract_ref extract remove_gaps cluster assign create_bams strspy_config strspy strspy_post tag_reads boolean_matrix str_cluster score
+.PHONY: basecall align get_ref extract_ref extract remove_gaps cluster assign create_bams strspy_config strspy add_strs tag_reads boolean_matrix str_cluster score
 
 # BASECALL: run from aretian-genomics-gpu server. First get fast5 files from s3.
 .PHONY: basecall
@@ -110,14 +110,14 @@ str_list: $(str_list)
 $(str_list): 0_str_list.py
 	@/home/fer/miniconda3/envs/genomics/bin/python3 0_str_list.py
 
-.PHONY: strspy_post
-strspy_post: $(strspy_post)
-$(strspy_post): $(str_list) $(strspy) 10_strspy_post.py
-	@/home/fer/miniconda3/envs/genomics/bin/python3 10_strspy_post.py $(run) $(dis)
+.PHONY: add_strs
+add_strs: $(add_strs)
+$(add_strs): $(str_list) $(strspy) 10_add_strs.py
+	@/home/fer/miniconda3/envs/genomics/bin/python3 10_add_strs.py $(run) $(dis)
 
 .PHONY: tag_reads
 tag_reads: $(tag_reads)
-$(tag_reads): $(strspy_post) 11_tag_reads.R
+$(tag_reads): $(add_strs) 11_tag_reads.R
 	@/usr/bin/Rscript 11_tag_reads.R $(run) $(dis)
 
 .PHONY: boolean_matrix

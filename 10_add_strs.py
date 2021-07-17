@@ -1,6 +1,6 @@
-# 10 - STRspy Post Processing
+# 10 - ADD STRs
 #
-# This script edits the output of STRspy to the right format with additional columns. The script is based on 07_STRspy.ipynb
+# This script adds full STRs and motifs to the output of STRspy. The script is based on 07_STRspy.ipynb
 #
 # INPUTS:
 #   run_number
@@ -10,7 +10,7 @@
 # OUTPUTS:
 #   VCF file with STRs present: {datadir}/{run_number}_{chrom}_person_full.txt
 print('')
-print('10 - STRSPY POST PROCESSING')
+print('10 - ADD STRS')
 
 # Load Modules
 # -----------------------------------------------------------------------------
@@ -38,19 +38,19 @@ run_number=f"run{run_num}"
 chrom_dis=f"{chrom}_{dis}"
 datadir=f"{rootdir}/{run_number}"
 
-# Concatenate all output
-# -----------------------------------------------------------------------------
-print(f'Concatenating all STRs in {datadir}/strspy/{dis}/output/Countings')
-concatenate_cmd = f"""
-cd "{datadir}/strspy/{dis}/output/Countings"
-cat *person0*Allele_freqs.txt > "{run_number}_{chrom}_person0_strs_raw.txt"
-cat *person1*Allele_freqs.txt > "{run_number}_{chrom}_person1_strs_raw.txt"
+# # Concatenate all output
+# # -----------------------------------------------------------------------------
+# print(f'Concatenating all STRs in {datadir}/strspy/{dis}/output/Countings')
+# concatenate_cmd = f"""
+# cd "{datadir}/strspy/{dis}/output/Countings"
+# cat *person0*Allele_freqs.txt > "{run_number}_{chrom}_person0_strs_raw.txt"
+# cat *person1*Allele_freqs.txt > "{run_number}_{chrom}_person1_strs_raw.txt"
 
-grep Human_STR "{run_number}_{chrom}_person0_strs_raw.txt" > "{run_number}_{chrom}_person0_strs.txt"
-grep Human_STR "{run_number}_{chrom}_person1_strs_raw.txt" > "{run_number}_{chrom}_person1_strs.txt"
-"""
+# grep Human_STR "{run_number}_{chrom}_person0_strs_raw.txt" > "{run_number}_{chrom}_person0_strs.txt"
+# grep Human_STR "{run_number}_{chrom}_person1_strs_raw.txt" > "{run_number}_{chrom}_person1_strs.txt"
+# """
 
-subprocess.run(concatenate_cmd, shell=True)
+# subprocess.run(concatenate_cmd, shell=True)
 
 # Add necessary columns
 # -----------------------------------------------------------------------------

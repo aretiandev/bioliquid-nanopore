@@ -33,3 +33,15 @@ cd /home/fer/genomics/strspy
 bash STRspy_run_v1.0.sh "config/${run_number}_${dis}_inputconfig.txt" config/UserToolsConfig.txt
 
 echo "Saved STRspy output in: ${datadir}/strspy/${dis}/output"
+
+# Concatenate all output
+# -----------------------------------------------------------------------------
+echo "Concatenating all STRs in ${datadir}/strspy/${dis}/output/Countings"
+cd ${datadir}/strspy/${dis}/output/Countings
+cat *person0*Allele_freqs.txt > ${run_number}_${chrom}_person0_strs_raw.txt
+cat *person1*Allele_freqs.txt > ${run_number}_${chrom}_person1_strs_raw.txt
+
+grep Human_STR ${run_number}_${chrom}_person0_strs_raw.txt" > ${run_number}_${chrom}_person0_strs.txt
+grep Human_STR ${run_number}_${chrom}_person1_strs_raw.txt" > ${run_number}_${chrom}_person1_strs.txt
+echo "Saved: ${datadir}/strspy/${dis}/output/Countings/${run_number}_${chrom}_person0_strs.txt"
+echo "Saved: ${datadir}/strspy/${dis}/output/Countings/${run_number}_${chrom}_person1_strs.txt"
