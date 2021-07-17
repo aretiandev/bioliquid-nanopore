@@ -25,6 +25,7 @@ rootdir=f"/mnt/aretian/genomics/nanopore"
 #-------------------------------------------------------------------------------------------
 # Create Hipstr reference file with full STRs
 # Load Full STR list
+print(f"Loading STR list from HipSTR reference: {rootdir}/hg38.hipstr_reference.bed")
 df = pd.read_csv(f'{rootdir}/hg38.hipstr_reference.bed', sep='\t', header=None)
 df.columns=['chr','start','end','NA','repeats','name','motif']
 
