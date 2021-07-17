@@ -74,12 +74,12 @@ $(extract_ref): $(get_ref) 0_extract_reference.sh
 
 .PHONY: extract_reads
 extract_reads: $(extract_reads) 
-$(extract_reads): $(extract_reads) 03_extract_reads.sh
+$(extract_reads): 03_extract_reads.sh
 	@bash 03_extract_reads.sh $(run) $(dis)
 
 .PHONY: remove_gaps
 remove_gaps: $(remove_gaps)
-$(remove_gaps): $(extract) 04_remove_gaps.py
+$(remove_gaps): $(extract_ref) 04_remove_gaps.py
 	@/home/fer/miniconda3/envs/genomics/bin/python3 04_remove_gaps.py $(run) $(dis)
 
 .PHONY: cluster
