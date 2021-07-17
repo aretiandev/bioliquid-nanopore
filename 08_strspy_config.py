@@ -68,7 +68,7 @@ df = df.loc[df['chr']==chrom]
 df = df[['chr','start','end','name']]
 
 # Save each STR in different BED file
-selected_strs = df.loc[(df['start']>location-windowwidth)&(df['end']<location+windowwidth)]
+selected_strs = df.loc[(df['start']>location-location_padding)&(df['end']<location+location_padding)]
 
 # Loop: create single STR files
 print(f'Creating BED files for each STR:    {datadir}/strspy/{dis}/input/db' )

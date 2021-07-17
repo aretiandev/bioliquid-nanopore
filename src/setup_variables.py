@@ -22,4 +22,5 @@ dis_data = {
     'thal3':{'chr':'chr16','location':''},
     'pompe':{'chr':'chr17','location':25000000}
 }
+location_padding=2000000
 rootdir=f"/mnt/aretian/genomics/nanopore"

@@ -14,7 +14,7 @@
 
 # Input variables
 # -----------------------------------------------------------------------------
-window_width=2000000
+location_padding=2000000
 
 dis=$1
 case $dis in

@@ -26,8 +26,8 @@ source src/setup_variables.sh $dis
 # Setup
 run_reads="${datadir}/bioliquid_${run_number}.bam"
 output="${datadir}/${run_number}_${chrom_dis}.bam"
-begin=$(expr $location - $window_width)
-end=$(expr $location + $window_width)
+begin=$(expr $location - $location_padding)
+end=$(expr $location + $location_padding)
 
 # Extract location of interest
 # -----------------------------------------------------------------------------
