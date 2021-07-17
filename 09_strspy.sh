@@ -18,44 +18,8 @@ echo ''
 # -----------------------------------------------------------------------------
 run_number="run${1}"
 dis=$2
-window_width=2000000
-
-case $dis in
-    cf)
-        echo "Run: ${1}, disease: $dis"
-        chrom="chr7"
-        location=
-        ;;
-    sca)
-        echo "Run: ${1}, disease: $dis"
-        chrom="chr11"
-        location=5227002
-        ;;
-    sma)
-        echo "Run: ${1}, disease: $dis"
-        chrom="chr5"
-        location=
-        ;;
-    thal)
-        echo "Run: ${1}, disease: $dis"
-        chrom="chr16"
-        location=
-        ;;
-    pompe)
-        echo "Run: ${1}, disease: $dis"
-        chrom="chr17"
-        location=25000000
-        ;;
-    *)
-        echo "Disease should be in disease list: cf, sca, sma, thal, pompe."
-        exit 1
-esac
-
-chrom_dis="${chrom}_${dis}"
-
-# Setup
-datadir="/mnt/aretian/genomics/nanopore/${run_number}"
-cd $datadir
+echo "Run: ${1}, disease: $dis"
+source src/setup_variables.sh $dis
 
 # Run STRspy
 # -----------------------------------------------------------------------------
@@ -64,6 +28,7 @@ echo "Config file: /home/fer/genomics/strspy/config/${run_number}_${dis}_inputco
 
 rm -rf "${datadir}/strspy/${dis}/output"
 mkdir "${datadir}/strspy/${dis}/output"
+
 cd /home/fer/genomics/strspy
 bash STRspy_run_v1.0.sh "config/${run_number}_${dis}_inputconfig.txt" config/UserToolsConfig.txt
 

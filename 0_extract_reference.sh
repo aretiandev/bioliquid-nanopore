@@ -18,47 +18,11 @@ echo ''
 # -----------------------------------------------------------------------------
 run_number="run${1}"
 dis=$2
-window_width=2000000
-
-case $dis in
-    cf)
-        echo "Run: ${1}, disease: $dis"
-        chrom="chr7"
-        location=
-        ;;
-    sca)
-        echo "Run: ${1}, disease: $dis"
-        chrom="chr11"
-        location=5227002
-        ;;
-    sma)
-        echo "Run: ${1}, disease: $dis"
-        chrom="chr5"
-        location=
-        ;;
-    thal)
-        echo "Run: ${1}, disease: $dis"
-        chrom="chr16"
-        location=
-        ;;
-    pompe)
-        echo "Run: ${1}, disease: $dis"
-        chrom="chr17"
-        location=25000000
-        ;;
-    *)
-        echo "Disease should be in disease list: cf, sca, sma, thal, pompe."
-        exit 1
-esac
-
-chrom_dis="${chrom}_${dis}"
-
-# Setup
-rootdir="/mnt/aretian/genomics/nanopore"
-datadir="/mnt/aretian/genomics/nanopore/${run_number}"
+echo "Run: ${1}, disease: $dis"
+source src/setup_variables.sh $dis
 
 # Extract selected chromosome from reference genome
 #-------------------------------------------------------------------------------------------
-echo "Extracting $chrom from /mnt/aretian/genomics/nanopore/GCA_000001405.15_GRCh38_no_alt_analysis_set.fna.gz"
-/home/fer/miniconda3/envs/genomics/bin/samtools faidx "/mnt/aretian/genomics/nanopore/GCA_000001405.15_GRCh38_no_alt_analysis_set.fna.gz" $chrom > "${rootdir}/${chrom}_selected.fa"
-echo "Saved: ${rootdir}/${chrom}_selected.fa"
+echo "Extracting $chr from /mnt/aretian/genomics/nanopore/GCA_000001405.15_GRCh38_no_alt_analysis_set.fna.gz"
+/home/fer/miniconda3/envs/genomics/bin/samtools faidx "/mnt/aretian/genomics/nanopore/GCA_000001405.15_GRCh38_no_alt_analysis_set.fna.gz" $chr > "${rootdir}/${chr}_selected.fa"
+echo "Saved: ${rootdir}/${chr}_selected.fa"
