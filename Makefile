@@ -26,6 +26,7 @@ remove_gaps    := $(datadir)/run$(run)_$(chr)_$(dis)_clean.csv
 cluster        := $(datadir)/run$(run)_$(chr)_read_clusters.txt
 assign         := $(datadir)/run$(run)_$(chr)_person0_uniqueids.txt
 create_bams    := $(datadir)/strspy/$(dis)/input/run$(run)_$(chr)_person0.bam
+str_list       := $(rootdir)/hg38.hipstr_reference_full_strs.bed
 strspy_config  := $(datadir)/strspy/$(dis)/input/regions/all_strs.bed
 strspy         := $(datadir)/strspy/$(dis)/output
 strspy_clean   := $(datadir)/run$(run)_$(chr)_person_full.txt
@@ -110,9 +111,14 @@ $(strspy): $(strspy_config) 09_strspy.sh
 clean_strspy:
 	rm -rf $(strspy)
 
+.PHONY: str_list
+str_list: $(str_list)
+$(str_list): 0_str_list.py
+	@/home/fer/miniconda3/envs/genomics/bin/python3 0_str_list.py
+
 .PHONY: strspy_clean
 strspy_clean: $(strspy_clean)
-$(strspy_clean): $(strspy) 10_strspy_clean.py
+$(strspy_clean): $(str_list) $(strspy) 10_strspy_clean.py
 	@/home/fer/miniconda3/envs/genomics/bin/python3 10_strspy_clean.py $(run) $(dis)
 
 .PHONY: tag_reads
