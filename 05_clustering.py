@@ -200,13 +200,13 @@ for left_bound in range(min(nanopore_reads['POS']),max(nanopore_reads['END_POS']
 # for left_bound in range(950000,970000,jump_width):
 
 #     print(f" {progress:.0f}% ", end="")
-	
-	# Print progress in jumps of 5%
+
+    # Print progress in jumps of 5%
     progress = iter/total_jumps*100
-	if progress>=threshold:
-		print(f'{threshold}%')
-		threshold = threshold+5
-		
+    if progress>=threshold:
+        print(f'{threshold}%')
+        threshold = threshold+5
+
     iter+=1
 #     if round(progress*1000)%50==0:
 #         print(f" {round(progress*100):.0f}% ", end="", flush=True)
