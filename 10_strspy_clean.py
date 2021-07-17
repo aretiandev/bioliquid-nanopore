@@ -21,31 +21,22 @@ import os
 import sys
 import subprocess
 
-# Set variables
-# -----------------------------------------------------------------------------
-# Input variables
+# Set Variables
+# ---------------------------------------------------------------------------------------------------
 run_num = sys.argv[1]
 dis = sys.argv[2]
 print(f"Run: {run_num}, disease: {dis}.")
 
-# Setup
+from src.setup_variables import *
+try:
+    chrom=dis_data[dis]['chr']
+    location=dis_data[dis]['location']
+except:
+    print("Disease should be in disease list: cf, sca, sma1, sma2, thal1, thal2, thal3, pompe.")
+    
 run_number=f"run{run_num}"
-
-if dis =="cf":
-    chrom = "chr7"
-elif dis == "sca":
-    chrom = "chr11"
-elif dis == "sma":
-    chrom = "chr5"
-elif dis == "thal":
-    chrom = "chr16"
-elif dis == "pompe":
-    chrom = "chr17"
-else:
-    print("Disease should be in disease list: cf, sca, sma, thal, pompe.")
-
 chrom_dis=f"{chrom}_{dis}"
-datadir=f"/mnt/aretian/genomics/nanopore/{run_number}"
+datadir=f"{rootdir}/{run_number}"
 
 # Concatenate all output
 # -----------------------------------------------------------------------------
