@@ -103,7 +103,7 @@ $(strspy): $(strspy_config) 09_strspy.sh
 
 .PHONY: clean_strspy
 clean_strspy:
-	rm -rf $(strspy)
+	rm -rf $(datadir)/strspy/$(dis)/output
 
 .PHONY: str_list
 str_list: $(str_list)
