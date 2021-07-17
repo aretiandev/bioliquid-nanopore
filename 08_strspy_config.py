@@ -48,6 +48,7 @@ else:
     print("Disease should be in disease list: cf, sca, sma, thal, pompe.")
 
 chrom_dis=f"{chrom}_{dis}"
+rootdir=f"/mnt/aretian/genomics/nanopore"
 datadir=f"/mnt/aretian/genomics/nanopore/{run_number}"
 
 # Individual BED and Fasta files
@@ -70,8 +71,8 @@ with open(f'{datadir}/{chrom}_selected.fa') as f: # update path if needed
 
 # Load list of STRs
 # Load Full STR list
-print(f'Reading list of STRs:               {datadir}/hg38.hipstr_reference.bed')
-df = pd.read_csv(f'{datadir}/hg38.hipstr_reference.bed', sep='\t', header=None)
+print(f'Reading list of STRs:               {rootdir}/hg38.hipstr_reference.bed')
+df = pd.read_csv(f'{rootdir}/hg38.hipstr_reference.bed', sep='\t', header=None)
 df.columns=['chr','start','end','NA','repeats','name','unit']
 
 # Select Chrom
