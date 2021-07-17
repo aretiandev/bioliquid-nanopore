@@ -20,7 +20,7 @@ datadir        := /mnt/aretian/genomics/nanopore/run$(run)
 #basecall      := $(datadir)/bioliquid_run$(run).fastq
 #align
 get_ref        := $(rootdir)/GCA_000001405.15_GRCh38_no_alt_analysis_set.fna.gz 
-extract_ref    := $(datadir)/$(chr)_selected.fa
+extract_ref    := $(rootdir)/$(chr)_selected.fa
 extract_reads  := $(datadir)/run$(run)_$(chr)_$(dis).sam
 remove_gaps    := $(datadir)/run$(run)_$(chr)_$(dis)_clean.csv
 cluster        := $(datadir)/run$(run)_$(chr)_read_clusters.txt

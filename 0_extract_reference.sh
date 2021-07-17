@@ -54,10 +54,11 @@ esac
 chrom_dis="${chrom}_${dis}"
 
 # Setup
+rootdir="/mnt/aretian/genomics/nanopore"
 datadir="/mnt/aretian/genomics/nanopore/${run_number}"
 
 # Extract selected chromosome from reference genome
 #-------------------------------------------------------------------------------------------
 echo "Extracting $chrom from /mnt/aretian/genomics/nanopore/GCA_000001405.15_GRCh38_no_alt_analysis_set.fna.gz"
-/home/fer/miniconda3/envs/genomics/bin/samtools faidx "/mnt/aretian/genomics/nanopore/GCA_000001405.15_GRCh38_no_alt_analysis_set.fna.gz" $chrom > "${datadir}/${chrom}_selected.fa"
-echo "Saved: ${datadir}/${chrom}_selected.fa"
+/home/fer/miniconda3/envs/genomics/bin/samtools faidx "/mnt/aretian/genomics/nanopore/GCA_000001405.15_GRCh38_no_alt_analysis_set.fna.gz" $chrom > "${rootdir}/${chrom}_selected.fa"
+echo "Saved: ${rootdir}/${chrom}_selected.fa"

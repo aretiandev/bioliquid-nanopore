@@ -5,7 +5,6 @@
 # INPUTS:
 #   run_number
 #   disease
-#   reference genome fasta for location: e.g. chr11_selected.fa
 #   Full list of STRs
 # 
 # OUTPUTS:
