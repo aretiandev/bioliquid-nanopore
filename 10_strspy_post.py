@@ -1,4 +1,4 @@
-# 10 - STRspy clean
+# 10 - STRspy Post Processing
 #
 # This script edits the output of STRspy to the right format with additional columns. The script is based on 07_STRspy.ipynb
 #
@@ -10,7 +10,7 @@
 # OUTPUTS:
 #   VCF file with STRs present: {datadir}/{run_number}_{chrom}_person_full.txt
 print('')
-print('10 - STRSPY CLEAN')
+print('10 - STRSPY POST PROCESSING')
 
 # Load Modules
 # -----------------------------------------------------------------------------
@@ -60,7 +60,7 @@ def complete_str_df(person):
     strspy_df.columns = ['name', 'count', 'normcount']
 
     # Load Full STR list
-    df = pd.read_csv(f'{datadir}/hg38.hipstr_reference_full_strs.bed', sep='\t', header=None)
+    df = pd.read_csv(f'{rootdir}/hg38.hipstr_reference_full_strs.bed', sep='\t', header=None)
     df.columns=['chr','start','end','NA','repeats','name','motif','str']
 
     # Append it to STRspy output
