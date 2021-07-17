@@ -23,11 +23,6 @@ datadir="/mnt/aretian/genomics/nanopore/${run_number}"
 # Index reference genome
 # !samtools faidx GCA_000001405.15_GRCh38_no_alt_analysis_set.fna
 
-# Extract selected chromosome from reference genome
-echo "Extracting $chrom from ${datadir}/GCA_000001405.15_GRCh38_no_alt_analysis_set.fna.gz"
-echo "Writing to ${datadir}/${chrom}_selected.fa"
-/home/fer/miniconda3/envs/genomics/bin/samtools faidx "${datadir}/GCA_000001405.15_GRCh38_no_alt_analysis_set.fna.gz" $chrom > "${datadir}/${chrom}_selected.fa"
-
 # 07_strspy
 #-------------------------------------------------------------------------------------------
 # Create Hipstr reference file with full STRs

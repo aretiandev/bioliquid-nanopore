@@ -1,8 +1,8 @@
-# Bioliquid Pipeline
+# BIOLIQUID PIPELINE
 #
 # Example routine:
 # 
-#   $make extract run=1 dis=sca
+#   $make extract   run=1 dis=sca
 #
 # There are three routines that take long:
 #
@@ -14,12 +14,14 @@
 
 # Set variables
 chr            := $(shell bash get_chrom.sh $(dis))
+rootdir        := /mnt/aretian/genomics/nanopore
 datadir        := /mnt/aretian/genomics/nanopore/run$(run)
 # Targets
-#basecall       := $(datadir)/bioliquid_run$(run).fastq
+#basecall      := $(datadir)/bioliquid_run$(run).fastq
 #align
+get_ref        := $(rootdir)/GCA_000001405.15_GRCh38_no_alt_analysis_set.fna.gz 
 extract_ref    := $(datadir)/$(chr)_selected.fa
-extract        := $(datadir)/run$(run)_$(chr)_$(dis).sam
+extract_reads  := $(datadir)/run$(run)_$(chr)_$(dis).sam
 remove_gaps    := $(datadir)/run$(run)_$(chr)_$(dis)_clean.csv
 cluster        := $(datadir)/run$(run)_$(chr)_read_clusters.txt
 assign         := $(datadir)/run$(run)_$(chr)_person0_uniqueids.txt
@@ -34,7 +36,7 @@ score          := $(datadir)/run$(run)_$(chr)_recall_score.csv
 
 all: score
 
-.PHONY: basecall align extract_ref extract remove_gaps cluster assign create_bams strspy_config strspy strspy_clean tag_reads boolean_matrix str_cluster score
+.PHONY: basecall align get_ref extract_ref extract remove_gaps cluster assign create_bams strspy_config strspy strspy_clean tag_reads boolean_matrix str_cluster score
 
 # BASECALL: run from aretian-genomics-gpu server. First get fast5 files from s3.
 .PHONY: basecall
@@ -59,14 +61,19 @@ align:
 	@samtools index ~/work/bioliquid_run$(run).bam
 	@samtools flagstat ~/work/bioliquid_run$(run).bam > ~/work/bioliquid_run$(run).bam.flag
 
+.PHONY: get_ref
+get_ref: $(get_ref) 
+$(get_ref): 0_get_reference.sh
+	@bash 0_get_reference.sh
+
 .PHONY: extract_ref
 extract_ref: $(extract_ref) 
-$(extract_ref): 0_extract_reference.sh
+$(extract_ref): $(get_ref) 0_extract_reference.sh
 	@bash 0_extract_reference.sh $(run) $(dis)
 
-.PHONY: extract
-extract: $(extract) 
-$(extract): $(extract_ref) 03_extract_reads.sh
+.PHONY: extract_reads
+extract_reads: $(extract_reads) 
+$(extract_reads): $(extract_reads) 03_extract_reads.sh
 	@bash 03_extract_reads.sh $(run) $(dis)
 
 .PHONY: remove_gaps
