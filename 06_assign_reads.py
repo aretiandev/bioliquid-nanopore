@@ -188,7 +188,8 @@ print("E: New read. Siblings in both clusters (tie). Assign average rounded to 0
 print("T: New read. Siblings in both clusters (tie). Assign individual from oldest read.")
 print("")
 
-print(f"Current window:", end="", flush=True)
+# print(f"Current window:", end="", flush=True)
+print(f"Current window:")
 
 # Identify idmax of window
 window_idxmax = results_file.groupby('window_num').count().idxmax().values[0]
@@ -198,8 +199,8 @@ loop_direction = 'left'
 for window in range(window_idxmax+1,-1,-1):
 # for window in results_file['window_num'].unique(): # iterate through instances of the sliding window 
     
-    print("", end="\r", flush=True)
-    print(f" {window}", end="", flush=True)
+#     print("", end="\r", flush=True)
+    print(f"\r{window}", end="", flush=True)
     
     window_reads = results_file.loc[results_file['window_num']==window].copy() # get data only from this window
     
@@ -235,7 +236,7 @@ max(results_file['window_num'])
 
 for window in range(window_idxmax+2,max(results_file['window_num'])+1,1):
     
-    print(f" {window}", end="", flush=True)
+    print(f"\r{window}", end="", flush=True)
     
     window_reads = results_file.loc[results_file['window_num']==window].copy() # get data only from this window
     

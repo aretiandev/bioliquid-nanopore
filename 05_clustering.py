@@ -177,13 +177,6 @@ def write_results_to_file(read, results_file):
 # -----------------------------------------------------------------------------
 print("")
 print('Performing padding and clustering.')
-results_file = open(results_file_path,"w")
-# results_file = open(results_file_path,"a")
-
-# window_ref_genome_start = 0
-iter = 1
-empty_count = 0
-
 # User feedback
 print(f"Total range: {max(nanopore_reads['END_POS']):,}")
 print(f"Window width: {window_width}")
@@ -199,14 +192,24 @@ print("*: Found more than 1 read in window and ran clustering. Saving clusters."
 print("")
 print(f"Iterations: ", end="")
 
+results_file = open(results_file_path,"w")
+iter = 1
+empty_count = 0
+threshold = 5
 for left_bound in range(min(nanopore_reads['POS']),max(nanopore_reads['END_POS']),jump_width):
 # for left_bound in range(950000,970000,jump_width):
 
-    progress = iter/total_jumps
 #     print(f" {progress:.0f}% ", end="")
-    if round(progress*1000)%50==0:
-        print(f" {round(progress*100):.0f}% ", end="", flush=True)
+	
+	# Print progress in jumps of 5%
+    progress = iter/total_jumps*100
+	if progress>=threshold:
+		print(f'{threshold}%')
+		threshold = threshold+5
+		
     iter+=1
+#     if round(progress*1000)%50==0:
+#         print(f" {round(progress*100):.0f}% ", end="", flush=True)
         
     right_bound = left_bound+window_width
     window_ref_genome = ref_genome[left_bound:left_bound+window_width]
