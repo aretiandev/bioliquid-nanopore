@@ -11,7 +11,6 @@
 #   VCF file with STRs present: {datadir}/{run_number}_{chrom}_person_full.txt
 print('')
 print('10 - STRSPY CLEAN')
-print('')
 
 # Load Modules
 # -----------------------------------------------------------------------------
@@ -26,6 +25,7 @@ import subprocess
 run_num = sys.argv[1]
 dis = sys.argv[2]
 print(f"Run: {run_num}, disease: {dis}.")
+print('')
 
 from src.setup_variables import *
 try:

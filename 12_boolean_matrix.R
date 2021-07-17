@@ -17,6 +17,12 @@
 
 print('')
 print('12 - BOOLEAN MATRIX')
+
+# Set variables
+args = commandArgs(trailingOnly=TRUE)
+run_num = args[1]
+dis = args[2]
+print(paste0("Run: ", run_num, ", disease: ", dis))
 print('')
 
 # Load Modules
@@ -28,13 +34,6 @@ suppressMessages(library(reshape2))
 # Set Parameters
 # -----------------------------------------------------------------------------
 # print('Setting parameters.')
-args = commandArgs(trailingOnly=TRUE)
-
-# Setup
-run_num = args[1]
-dis = args[2]
-print(paste0("Run: ", run_num, ", disease: ", dis))
-
 run_number=paste0("run",run_num)
 
 dis_params = data.frame('disease' = c('sca', 'cystic', 'spinal1', 'spinal2', 'thal1', 'thal2', 'thal3', 'pompe'),

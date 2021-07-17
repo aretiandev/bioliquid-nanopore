@@ -17,7 +17,6 @@
 #   Clustered reads with windows: run1_chr11_read_clusters.txt
 print('')
 print('05 - CLUSTERING')
-print('')
 
 # Load Modules
 # -----------------------------------------------------------------------------
@@ -38,6 +37,7 @@ encoder = OneHotEncoder()
 run_num = sys.argv[1]
 dis = sys.argv[2]
 print(f"Run: {run_num}, disease: {dis}.")
+print('')
 
 from src.setup_variables import *
 try:

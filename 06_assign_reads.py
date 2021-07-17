@@ -13,7 +13,6 @@
 #   List of read IDs for each person: e.g. run1_chr11_person0_uniqueids.txt
 print('')
 print('06 - ASSIGN READS')
-print('')
 
 # Load Modules
 # -----------------------------------------------------------------------------
@@ -28,6 +27,7 @@ import sys
 run_num = sys.argv[1]
 dis = sys.argv[2]
 print(f"Run: {run_num}, disease: {dis}.")
+print('')
 
 from src.setup_variables import *
 try:

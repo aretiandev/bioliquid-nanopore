@@ -12,7 +12,6 @@
 #   BED and fasta files needed to run STRspy
 print('')
 print('08 - STRSPY CONFIG')
-print('')
 
 # Load Modules
 # -----------------------------------------------------------------------------
@@ -26,6 +25,7 @@ import sys
 run_num = sys.argv[1]
 dis = sys.argv[2]
 print(f"Run: {run_num}, disease: {dis}.")
+print('')
 
 from src.setup_variables import *
 try:
