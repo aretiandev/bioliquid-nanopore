@@ -7,7 +7,7 @@
 #   disease
 # 
 # OUTPUTS:
-#   chr
+#   chrom
 #   location
 #   directories: rootdir, datadir
 
@@ -19,23 +19,23 @@ window_width=2000000
 dis=$1
 case $dis in
     cf)
-        chr="chr7"
+        chrom="chr7"
         location=
         ;;
     sca)
-        chr="chr11"
+        chrom="chr11"
         location=5227002
         ;;
     sma)
-        chr="chr5"
+        chrom="chr5"
         location=
         ;;
     thal)
-        chr="chr16"
+        chrom="chr16"
         location=
         ;;
     pompe)
-        chr="chr17"
+        chrom="chr17"
         location=25000000
         ;;
     *)
@@ -43,7 +43,7 @@ case $dis in
         exit 1
 esac
 
-chr_dis="${chr}_${dis}"
+chrom_dis="${chrom}_${dis}"
 
 rootdir="/mnt/aretian/genomics/nanopore"
 datadir="/mnt/aretian/genomics/nanopore/${run_number}"

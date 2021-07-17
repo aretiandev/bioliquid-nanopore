@@ -23,6 +23,6 @@ source src/setup_variables.sh $dis
 
 # Extract selected chromosome from reference genome
 #-------------------------------------------------------------------------------------------
-echo "Extracting $chr from /mnt/aretian/genomics/nanopore/GCA_000001405.15_GRCh38_no_alt_analysis_set.fna.gz"
-/home/fer/miniconda3/envs/genomics/bin/samtools faidx "/mnt/aretian/genomics/nanopore/GCA_000001405.15_GRCh38_no_alt_analysis_set.fna.gz" $chr > "${rootdir}/${chr}_selected.fa"
-echo "Saved: ${rootdir}/${chr}_selected.fa"
+echo "Extracting $chrom from /mnt/aretian/genomics/nanopore/GCA_000001405.15_GRCh38_no_alt_analysis_set.fna.gz"
+/home/fer/miniconda3/envs/genomics/bin/samtools faidx "/mnt/aretian/genomics/nanopore/GCA_000001405.15_GRCh38_no_alt_analysis_set.fna.gz" $chrom > "${rootdir}/${chrom}_selected.fa"
+echo "Saved: ${rootdir}/${chrom}_selected.fa"

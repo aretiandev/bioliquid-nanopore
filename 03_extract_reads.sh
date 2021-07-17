@@ -25,21 +25,21 @@ source src/setup_variables.sh $dis
 
 # Setup
 run_reads="${datadir}/bioliquid_${run_number}.bam"
-output="${datadir}/${run_number}_${chr_dis}.bam"
+output="${datadir}/${run_number}_${chrom_dis}.bam"
 begin=$(expr $location - $window_width)
 end=$(expr $location + $window_width)
 
 # Extract location of interest
 # -----------------------------------------------------------------------------
-echo "Extracting location $chr:$begin-$end from $run_reads"
+echo "Extracting location $chrom:$begin-$end from $run_reads"
 /home/fer/miniconda3/envs/genomics/bin/samtools view -b $run_reads "chr11:$begin-$end" > $output
 # Index
 /home/fer/miniconda3/envs/genomics/bin/samtools index $output
 
 # Convert to Sam
 # -----------------------------------------------------------------------------
-output="${datadir}/${run_number}_${chr_dis}.bam"
-output_sam="${datadir}/${run_number}_${chr_dis}.sam"
+output="${datadir}/${run_number}_${chrom_dis}.bam"
+output_sam="${datadir}/${run_number}_${chrom_dis}.sam"
 /home/fer/miniconda3/envs/genomics/bin/samtools view $output > $output_sam
 echo "Created $output"
 echo "Created $output_sam"
