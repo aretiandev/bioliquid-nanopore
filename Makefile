@@ -13,7 +13,7 @@
 # Routines will only be run if dependencies have been updated. The full list is under 'Targets' below.
 
 # Set variables
-chr            := $(shell bash get_chrom.sh $(dis))
+chr            := $(shell bash src/get_chrom.sh $(dis))
 rootdir        := /mnt/aretian/genomics/nanopore
 datadir        := /mnt/aretian/genomics/nanopore/run$(run)
 # Targets
