@@ -27,7 +27,7 @@ echo "Running STRspy."
 echo "Config file: /home/fer/genomics/strspy/config/${run_number}_${dis}_inputconfig.txt"
 
 rm -rf "${datadir}/strspy/${dis}/output"
-mkdir "${datadir}/strspy/${dis}/output"
+mkdir -p "${datadir}/strspy/${dis}/output"
 
 cd /home/fer/genomics/strspy
 bash STRspy_run_v1.0.sh "config/${run_number}_${dis}_inputconfig.txt" config/UserToolsConfig.txt
