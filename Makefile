@@ -37,7 +37,7 @@ score          := $(datadir)/$(run_number)_$(chrom)_recall_score.csv
 
 .PHONY: all all_log basecall align get_ref extract_ref extract_reads remove_gaps cluster assign create_bams strspy_config strspy clean_strspy str_list add_strs tag_reads boolean_matrix str_cluster score
 
-.PHONY all
+.PHONY: all
 all: score
 
 .PHONY: all_log
