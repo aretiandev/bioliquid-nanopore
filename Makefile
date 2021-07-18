@@ -13,25 +13,26 @@
 # Routines will only be run if dependencies have been updated. The full list is under 'Targets' below.
 
 # Set variables
-chr            := $(shell bash src/get_chrom.sh $(dis))
+chrom          := $(shell bash src/get_chrom.sh $(dis))
+run_number     := run$(run)
 rootdir        := /mnt/aretian/genomics/nanopore
-datadir        := /mnt/aretian/genomics/nanopore/run$(run)
+datadir        := /mnt/aretian/genomics/nanopore/$(run_number)
 # Targets
 get_ref        := $(rootdir)/GCA_000001405.15_GRCh38_no_alt_analysis_set.fna.gz 
-extract_ref    := $(rootdir)/$(chr)_selected.fa
-extract_reads  := $(datadir)/run$(run)_$(chr)_$(dis).sam
-remove_gaps    := $(datadir)/run$(run)_$(chr)_$(dis)_clean.csv
-cluster        := $(datadir)/run$(run)_$(chr)_read_clusters.txt
-assign         := $(datadir)/run$(run)_$(chr)_person0_uniqueids.txt
-create_bams    := $(datadir)/strspy/$(dis)/input/run$(run)_$(chr)_person0.bam
+extract_ref    := $(rootdir)/$(chrom)_selected.fa
+extract_reads  := $(datadir)/$(run_number)_$(chrom)_$(dis).sam
+remove_gaps    := $(datadir)/$(run_number)_$(chrom)_$(dis)_clean.csv
+cluster        := $(datadir)/$(run_number)_$(chrom)_read_clusters.txt
+assign         := $(datadir)/$(run_number)_$(chrom)_person0_uniqueids.txt
+create_bams    := $(datadir)/strspy/$(dis)/input/$(run_number)_$(chrom)_person0.bam
 str_list       := $(rootdir)/hg38.hipstr_reference_full_strs.bed
 strspy_config  := $(datadir)/strspy/$(dis)/input/regions/all_strs.bed
-strspy         := $(datadir)/strspy/$(dis)/output/Countings/${run_number}_${chr}_person0_strs.txt
-add_strs       := $(datadir)/run$(run)_$(chr)_person_full.txt
-tag_reads      := $(datadir)/run$(run)_$(chr)_tagged_reads.csv
-boolean_matrix := $(datadir)/run$(run)_$(chr)_bool_tagged_reads.csv
-str_cluster    := $(datadir)/run$(run)_$(chr)_kmeans_clusters.csv
-score          := $(datadir)/run$(run)_$(chr)_recall_score.csv
+strspy         := $(datadir)/strspy/$(dis)/output/Countings/run${run}_${chrom}_person0_strs.txt
+add_strs       := $(datadir)/$(run_number)_$(chrom)_person_full.txt
+tag_reads      := $(datadir)/$(run_number)_$(chrom)_tagged_reads.csv
+boolean_matrix := $(datadir)/$(run_number)_$(chrom)_bool_tagged_reads.csv
+str_cluster    := $(datadir)/$(run_number)_$(chrom)_kmeans_clusters.csv
+score          := $(datadir)/$(run_number)_$(chrom)_recall_score.csv
 
 all: score
 
@@ -41,7 +42,7 @@ all: score
 .PHONY: basecall
 basecall:
 	@bash 00_basecaller.sh gpu /home/fer/genomics/fast5 /home/fer/genomics/basecall-latest
-	@cat /home/fer/genomics/basecall-latest/pass/*fastq > /home/fer/genomics/basecall-latest/bioliquid_run$(run).fastq
+	@cat /home/fer/genomics/basecall-latest/pass/*fastq > /home/fer/genomics/basecall-latest/bioliquid_$(run_number).fastq
 
 # ALIGN: Run from inside docker container
 # $docker run -d -v /home/fer/genomics:/home/jovyan/work -e GRANT_SUDO=yes --user root --name bioaretian yufernando/bioaretian:guppy-gpu
@@ -50,11 +51,11 @@ basecall:
 # $make align run=3
 .PHONY: align
 align:
-	@/opt/ont-guppy/bin/minimap2 -x map-ont -a ~/work/GCA_000001405.15_GRCh38_no_alt_analysis_set.fna.gz ~/work/basecall-latest/bioliquid_run$(run).fastq > ~/work/bioliquid_run$(run).sam
-	@/opt/conda/bin/samtools view -bSh  ~/work/bioliquid_run$(run).sam          > ~/work/bioliquid_run$(run)_unsorted.bam
-	@/opt/conda/bin/samtools sort -@ 32 ~/work/bioliquid_run$(run)_unsorted.bam > ~/work/bioliquid_run$(run).bam
-	@/opt/conda/bin/samtools index      ~/work/bioliquid_run$(run).bam
-	@/opt/conda/bin/samtools flagstat   ~/work/bioliquid_run$(run).bam          > ~/work/bioliquid_run$(run).bam.flag
+	@/opt/ont-guppy/bin/minimap2 -x map-ont -a ~/work/GCA_000001405.15_GRCh38_no_alt_analysis_set.fna.gz ~/work/basecall-latest/bioliquid_$(run_number).fastq > ~/work/bioliquid_$(run_number).sam
+	@/opt/conda/bin/samtools view -bSh  ~/work/bioliquid_$(run_number).sam          > ~/work/bioliquid_$(run_number)_unsorted.bam
+	@/opt/conda/bin/samtools sort -@ 32 ~/work/bioliquid_$(run_number)_unsorted.bam > ~/work/bioliquid_$(run_number).bam
+	@/opt/conda/bin/samtools index      ~/work/bioliquid_$(run_number).bam
+	@/opt/conda/bin/samtools flagstat   ~/work/bioliquid_$(run_number).bam          > ~/work/bioliquid_$(run_number).bam.flag
 
 .PHONY: get_ref
 get_ref: $(get_ref) 
@@ -129,12 +130,12 @@ $(boolean_matrix): $(tag_reads) 12_boolean_matrix.R
 str_cluster: $(str_cluster)
 $(str_cluster): $(boolean_matrix) 13_str_clustering.R
 	@/usr/bin/Rscript 13_str_clustering.R $(run) $(dis)
-	@cp $(datadir)/run$(run)_$(chr)_assigned_kmeans_clusters.png /home/fer/genomics/bioliquid-nanopore/cluster_plots/
-	@cp $(datadir)/run$(run)_$(chr)_real_sample_labels.png       /home/fer/genomics/bioliquid-nanopore/cluster_plots/
+	@cp $(datadir)/$(run_number)_$(chrom)_assigned_kmeans_clusters.png /home/fer/genomics/bioliquid-nanopore/cluster_plots/
+	@cp $(datadir)/$(run_number)_$(chrom)_real_sample_labels.png       /home/fer/genomics/bioliquid-nanopore/cluster_plots/
 	@echo Copying plots to home folder.
 	@mkdir -p /home/fer/genomics/bioliquid-nanopore/cluster_plots
-	@echo Saved: /home/fer/genomics/bioliquid-nanopore/cluster_plots/run$(run)_$(chr)_assigned_kmeans_clusters.png
-	@echo Saved: /home/fer/genomics/bioliquid-nanopore/cluster_plots/run$(run)_$(chr)_real_sample_labels.png 
+	@echo Saved: /home/fer/genomics/bioliquid-nanopore/cluster_plots/$(run_number)_$(chrom)_assigned_kmeans_clusters.png
+	@echo Saved: /home/fer/genomics/bioliquid-nanopore/cluster_plots/$(run_number)_$(chrom)_real_sample_labels.png 
 
 .PHONY: score
 score: $(score)
