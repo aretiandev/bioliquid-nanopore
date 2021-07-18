@@ -90,6 +90,20 @@ ssh -f -N -L 8888:localhost:8888 fer@aretian-genomics
 
 Now open a browser in http://127.0.0.1:8888/ and use the token above or copy and paste the link from `docker logs`.
 
+# Python
+conda install pandas numpy
+conda install -c conda-forge scikit-learn 
 
+# R
+Install R and Rscript
+suppressMessages(library(Rsamtools, quietly=TRUE))
+suppressMessages(library(dplyr, quietly=TRUE))
+suppressMessages(library(reshape2))
+suppressMessages(library(tidyverse, quietly = TRUE))
+suppressMessages(library(factoextra))
+suppressMessages(library(FactoMineR)
 
+install.packages("tidyverse")
 
+# Strspy
+Clone repo
