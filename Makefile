@@ -132,7 +132,7 @@ $(str_cluster): $(boolean_matrix) 13_str_clustering.R
 	@cp $(datadir)/run$(run)_$(chr)_assigned_kmeans_clusters.png /home/fer/genomics/bioliquid-nanopore/cluster_plots/
 	@cp $(datadir)/run$(run)_$(chr)_real_sample_labels.png       /home/fer/genomics/bioliquid-nanopore/cluster_plots/
 	@echo Copying plots to home folder.
-    @mkdir -p /home/fer/genomics/bioliquid-nanopore/cluster_plots
+	@mkdir -p /home/fer/genomics/bioliquid-nanopore/cluster_plots
 	@echo Saved: /home/fer/genomics/bioliquid-nanopore/cluster_plots/run$(run)_$(chr)_assigned_kmeans_clusters.png
 	@echo Saved: /home/fer/genomics/bioliquid-nanopore/cluster_plots/run$(run)_$(chr)_real_sample_labels.png 
 
