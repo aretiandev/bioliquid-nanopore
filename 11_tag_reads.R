@@ -132,6 +132,7 @@ update_reads <- function(reads, vcf, str) {
 # Implementation
 # -----------------------------------------------------------------------------
 print(paste0('Tagging reads. Saving: ',datadir,'/strs'))
+system(paste0('mkdir -p ', datadir,'/strs'))
 # for each STR
 for (str in c(1:nrow(vcf))) { #
                                  
