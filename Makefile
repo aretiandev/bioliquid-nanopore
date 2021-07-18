@@ -17,6 +17,7 @@ chrom          := $(shell bash src/get_chrom.sh $(dis))
 run_number     := run$(run)
 rootdir        := /mnt/aretian/genomics/nanopore
 datadir        := /mnt/aretian/genomics/nanopore/$(run_number)
+
 # Targets
 get_ref        := $(rootdir)/GCA_000001405.15_GRCh38_no_alt_analysis_set.fna.gz 
 extract_ref    := $(rootdir)/$(chrom)_selected.fa
@@ -130,6 +131,7 @@ $(boolean_matrix): $(tag_reads) 12_boolean_matrix.R
 str_cluster: $(str_cluster)
 $(str_cluster): $(boolean_matrix) 13_str_clustering.R
 	@/usr/bin/Rscript 13_str_clustering.R $(run) $(dis)
+    @mkdir -p /home/fer/genomics/bioliquid-nanopore/cluster_plots
 	@cp $(datadir)/$(run_number)_$(chrom)_assigned_kmeans_clusters.png /home/fer/genomics/bioliquid-nanopore/cluster_plots/
 	@cp $(datadir)/$(run_number)_$(chrom)_real_sample_labels.png       /home/fer/genomics/bioliquid-nanopore/cluster_plots/
 	@echo Copying plots to home folder.
