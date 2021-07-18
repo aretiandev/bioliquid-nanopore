@@ -56,7 +56,7 @@ datadir=f"{rootdir}/{run_number}"
 # -----------------------------------------------------------------------------
 def complete_str_df(person):
     # Load STRspy output
-    strspy_df = pd.read_csv(f'{datadir}/strspy/{dis}/output/Countings/{run_number}_{chrom}_{person}_strs.txt', sep='\t', header=None)
+    strspy_df = pd.read_csv(f'{datadir}/strspy/{dis}/output/Countings/{run_number}_{chrom}_{person}_strs.txt', sep='\t')
     strspy_df.columns = ['name', 'count', 'normcount']
 
     # Load Full STR list
