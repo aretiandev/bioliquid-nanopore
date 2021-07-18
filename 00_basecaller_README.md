@@ -95,15 +95,16 @@ conda install pandas numpy
 conda install -c conda-forge scikit-learn 
 
 # R
-Install R and Rscript
-suppressMessages(library(Rsamtools, quietly=TRUE))
-suppressMessages(library(dplyr, quietly=TRUE))
-suppressMessages(library(reshape2))
-suppressMessages(library(tidyverse, quietly = TRUE))
-suppressMessages(library(factoextra))
-suppressMessages(library(FactoMineR)
+sudo apt-get install libssl-dev
 
 install.packages("tidyverse")
+install.packages("dplyr")
+install.packages("reshape2")
+if (!requireNamespace("BiocManager", quietly = TRUE))
+    install.packages("BiocManager")
+BiocManager::install("Rsamtools")
+install.packages("FactoMineR")
+install.packages("factoextra")
 
 # Strspy
 Clone repo
