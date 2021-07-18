@@ -292,4 +292,10 @@ for left_bound in range(min(nanopore_reads['POS']),max(nanopore_reads['END_POS']
 results_file.close()
 print("")
 print("Done padding and clustering.")
+read_clusters_df = pd.read_csv(f'{datadir}/{run_number}_{chrom}_read_clusters.txt', header=None)
+read_clusters_df.columns = ['ID', 'kmeans_cls2', 'window_num']
+cluster0_size = (read_clusters_df['kmeans_cls2']==0).sum()
+cluster1_size = (read_clusters_df['kmeans_cls2']==1).sum()
+print(f"Cluster 0: {cluster0_size} reads ({cluster0_size/len(read_clusters_df)*100:.1f}%)")
+print(f"Cluster 1: {cluster1_size} reads ({cluster1_size/len(read_clusters_df)*100:.1f}%)")
 print(f"Saved results: {datadir}/{run_number}_{chrom}_read_clusters.txt")
