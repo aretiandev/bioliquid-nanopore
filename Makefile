@@ -35,14 +35,14 @@ boolean_matrix := $(datadir)/$(run_number)_$(chrom)_bool_tagged_reads.csv
 str_cluster    := $(datadir)/$(run_number)_$(chrom)_kmeans_clusters.csv
 score          := $(datadir)/$(run_number)_$(chrom)_recall_score.csv
 
-.PHONY: all all_log basecall align get_ref extract_ref extract remove_gaps cluster assign create_bams strspy_config strspy add_strs tag_reads boolean_matrix str_cluster score
+.PHONY: all all_log basecall align get_ref extract_ref extract_reads remove_gaps cluster assign create_bams strspy_config strspy clean_strspy str_list add_strs tag_reads boolean_matrix str_cluster score
 
 .PHONY all
 all: score
 
 .PHONY: all_log
 all_log:
-    @mkdir -p logs
+	@mkdir -p logs
 	$(MAKE) all run=$(run) dis=$(dis) 2>&1 | tee logs/$(run_number)_$(dis)_$(shell date '+%Y-%m-%d-%Hh').log
 
 # BASECALL: run from aretian-genomics-gpu server. First get fast5 files from s3.
