@@ -42,7 +42,8 @@ all: score
 
 .PHONY: all_log
 all_log:
-	$(MAKE) all run=$(run) dis=$(dis) 2>&1 | tee $(run_number)_$(dis)_$(shell date '+%Y-%m-%d-%Hh').log
+    @mkdir -p logs
+	$(MAKE) all run=$(run) dis=$(dis) 2>&1 | tee logs/$(run_number)_$(dis)_$(shell date '+%Y-%m-%d-%Hh').log
 
 # BASECALL: run from aretian-genomics-gpu server. First get fast5 files from s3.
 .PHONY: basecall
