@@ -50,8 +50,6 @@ df['predicted'] = df['predicted']-1
 
 # Calculate Recall Score
 # -----------------------------------------------------------------------------
-print(f'Saving score results:       {datadir}/{run_number}_{chrom}_recall_score.csv')
-
 recall0 = recall_score(df['true'],df['predicted'], pos_label=0)
 print(f"The recall score for cluster 0 is {recall0}")
 
@@ -61,3 +59,5 @@ print(f"The recall score for cluster 1 is {recall1}")
 # Save results
 with open(f'{datadir}/{run_number}_{chrom}_recall_score.csv', 'w') as f:
     f.write(f"{recall0},{recall1}")
+    
+print(f'Saved score results:       {datadir}/{run_number}_{chrom}_recall_score.csv')
