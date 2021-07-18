@@ -11,10 +11,6 @@
 #   recall scores: e.g. datadir/run_chr_recall_score.csv
 print('')
 print('14 - SCORE')
-run_num = sys.argv[1]
-dis = sys.argv[2]
-print(f"Run: {run_num}, disease: {dis}.")
-print('')
 
 # Load Modules
 # -----------------------------------------------------------------------------
@@ -25,6 +21,11 @@ from sklearn.metrics import precision_score, recall_score
 
 # Set Variables
 # ---------------------------------------------------------------------------------------------------
+run_num = sys.argv[1]
+dis = sys.argv[2]
+print(f"Run: {run_num}, disease: {dis}.")
+print('')
+
 from src.setup_variables import *
 try:
     chrom=dis_data[dis]['chr']
