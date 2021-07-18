@@ -43,7 +43,11 @@ all: score
 .PHONY: all_log
 all_log:
 	@mkdir -p logs
-	$(MAKE) all run=$(run) dis=$(dis) 2>&1 | tee logs/$(run_number)_$(dis)_$(shell date '+%Y-%m-%d-%Hh').log
+	@echo "BIOLIQUID PIPELINE"
+	@echo "Run: $(run), disease: $(dis)"
+	@echo ""
+	@echo "Log file: logs/$(run_number)_$(dis)_$(shell date '+%Y-%m-%d-%Hh').log"
+	@$(MAKE) all run=$(run) dis=$(dis) 2>&1 | tee logs/$(run_number)_$(dis)_$(shell date '+%Y-%m-%d-%Hh').log
 
 # BASECALL: run from aretian-genomics-gpu server. First get fast5 files from s3.
 .PHONY: basecall
