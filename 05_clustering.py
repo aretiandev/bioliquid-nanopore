@@ -261,7 +261,7 @@ for left_bound in range(min(nanopore_reads['POS']),max(nanopore_reads['END_POS']
     X_onehot = encoder.fit_transform(unique_reads).toarray()
 
     # PCA
-    pca = PCA(n_components=2)
+    pca = PCA(n_components=2, random_state=42)
     X_pca = pca.fit_transform(X_onehot)
     
     window_reads['PCA1'] = np.nan
