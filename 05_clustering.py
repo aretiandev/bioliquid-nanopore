@@ -253,9 +253,11 @@ for left_bound in range(min(nanopore_reads['POS']),max(nanopore_reads['END_POS']
 #     window_reads['one_hot_read_V1'] = window_reads['final_padded_read'].apply(lambda x: nucleotide_to_one_hot(x).flatten())  # apply one-hot encoding V1
 
 #     One hot encoding
-    unique_reads = []
-    for index, read in window_reads.iterrows(): # TODO: TRY TO USE LAMBDA FUNCTION IF POSSIBLE
-        unique_reads.append(list(read['final_padded_read']))
+#     unique_reads = []
+#     for index, read in window_reads.iterrows(): # TODO: TRY TO USE LAMBDA FUNCTION IF POSSIBLE
+#         unique_reads.append(list(read['final_padded_read']))
+
+    unique_reads = [list(row) for row in window_reads['final_padded_read']]
     X_onehot = encoder.fit_transform(unique_reads).toarray()
 
     # PCA
