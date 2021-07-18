@@ -64,3 +64,32 @@ sudo apt install samtools
 # Guppy
 
 Run guppy basecaller from the Makefile recipe.
+
+# Qualimap
+```
+docker run --rm -v $PWD:/data pegi3s/qualimap qualimap bamqc -bam /data/bioliquid_run1.bam
+```
+If you get an “Out of memory error” try:
+````
+docker run --rm -v $PWD:/data pegi3s/qualimap qualimap bamqc -bam /data/bioliquid_run1.bam --java-mem-size=50G
+```
+Where 50G is the max memory. Try using 70-80% of your total memory.
+
+# Setup remote JupyterLab
+
+It is useful to run Jupyterlab from the server and connect to the port through ssh. From the remote server, run Jupyterlab and get the token:
+```
+docker run -d --rm -v $PWD:/home/jovyan/work -v /mnt:/mnt -p 8888:8888 --name bioaretian yufernando/bioaretian
+docker logs bioaretian
+```
+
+From the local computer, open an ssh tunnel that connects port 8888 in the server with port 8888 in the local machine:
+```
+ssh -f -N -L 8888:localhost:8888 fer@aretian-genomics
+```
+
+Now open a browser in http://127.0.0.1:8888/ and use the token above or copy and paste the link from `docker logs`.
+
+
+
+
