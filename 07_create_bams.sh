@@ -27,7 +27,7 @@ source src/setup_variables.sh $dis
 cd $datadir
 echo "Extracting SAM files for person0 and person1 out of ${run_number}_${chrom_dis}.bam"
 /home/fer/miniconda3/envs/genomics/bin/samtools view "${run_number}_${chrom_dis}.bam" | grep -f "${run_number}_${chrom}_person0_uniqueids.txt" > "${run_number}_${chrom}_person0_reads.sam"
-/home/fer/miniconda3/envs/genomics/bin/samtools view "${run_number}_${chrom_dis}.bam" | grep -f "${run_number}_${chrom}_person1_uniqueids.txt" > "${run_number}_${chm}_person1_reads.sam"
+/home/fer/miniconda3/envs/genomics/bin/samtools view "${run_number}_${chrom_dis}.bam" | grep -f "${run_number}_${chrom}_person1_uniqueids.txt" > "${run_number}_${chrom}_person1_reads.sam"
 # Get header
 /home/fer/miniconda3/envs/genomics/bin/samtools view -H "${run_number}_${chrom_dis}.bam" > "${run_number}_${chrom}_person_header.txt"
 # Concatenate
