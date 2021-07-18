@@ -108,3 +108,4 @@ install.packages("factoextra")
 
 # Strspy
 Clone repo
+Follow installation instructions: https://github.com/unique379r/strspy
