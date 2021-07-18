@@ -51,8 +51,8 @@ awk 'FNR==1 && NR!=1{next;}{print}' $input > $output
 # grep "Human_STR" ${run_number}_${chrom}_person0_strs_raw.txt" > "${run_number}_${chrom}_person0_strs.txt"
 # grep "Human_STR" ${run_number}_${chrom}_person1_strs_raw.txt" > "${run_number}_${chrom}_person1_strs.txt"
 
-person0_count=${wc -l ${datadir}/strspy/${dis}/output/Countings/${run_number}_${chrom}_person0_strs.txt | awk '{print $1}'}
-person1_count=${wc -l ${datadir}/strspy/${dis}/output/Countings/${run_number}_${chrom}_person1_strs.txt | awk '{print $1}'}
+person0_count=$(wc -l ${datadir}/strspy/${dis}/output/Countings/${run_number}_${chrom}_person0_strs.txt | awk '{print $1}')
+person1_count=$(wc -l ${datadir}/strspy/${dis}/output/Countings/${run_number}_${chrom}_person1_strs.txt | awk '{print $1}')
 echo "Found" $person0_count "STRs for person 0."
 echo "Found" $person1_count "STRs for person 1."
 
