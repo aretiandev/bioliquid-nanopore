@@ -251,6 +251,10 @@ for window in range(window_idxmax+2,max(results_file['window_num'])+1,1):
 
 print("")
 print("Done.")
+individual0_size = nanopore_reads[nanopore_reads['individual']==0].__len__()
+individual1_size = nanopore_reads[nanopore_reads['individual']==1].__len__()
+print(f"Assigned {individual0_size} reads to individual 0.")
+print(f"Assigned {individual1_size} reads to individual 1.")
 
 # Get list of IDs
 # -----------------------------------------------------------------------------
