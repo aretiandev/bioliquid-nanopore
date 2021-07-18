@@ -39,7 +39,7 @@ all: score
 
 .PHONY: all_log
 all_log:
-	$(MAKE) all run=$(run) dis=$(dis) 2>&1 | tee run1_pompe_$(shell date '+%Y-%m-%d-%Hh').log
+	$(MAKE) all run=$(run) dis=$(dis) 2>&1 | tee $(run_number)_$(dis)_$(shell date '+%Y-%m-%d-%Hh').log
 
 .PHONY: basecall align get_ref extract_ref extract remove_gaps cluster assign create_bams strspy_config strspy add_strs tag_reads boolean_matrix str_cluster score
 
