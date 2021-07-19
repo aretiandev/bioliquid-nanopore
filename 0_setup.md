@@ -1,4 +1,4 @@
-# Basecaller
+# Setup
 
 Instructions to setup a Linode GPU to run basecalling with guppy_basecaller.
 
