@@ -100,6 +100,9 @@ nanopore_reads = nanopore_reads[['ID', 'QNAME', 'FLAG', 'RNAME', 'POS', 'MAPQ', 
 ### Remove gaps
 confirmed_gaps = [] # Collect gaps in list
 max_end_pos = 0 # Store end position of longest read
+# Initialize island counter
+islandID_counter=0
+nanopore_reads["islandID"]=islandID_counter  
 
 for index in nanopore_reads.index:
  
@@ -136,6 +139,9 @@ for index in nanopore_reads.index:
      
             current_read_end = nanopore_reads.loc[index,'END_POS']
             max_end_pos = current_read_end # Current read end should always be larger than max_end_pos
+            
+            islandID_counter += 1
+            nanopore_reads.loc[index:,"islandID"]=islandID_counter 
             
 # print(f"There are {len(confirmed_gaps)} gaps.")
 
@@ -197,6 +203,8 @@ with open(f'{datadir}/{run_number}_{chrom}_reference_genome.json', 'w') as f:
 
 # Save Nanopore Reads
 nanopore_reads.to_csv(f'{datadir}/{run_number}_{chrom_dis}_clean.csv', index=False)
+
+# Save original confirmed gaps
 
 print(f'Saved: {datadir}/{run_number}_{chrom}_reference_genome.json')
 print(f'Saved: {datadir}/{run_number}_{chrom_dis}_clean.csv')
