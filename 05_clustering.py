@@ -48,7 +48,7 @@ except:
 run_number=f"run{run_num}"
 chrom_dis=f"{chrom}_{dis}"
 datadir=f"{rootdir}/{run_number}"
-results_file_path = f"{datadir}/{run_number}_{chrom}_read_clusters.txt"
+results_file_path = f"{datadir}/{run_number}_{chrom}_read_clusters_debug.txt"
 
 # Import data
 # -----------------------------------------------------------------------------
@@ -160,8 +160,8 @@ def nucleotide_to_one_hot(nucleotide_sequence):
 # Input: read (Series)
 
 # Text file for results
-def write_results_to_file(read, results_file):
-    results_file.write(f"{read['ID']},{read['kmeans_cls2']},{read['window_num']}\n")
+def write_results_to_file(read, is_first_window, results_file):
+    results_file.write(f"{read['ID']},{read['kmeans_cls2']},{read['window_num']},{is_first_window}\n")
 
 # Main Loop: padding and clustering
 # -----------------------------------------------------------------------------
@@ -186,108 +186,134 @@ results_file = open(results_file_path,"w")
 iter = 1
 empty_count = 0
 threshold = 5
-for left_bound in range(min(nanopore_reads['POS']),max(nanopore_reads['END_POS']),jump_width):
-# for left_bound in range(950000,970000,jump_width):
+islands_list = nanopore_reads['islandID'].unique()
 
-#     print(f" {progress:.0f}% ", end="")
+for current_islandID in islands_list:
+    island_reads = nanopore_reads.loc[nanopore_reads['islandID']==current_islandID].copy()
 
-    # Print progress in jumps of 5%
-    progress = iter/total_jumps*100
-    if progress>=threshold:
-        print(f'{threshold}%', end="")
-        threshold = threshold+5
+    island_width = max(island_reads['END_POS'])- min(island_reads['POS'])+1
+#     number_of_jumps = (island_width - window_width + 1) / jump_width
+    number_of_windows = np.ceil( (island_width - window_width) / jump_width ) + 1
+    
+    window_number=1
+    
+    is_first_window=1
 
-    iter+=1
-#     if round(progress*1000)%50==0:
-#         print(f" {round(progress*100):.0f}% ", end="", flush=True)
+    for left_bound in range(min(island_reads['POS']),max(island_reads['END_POS']),jump_width):
+    # for left_bound in range(950000,970000,jump_width):
+
+#         print(f"window number: {window_number}")
+#         print(f"iter: {iter}")
+#         print(f"is_first_window: {is_first_window}")
+              
+        is_last_window = ( window_number == number_of_windows )
         
-    right_bound = left_bound+window_width
-    window_ref_genome = ref_genome[left_bound:left_bound+window_width]
-    
-    # Identify if each read is in the window: True/False
-#     print("Identifying if each read is in the window...")
-    nanopore_reads['read_filter'] = nanopore_reads.apply(lambda x: check_sliding_window(x), axis=1)
-    
-    # Get them
-    window_reads = nanopore_reads.loc[nanopore_reads['read_filter']==True] 
-#     print(f" {window_reads['ID'].unique()}-", end="")
-    window_reads = window_reads.reset_index()
-    
-    # Display feedback to user every 100 empty windows
-#     if empty_count%100 == 0:
-#         print(empty_count)
+        if is_last_window:
+            # Adjust left_bound
+            left_bound = max(island_reads['END_POS']) - window_width + 1
+            
+        window_number += 1
 
-    if len(window_reads) == 0:
-        # There are no nanopore reads in this window (next window)
-        empty_count += 1
-        print(f"0", end="", flush=True)
-        
-        # Record window with empty read
-        data = {'ID':[np.nan],'kmeans_cls2':[np.nan], 'window_num':[iter]}
-        empty_window_reads = pd.DataFrame(data)
-   
-        empty_window_reads.apply(lambda x: write_results_to_file(x, results_file), axis=1) # write results to file
-        continue 
-        
-    elif len(window_reads) == 1:
-        # There is only one read in this window
-        empty_count += 1
-        print(f"1", end="", flush=True)
-        
-        # Record window and assign arbitrary individual
-        window_reads['window_num']=iter
-        window_reads['kmeans_cls2']=0
-        window_reads.apply(lambda x: write_results_to_file(x, results_file), axis=1) # write results to file
-        
-        continue
-        
-    # More than one read in window. Proceeding to padding and clustering
+        # Print progress in jumps of 5%
+        progress = iter/total_jumps*100
+        if progress>=threshold:
+            print(f'{threshold}%', end="")
+            threshold = threshold+5
 
-#     Padding
-    window_reads['left_padded'] = window_reads.apply(lambda x: left_pad_read(x), axis=1) # fill reference genome on the left of the read
-    window_reads['right_padded'] = window_reads.apply(lambda x: right_pad_read(x), axis=1) # fill reference genome on the right of the read
-    window_reads['final_padded_read'] = window_reads['right_padded']
-    window_reads['FINAL_SEQ_LEN'] = window_reads['final_padded_read'].apply(lambda x: len(x)) # should always be 5k
-    
-    # not currently used. Should be used if we use the custom one-hot-encoding
-#     window_reads['one_hot_read_V1'] = window_reads['final_padded_read'].apply(lambda x: nucleotide_to_one_hot(x).flatten())  # apply one-hot encoding V1
+        iter+=1
+    #     if round(progress*1000)%50==0:
+    #         print(f" {round(progress*100):.0f}% ", end="", flush=True)
 
-#     One hot encoding
-#     unique_reads = []
-#     for index, read in window_reads.iterrows(): # TODO: TRY TO USE LAMBDA FUNCTION IF POSSIBLE
-#         unique_reads.append(list(read['final_padded_read']))
+        right_bound = left_bound+window_width
+        window_ref_genome = ref_genome[left_bound:left_bound+window_width]
 
-    unique_reads = [list(row) for row in window_reads['final_padded_read']]
-    X_onehot = encoder.fit_transform(unique_reads).toarray()
+        # Identify if each read is in the window: True/False
+    #     print("Identifying if each read is in the window...")
+        island_reads['read_filter'] = island_reads.apply(lambda x: check_sliding_window(x), axis=1)
 
-    # PCA
-    pca = PCA(n_components=2, random_state=42)
-    X_pca = pca.fit_transform(X_onehot)
-    
-    window_reads['PCA1'] = np.nan
-    window_reads['PCA2'] = np.nan
-    for ID in window_reads.index:
-        window_reads.loc[ID,'PCA1'] = X_pca[ID][0] # TODO: change rounding if desired
-        window_reads.loc[ID,'PCA2'] = X_pca[ID][1] # TODO: change rounding if desired
-        
-    # Standardizing the features
-    X = window_reads[['PCA1','PCA2']]
-    X = StandardScaler().fit_transform(X)
+        # Get them
+        window_reads = island_reads.loc[island_reads['read_filter']==True] 
+    #     print(f" {window_reads['ID'].unique()}-", end="")
+        window_reads = window_reads.reset_index()
 
-    # Run Kmeans
-    model = KMeans(n_clusters=2, random_state=42)
-    cls2 = model.fit(X)
-    window_reads['kmeans_cls2'] = cls2.labels_
-    window_reads['window_num'] = iter
-    
-    # Write results to file
-    window_reads.apply(lambda x: write_results_to_file(x, results_file), axis=1) # write results to file
-    
-    print(f"*", end="", flush=True)
-    
-#     Break after N iterations
-#     if iter>100:
-#         break
+        # Display feedback to user every 100 empty windows
+    #     if empty_count%100 == 0:
+    #         print(empty_count)
+
+        if len(window_reads) == 0:
+            # There are no nanopore reads in this window (next window)
+            empty_count += 1
+            print(f"0", end="", flush=True)
+
+            # Record window with empty read
+            data = {'ID':[np.nan],'kmeans_cls2':[np.nan], 'window_num':[iter]}
+            empty_window_reads = pd.DataFrame(data)
+
+            empty_window_reads.apply(lambda x: write_results_to_file(x, is_first_window, results_file), axis=1) # write results to file
+            is_first_window=0
+            continue 
+
+        elif len(window_reads) == 1:
+            # There is only one read in this window
+            empty_count += 1
+            print(f"1", end="", flush=True)
+
+            # Record window and assign arbitrary individual
+            window_reads['window_num']=iter
+            window_reads['kmeans_cls2']=0
+            window_reads.apply(lambda x: write_results_to_file(x, is_first_window, results_file), axis=1) # write results to file
+            is_first_window=0
+            continue
+
+        # More than one read in window. Proceeding to padding and clustering
+
+    #     Padding
+        window_reads['left_padded'] = window_reads.apply(lambda x: left_pad_read(x), axis=1) # fill reference genome on the left of the read
+        window_reads['right_padded'] = window_reads.apply(lambda x: right_pad_read(x), axis=1) # fill reference genome on the right of the read
+        window_reads['final_padded_read'] = window_reads['right_padded']
+        window_reads['FINAL_SEQ_LEN'] = window_reads['final_padded_read'].apply(lambda x: len(x)) # should always be 5k
+
+        # not currently used. Should be used if we use the custom one-hot-encoding
+    #     window_reads['one_hot_read_V1'] = window_reads['final_padded_read'].apply(lambda x: nucleotide_to_one_hot(x).flatten())  # apply one-hot encoding V1
+
+    #     One hot encoding
+    #     unique_reads = []
+    #     for index, read in window_reads.iterrows(): # TODO: TRY TO USE LAMBDA FUNCTION IF POSSIBLE
+    #         unique_reads.append(list(read['final_padded_read']))
+
+        unique_reads = [list(row) for row in window_reads['final_padded_read']]
+        X_onehot = encoder.fit_transform(unique_reads).toarray()
+
+        # PCA
+        pca = PCA(n_components=2, random_state=42)
+        X_pca = pca.fit_transform(X_onehot)
+
+        window_reads['PCA1'] = np.nan
+        window_reads['PCA2'] = np.nan
+        for ID in window_reads.index:
+            window_reads.loc[ID,'PCA1'] = X_pca[ID][0] # TODO: change rounding if desired
+            window_reads.loc[ID,'PCA2'] = X_pca[ID][1] # TODO: change rounding if desired
+
+        # Standardizing the features
+        X = window_reads[['PCA1','PCA2']]
+        X = StandardScaler().fit_transform(X)
+
+        # Run Kmeans
+        model = KMeans(n_clusters=2, random_state=42)
+        cls2 = model.fit(X)
+        window_reads['kmeans_cls2'] = cls2.labels_
+        window_reads['window_num'] = iter
+
+        # Write results to file
+        window_reads.apply(lambda x: write_results_to_file(x, is_first_window, results_file), axis=1) # write results to file
+
+        is_first_window=0
+            
+        print(f"*", end="", flush=True)
+
+#         Break after N iterations
+        if iter>100:
+            break
         
 results_file.close()
 print("")
