@@ -22,7 +22,7 @@ import os
 import sys
 
 # Set Variables
-# ---------------------------------------------------------------------------------------------------
+# -----------------------------------------------------------------------------
 run_num = sys.argv[1]
 dis = sys.argv[2]
 print(f"Run: {run_num}, disease: {dis}.")
@@ -165,6 +165,8 @@ print('Assigning individuals to reads.')
 # Setup
 ID_person_match = {} #Dictionary to keep track of kmeans cluster and individual assignment
 first_iter = True
+majority_individual = np.nan
+ignore_history = False
 
 # Feedback to user
 n_windows = results_file['window_num'].nunique()
@@ -182,13 +184,14 @@ print(f"Current window:")
 
 # Identify idmax of window
 window_idxmax = results_file.groupby('window_num').count().idxmax().values[0]
+window_min = min(results_file['window_num'])
+
 # Loop to the left
 loop_direction = 'left'
 
-for window in range(window_idxmax+1,-1,-1):
+for window in range(window_idxmax+1,window_min-1,-1):
 # for window in results_file['window_num'].unique(): # iterate through instances of the sliding window 
     
-#     print("", end="\r", flush=True)
     print(f"\r{window}", end="", flush=True)
     
     window_reads = results_file.loc[results_file['window_num']==window].copy() # get data only from this window
@@ -200,6 +203,28 @@ for window in range(window_idxmax+1,-1,-1):
     
     # We now have IDs, cluster decisions (0,1) for every read that was included in this window.
     
+    if (first_iter == True) and (window_reads['is_first_window'].values[0]):
+#                       You are here
+#       [--------------]  [*****----------------]
+        
+        # Make decision in first window
+        window_reads.loc[window_reads['kmeans_cls2'] == 0, 'individual'] = 0
+        window_reads.loc[window_reads['kmeans_cls2'] == 1, 'individual'] = 1
+        
+        # run propagate_assignment_2 for the last time
+        window_reads.apply(lambda x: propagate_assignment_1(x), axis=1) # add results to main reads file
+        
+        # Store majority_individual to be used in the next loop
+        majority_individual = window_reads['individual'].value_counts().index[0]
+#         print(f"first maj ind: {majority_individual}")
+        
+        # and store an indicator that the next one is the first
+        ignore_history = True
+        first_iter = False
+        
+        continue
+        
+        
     # Step 1: We make a decision in the first window
     if first_iter == True:
         
@@ -210,8 +235,56 @@ for window in range(window_idxmax+1,-1,-1):
         window_reads.apply(lambda x: propagate_assignment_1(x), axis=1) # add results to main reads file
         
         first_iter = False
+        
+        if window_reads['is_first_window']:
+            pass
+        
         continue
-    
+        
+        
+    if ignore_history: # this is first window
+        # You are in a new island
+#              You are here
+#       [---------******]  [----------------]
+        
+
+        # Calculate majority cluster
+        majority_cluster = window_reads['kmeans_cls2'].value_counts().index[0]
+        
+        # Assign majority_individual to the majority cluster
+        window_reads.loc[window_reads['kmeans_cls2'] == majority_cluster    , 'individual'] = majority_individual
+        window_reads.loc[window_reads['kmeans_cls2'] == (1-majority_cluster), 'individual'] = 1-majority_individual
+        
+        window_reads.apply(lambda x: propagate_assignment_1(x), axis=1)
+        
+        if window_reads['is_first_window'].values[0]: #this is last window
+            ignore_history=True
+        else:
+            ignore_history=False
+            
+        continue
+        
+#         132     133               134
+# Scenario A
+# [----------] [----]            [*****]     
+# Scenario B
+# [----]       [----]    [*****]  
+
+    if window_reads['is_first_window'].values[0]:
+#                       You are here
+#       [--------------]  [*****----------------]
+        
+        # run propagate_assignment_2 for the last time
+        window_reads.apply(lambda x: propagate_assignment_2(x), axis=1) # add results to main reads file
+        
+        # Store majority_individual to be used in the next loop
+        majority_individual = window_reads['individual'].value_counts().index[0]
+        
+        # and store an indicator that the next one is the first
+        ignore_history = True
+        continue
+
+        
 #     print('Stepping inside propagate 2...')
     # Step 2: We perform ID bookeeping and cluster association to manage all following windows
     # Book-keeping:
@@ -221,7 +294,7 @@ for window in range(window_idxmax+1,-1,-1):
     
 # Loop right
 loop_direction = 'right'
-max(results_file['window_num'])
+majority_individual = np.nan
 
 for window in range(window_idxmax+2,max(results_file['window_num'])+1,1):
     
@@ -231,17 +304,30 @@ for window in range(window_idxmax+2,max(results_file['window_num'])+1,1):
     
     # We now have IDs, cluster decisions (0,1) for every read that was included in this window.
     
-    # Step 1: We make a decision in the first window
-#     if first_iter == True:
+    if window_reads['is_first_window'].values[0]:
+#                       You are here
+#       A [---------LLLLL]  [*****---------------] [-----------]
+#       Other cases:
+#       B [--------------]  [*****]                 [-----------]
+#       C [--------------]  [--LLLLL*****--------] [-----------]
+#       D [--------------]  [-----------LLLLL*****] [-----------]
+
+        # Get previous window
+        previous_window_reads = results_file.loc[results_file['window_num']==(window-1)].copy()
         
-#         # Make decision in first window
-#         window_reads.loc[window_reads['kmeans_cls2'] == 0, 'individual'] = 0
-#         window_reads.loc[window_reads['kmeans_cls2'] == 1, 'individual'] = 1
+        # Look for the majority individual in the previous window
+        majority_individual =  previous_window_reads['individual'].value_counts().index[0]
+    
+        # Compare with the majority cluster
+        majority_cluster = window_reads['kmeans_cls2'].value_counts().index[0]
         
-#         window_reads.apply(lambda x: propagate_assignment_1(x), axis=1) # add results to main reads file
+        # Assign majority_individual to the majority cluster
+        window_reads.loc[window_reads['kmeans_cls2'] == majority_cluster    , 'individual'] = majority_individual
+        window_reads.loc[window_reads['kmeans_cls2'] == (1-majority_cluster), 'individual'] = 1-majority_individual
         
-#         first_iter = False
-#         continue
+        window_reads.apply(lambda x: propagate_assignment_1(x), axis=1)
+        
+        continue
         
     # Step 2: We perform ID bookeeping and cluster association to manage all following windows
     # Book-keeping:
