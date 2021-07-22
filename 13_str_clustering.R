@@ -9,14 +9,17 @@
 # 
 # OUTPUTS:
 #   cluster results: datadir/run_chr_kmeans_clusters.csv'
-print('')
-print('13 - STR CLUSTERING')
-# Set variables
 args = commandArgs(trailingOnly=TRUE)
+print('')
+print('----------------------------------------------------------------------')
+print('13 - STR CLUSTERING (13_str_clustering.R)')
+print(paste0("Run: ", args[1], ", disease: ", args[2]))
+print('')
+print('')
+
+# Set variables
 run_num = args[1]
 dis = args[2]
-print(paste0("Run: ", run_num, ", disease: ", dis))
-print('')
 
 # Load Modules
 # -----------------------------------------------------------------------------

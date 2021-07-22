@@ -9,22 +9,24 @@
 # 
 # OUTPUTS:
 #   recall scores: e.g. datadir/run_chr_recall_score.csv
+import sys
 print('')
-print('14 - SCORE')
+print('----------------------------------------------------------------------')
+print(f'14 - SCORE ({__file__})')
+print(f"Run: {sys.argv[1]}, disease: {sys.argv[2]}.")
+print('')
+print('')
 
 # Load Modules
 # -----------------------------------------------------------------------------
 import pandas as pd
 import os
-import sys
 from sklearn.metrics import precision_score, recall_score
 
 # Set Variables
 # ---------------------------------------------------------------------------------------------------
 run_num = sys.argv[1]
 dis = sys.argv[2]
-print(f"Run: {run_num}, disease: {dis}.")
-print('')
 
 from src.setup_variables import *
 try:

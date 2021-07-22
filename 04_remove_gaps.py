@@ -17,8 +17,13 @@
 # OUTPUTS:
 #   reads without gaps: e.g. run1_chr11_sca_clean.csv
 #   reference genome without gaps: e.g. run1_chr11_reference_genome.json
+import sys
 print('')
-print('04 - REMOVE GAPS')
+print('----------------------------------------------------------------------')
+print(f'04 - REMOVE GAPS ({__file__})')
+print(f"Run: {sys.argv[1]}, disease: {sys.argv[2]}.")
+print('')
+print('')
 
 # Load Modules
 # ---------------------------------------------------------------------------------------------------
@@ -26,14 +31,11 @@ import numpy as np
 import pandas as pd
 import json
 import os
-import sys
 
 # Set Variables
 # ---------------------------------------------------------------------------------------------------
 run_num = sys.argv[1]
 dis = sys.argv[2]
-print(f"Run: {run_num}, disease: {dis}.")
-print('')
 
 from src.setup_variables import *
 try:

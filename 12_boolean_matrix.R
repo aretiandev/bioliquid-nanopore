@@ -14,16 +14,17 @@
 # 
 # OUTPUTS:
 #   boolean matrix of tagged reads: e.g. datadir/run_chr_bool_tagged_reads.csv'
-
+args = commandArgs(trailingOnly=TRUE)
 print('')
-print('12 - BOOLEAN MATRIX')
+print('----------------------------------------------------------------------')
+print('12 - BOOLEAN MATRIX (12_boolean_matrix.R)')
+print(paste0("Run: ", args[1], ", disease: ", args[2]))
+print('')
+print('')
 
 # Set variables
-args = commandArgs(trailingOnly=TRUE)
 run_num = args[1]
 dis = args[2]
-print(paste0("Run: ", run_num, ", disease: ", dis))
-print('')
 
 # Load Modules
 # -----------------------------------------------------------------------------

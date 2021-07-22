@@ -11,14 +11,19 @@
 # OUTPUTS:
 #   reads without gaps: e.g. run1_chr11_sca_clean.csv
 #   reference genome without gaps: e.g. run1_chr11_reference_genome.json
-print('')
-print('11 - TAG READS')
-# Set variables
 args = commandArgs(trailingOnly=TRUE)
+print('')
+print('----------------------------------------------------------------------')
+print('11 - TAG READS (11_tag_reads.R)')
+print(paste0("Run: ", args[1], ", disease: ", args[2]))
+print('')
+print('')
+
+# Set variables
+# -----------------------------------------------------------------------------
 run_num = args[1]
 dis = args[2]
-print(paste0("Run: ", run_num, ", disease: ", dis))
-print('')
+
 # Load Modules
 # -----------------------------------------------------------------------------
 print('Loading modules.')

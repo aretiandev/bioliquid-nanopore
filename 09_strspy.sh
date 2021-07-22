@@ -10,15 +10,17 @@
 # 
 # OUTPUTS:
 #   Identified STRs: e.g. {datadir}/strspy/${dis}/output/Countings
-echo ''
-echo "09 - STRSPY"
+echo ""
+echo "----------------------------------------------------------------------"
+echo "09 - STRSPY (${0})"
+echo "Run: ${1}, disease: ${2}"
+echo ""
+echo ""
 
 # Input variables
 # -----------------------------------------------------------------------------
 run_number="run${1}"
 dis=$2
-echo "Run: ${1}, disease: $dis"
-echo ''
 source src/setup_variables.sh $dis
 
 # Run STRspy

@@ -15,8 +15,13 @@
 # 
 # OUTPUTS:
 #   Clustered reads with windows: run1_chr11_read_clusters.txt
+import sys
 print('')
-print('05 - CLUSTERING')
+print('----------------------------------------------------------------------')
+print(f'05 - CLUSTERING ({__file__})')
+print(f"Run: {sys.argv[1]}, disease: {sys.argv[2]}.")
+print('')
+print('')
 
 # Load Modules
 # -----------------------------------------------------------------------------
@@ -24,7 +29,6 @@ import numpy as np
 import pandas as pd
 import json
 import os
-import sys
 from sklearn.decomposition import PCA
 from sklearn.preprocessing import StandardScaler
 from sklearn.cluster import KMeans
@@ -35,8 +39,6 @@ encoder = OneHotEncoder()
 # ---------------------------------------------------------------------------------------------------
 run_num = sys.argv[1]
 dis = sys.argv[2]
-print(f"Run: {run_num}, disease: {dis}.")
-print('')
 
 from src.setup_variables import *
 try:

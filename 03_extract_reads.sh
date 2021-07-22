@@ -13,14 +13,16 @@
 #   BAM file: e.g. run1_chr11_sca.bam
 #   SAM file: e.g. run1_chr11_sca.sam
 echo ""
-echo "03 - EXTRACT READS"
+echo "----------------------------------------------------------------------"
+echo "03 - EXTRACT READS (${0})"
+echo "Run: ${1}, disease: ${2}"
+echo ""
+echo ""
 
 # Input variables
 # -----------------------------------------------------------------------------
 run_number="run${1}"
 dis=$2
-echo "Run: ${1}, disease: $dis"
-echo ""
 source src/setup_variables.sh $dis
 
 # Setup

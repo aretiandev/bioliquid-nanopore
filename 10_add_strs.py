@@ -9,23 +9,25 @@
 # 
 # OUTPUTS:
 #   VCF file with STRs present: {datadir}/{run_number}_{chrom}_person_full.txt
+import sys
 print('')
-print('10 - ADD STRS')
+print('----------------------------------------------------------------------')
+print(f'10 - ADD STRS ({__file__})')
+print(f"Run: {sys.argv[1]}, disease: {sys.argv[2]}.")
+print('')
+print('')
 
 # Load Modules
 # -----------------------------------------------------------------------------
 import numpy as np
 import pandas as pd
 import os
-import sys
 import subprocess
 
 # Set Variables
 # ---------------------------------------------------------------------------------------------------
 run_num = sys.argv[1]
 dis = sys.argv[2]
-print(f"Run: {run_num}, disease: {dis}.")
-print('')
 
 from src.setup_variables import *
 try:
