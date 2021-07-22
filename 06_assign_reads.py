@@ -11,22 +11,24 @@
 # OUTPUTS:
 #   reference genome without gaps: e.g. run1_chr11_reference_genome.json
 #   List of read IDs for each person: e.g. run1_chr11_person0_uniqueids.txt
+import sys
 print('')
-print('06 - ASSIGN READS')
+print('----------------------------------------------------------------------')
+print(f'06 - ASSIGN READS ({__file__})')
+print(f"Run: {sys.argv[1]}, disease: {sys.argv[2]}.")
+print('')
+print('')
 
 # Load Modules
 # -----------------------------------------------------------------------------
 import pandas as pd
 import numpy as np
 import os
-import sys
 
 # Set Variables
 # -----------------------------------------------------------------------------
 run_num = sys.argv[1]
 dis = sys.argv[2]
-print(f"Run: {run_num}, disease: {dis}.")
-print('')
 
 from src.setup_variables import *
 try:
@@ -48,7 +50,7 @@ print(f'Reading clean Nanopore reads from: {datadir}/{run_number}_{chrom_dis}_cl
 
 results_file = pd.read_csv(f"{datadir}/{run_number}_{chrom}_read_clusters.txt")
 
-results_file.columns = ['ID', 'kmeans_cls2', 'window_num']
+results_file.columns = ['ID', 'kmeans_cls2', 'window_num', 'is_first_window']
 
 # Load Nanopore Reads
 nanopore_reads = pd.read_csv(f"{datadir}/{run_number}_{chrom_dis}_clean.csv") # load nanopore reads with padded sequences and other attribute data
@@ -235,9 +237,6 @@ for window in range(window_idxmax+1,window_min-1,-1):
         window_reads.apply(lambda x: propagate_assignment_1(x), axis=1) # add results to main reads file
         
         first_iter = False
-        
-        if window_reads['is_first_window']:
-            pass
         
         continue
         
