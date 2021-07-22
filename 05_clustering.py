@@ -48,7 +48,7 @@ except:
 run_number=f"run{run_num}"
 chrom_dis=f"{chrom}_{dis}"
 datadir=f"{rootdir}/{run_number}"
-results_file_path = f"{datadir}/{run_number}_{chrom}_read_clusters_debug.txt"
+results_file_path = f"{datadir}/{run_number}_{chrom}_read_clusters.txt"
 
 # Import data
 # -----------------------------------------------------------------------------
@@ -183,7 +183,7 @@ print("")
 print(f"Iterations: ", end="")
 
 results_file = open(results_file_path,"w")
-iter = 1
+iter = 0
 empty_count = 0
 threshold = 5
 islands_list = nanopore_reads['islandID'].unique()
@@ -214,13 +214,13 @@ for current_islandID in islands_list:
             
         window_number += 1
 
+        iter+=1
         # Print progress in jumps of 5%
         progress = iter/total_jumps*100
         if progress>=threshold:
             print(f'{threshold}%', end="")
             threshold = threshold+5
 
-        iter+=1
     #     if round(progress*1000)%50==0:
     #         print(f" {round(progress*100):.0f}% ", end="", flush=True)
 
@@ -312,14 +312,14 @@ for current_islandID in islands_list:
         print(f"*", end="", flush=True)
 
 #         Break after N iterations
-        if iter>100:
-            break
+#         if iter>100:
+#             break
         
 results_file.close()
 print("")
 print("Done padding and clustering.")
 read_clusters_df = pd.read_csv(f'{datadir}/{run_number}_{chrom}_read_clusters.txt', header=None)
-read_clusters_df.columns = ['ID', 'kmeans_cls2', 'window_num']
+read_clusters_df.columns = ['ID', 'kmeans_cls2', 'window_num','is_first_window']
 cluster0_size = (read_clusters_df['kmeans_cls2']==0).sum()
 cluster1_size = (read_clusters_df['kmeans_cls2']==1).sum()
 print(f"Cluster 0: {cluster0_size} reads ({cluster0_size/len(read_clusters_df)*100:.1f}%)")
