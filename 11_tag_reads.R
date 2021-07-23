@@ -102,8 +102,8 @@ init_reads <- function(str, sample, vcf) {
         reads <- NA
     } else {
         reads <- data.frame('read_id'=aln[[1]]$qname,
-                            'str_id' = str_id,
                             'samplename' = samplename,
+                            'str_id' = str_id,
                             'startpos' = aln[[1]]$pos, 
                             'str_start'= 0,
                             'str_end' = 0,
@@ -142,8 +142,8 @@ system(paste0('mkdir -p ', datadir,'/strs'))
 for (str in c(1:nrow(vcf))) { #
                                  
     data <- as_tibble(data.frame('read_id'='',
-                                 'str_id' = '',
                                  'samplename' = '',
+                                 'str_id' = '',
                                  'startpos' = 0, 
                                  'str_start'= 0,
                                  'str_end' = 0,
@@ -175,7 +175,8 @@ for (str in c(1:nrow(vcf))) { #
 
 #     data <- data %>% mutate(uid = paste0(sample, '-', readgroup))
     data <- data %>% mutate(read_id = paste0(samplename, '-', read_id))
-    data <- data %>% select(read_id, str_id, startpos)
+#     data <- data %>% select(read_id, str_id, startpos)
+    data <- data %>% select(read_id, samplename, str_id, startpos, str_start, str_end, read, str, motif)
 
     
     # save each str df (only if all samples met the threshold)
