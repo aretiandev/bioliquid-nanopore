@@ -38,6 +38,7 @@ except:
     
 run_number=f"run{run_num}"
 chrom_dis=f"{chrom}_{dis}"
+rootdir=f"/mnt/aretian/genomics/nanopore"
 datadir=f"{rootdir}/{run_number}"
 
 # # Concatenate all output
