@@ -1,4 +1,4 @@
-# 13 - STR Clustering
+# 14 - STR Clustering
 #
 # This script performs clustering of the person-reads based on the boolean matrix.
 #
@@ -12,7 +12,7 @@
 args = commandArgs(trailingOnly=TRUE)
 print('')
 print('----------------------------------------------------------------------')
-print('13 - STR CLUSTERING (13_str_clustering.R)')
+print('14 - STR CLUSTERING (14_str_clustering.R)')
 print(paste0("Run: ", args[1], ", disease: ", args[2]))
 print('')
 print('')

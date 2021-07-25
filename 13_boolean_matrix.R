@@ -1,4 +1,4 @@
-# 12 - Create Boolean Matrix
+# 13 - Create Boolean Matrix
 #
 # This scripts creates a matrix of boolean values per read based on str presence. Example:
 # 
@@ -17,7 +17,7 @@
 args = commandArgs(trailingOnly=TRUE)
 print('')
 print('----------------------------------------------------------------------')
-print('12 - BOOLEAN MATRIX (12_boolean_matrix.R)')
+print('13 - BOOLEAN MATRIX (12_boolean_matrix.R)')
 print(paste0("Run: ", args[1], ", disease: ", args[2]))
 print('')
 print('')
@@ -48,7 +48,7 @@ datadir = paste0('/mnt/aretian/genomics/nanopore/',run_number)
 
 # Load Data
 # -----------------------------------------------------------------------------
-df <- read.csv(paste0(datadir,'/', run_number,'_',chr,'_tagged_reads.csv'), stringsAsFactors = FALSE)
+df <- read.csv(paste0(datadir,'/', run_number,'_',chr,'_long_tagged_reads.csv'), stringsAsFactors = FALSE)
 
 # Helper Functions
 # -----------------------------------------------------------------------------

@@ -1,4 +1,4 @@
-# 14 - Score
+# 15 - Score
 #
 # This script evaluates clustering accuracy.. The script is based on 11_evaluate_clusters.ipynb
 #
@@ -12,7 +12,7 @@
 import sys
 print('')
 print('----------------------------------------------------------------------')
-print(f'14 - SCORE ({__file__})')
+print(f'15 - SCORE ({__file__})')
 print(f"Run: {sys.argv[1]}, disease: {sys.argv[2]}.")
 print('')
 print('')

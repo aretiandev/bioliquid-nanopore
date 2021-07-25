@@ -31,11 +31,12 @@ strspy_config  := $(datadir)/strspy/$(dis)/input/regions/all_strs.bed
 strspy         := $(datadir)/strspy/$(dis)/output/Countings/run${run}_${chrom}_person0_strs.txt
 add_strs       := $(datadir)/$(run_number)_$(chrom)_person_full.txt
 tag_reads      := $(datadir)/$(run_number)_$(chrom)_tagged_reads.csv
+long_reads     := $(datadir)/$(run_number)_$(chrom)_long_tagged_reads.csv
 boolean_matrix := $(datadir)/$(run_number)_$(chrom)_bool_tagged_reads.csv
 str_cluster    := $(datadir)/$(run_number)_$(chrom)_kmeans_clusters.csv
 score          := $(datadir)/$(run_number)_$(chrom)_recall_score.csv
 
-.PHONY: all all_log basecall align get_ref extract_ref extract_reads remove_gaps clean_remove_gaps cluster clean_cluster assign create_bams strspy_config strspy clean_strspy str_list add_strs tag_reads boolean_matrix str_cluster score
+.PHONY: all all_log basecall align get_ref extract_ref extract_reads remove_gaps clean_remove_gaps cluster clean_cluster assign create_bams strspy_config strspy clean_strspy str_list add_strs tag_reads long_reads boolean_matrix str_cluster score
 
 all: score
 
@@ -121,13 +122,17 @@ tag_reads: $(tag_reads)
 $(tag_reads): $(add_strs) 11_tag_reads.R
 	@/usr/bin/Rscript 11_tag_reads.R $(run) $(dis)
 
+long_reads: $(long_reads)
+$(long_reads): $(tag_reads) 12_long_reads.py
+	@/home/fer/miniconda3/envs/genomics/bin/python3 12_long_reads.py $(run) $(dis)
+
 boolean_matrix: $(boolean_matrix)
-$(boolean_matrix): $(tag_reads) 12_boolean_matrix.R
-	@/usr/bin/Rscript 12_boolean_matrix.R $(run) $(dis)
+$(boolean_matrix): $(long_reads) 13_boolean_matrix.R
+	@/usr/bin/Rscript 13_boolean_matrix.R $(run) $(dis)
 
 str_cluster: $(str_cluster)
-$(str_cluster): $(boolean_matrix) 13_str_clustering.R
-	@/usr/bin/Rscript 13_str_clustering.R $(run) $(dis)
+$(str_cluster): $(boolean_matrix) 14_str_clustering.R
+	@/usr/bin/Rscript 14_str_clustering.R $(run) $(dis)
 	@mkdir -p /home/fer/genomics/bioliquid-nanopore/cluster_plots
 	@cp $(datadir)/$(run_number)_$(chrom)_assigned_kmeans_clusters.png /home/fer/genomics/bioliquid-nanopore/cluster_plots/
 	@cp $(datadir)/$(run_number)_$(chrom)_real_sample_labels.png       /home/fer/genomics/bioliquid-nanopore/cluster_plots/
@@ -137,5 +142,5 @@ $(str_cluster): $(boolean_matrix) 13_str_clustering.R
 	@echo Saved: /home/fer/genomics/bioliquid-nanopore/cluster_plots/$(run_number)_$(chrom)_real_sample_labels.png 
 
 score: $(score)
-$(score): $(str_cluster) 14_score.py
-	@/home/fer/miniconda3/envs/genomics/bin/python3 14_score.py $(run) $(dis)
+$(score): $(str_cluster) 15_score.py
+	@/home/fer/miniconda3/envs/genomics/bin/python3 15_score.py $(run) $(dis)

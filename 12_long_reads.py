@@ -314,4 +314,4 @@ person_reads_out = person_reads_out[original_columns]
 
 # Save
 # -----------------------------------------------------------------------------
-person_reads_out.to_csv(f'{datadir}/{run_number}_{chrom}_tagged_reads.csv', index=None)
+person_reads_out.to_csv(f'{datadir}/{run_number}_{chrom}_long_tagged_reads.csv', index=None)
