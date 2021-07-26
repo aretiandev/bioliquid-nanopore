@@ -11,7 +11,7 @@
 #   tagged_long_reads.csv
 import sys
 print('')
-print('----------------------------------------------------------------------')
+print('------------------------------------------------------------------------------------------')
 print(f'12 - LONG READS ({__file__})')
 print(f"Run: {sys.argv[1]}, disease: {sys.argv[2]}.")
 print('')
@@ -29,6 +29,9 @@ import matplotlib.pyplot as plt
 run_num = sys.argv[1]
 dis = sys.argv[2]
 
+# Parameters
+expected_gap_fraction = 0.5
+
 from src.setup_variables import *
 try:
     chrom=dis_data[dis]['chr']
@@ -42,11 +45,9 @@ chrom_dis=f"{chrom}_{dis}"
 rootdir=f"/mnt/aretian/genomics/nanopore"
 datadir=f"{rootdir}/{run_number}"
 
-# Parameters
-expected_gap_fraction = 0.5
-
 # Load Data
 # -----------------------------------------------------------------------------
+print(f'Loading tagged reads from: {datadir}/{run_number}_{chrom}_tagged_reads.csv')
 df = pd.read_csv(f'{datadir}/{run_number}_{chrom}_tagged_reads.csv')
 original_columns = df.columns
 df = df.rename(columns={'startpos':'orig_pos'})
@@ -59,8 +60,10 @@ df['sample'] = df['samplename'].str[-1].astype(int)
 # Helper functions
 # -----------------------------------------------------------------------------
 
-# Descriptive Stats
-def descriptive_stats(df):
+# Create Bins
+def create_bins(df):
+    print("")
+    print("CREATING BINS")
     total_length = max(df['end_pos'])
     reads_0 = df[df['sample']==0]
     reads_1 = df[df['sample']==1]
@@ -84,7 +87,10 @@ def descriptive_stats(df):
     n_long_reads_0 = n_0/n_bins
     # Bins in person1
     n_long_reads_1 = n_1/n_bins
-
+    
+    print("")
+    print(f"*** Optimal Bin Size and Number ***")
+    print("")
     print(f"Total length of region:     {total_length:,.0f}")
     print(f"Avg read length:               {mean_length:,.2f}")
     print(f"Avg read length + {expected_gap_fraction*100:,.0f}% padd:    {mean_length+expected_gap:,.2f}")
@@ -92,13 +98,13 @@ def descriptive_stats(df):
     print(f"total_length/bin_length:           {n_bins_exact:,.2f}")
     print(f"Number of bins:                    {n_bins:,.2f} --> last bin is {'shorter' if (n_bins>n_bins_exact) else 'longer'}.")
     print("")
-    print(f"               Count       Avg Length    N of long reads ")
+    print(f"*** Estimated # of Long Reads per Person ***")
+    print("")
+    print(f"               Count       Avg Length    N of long reads (est)")
     print(f"person0        {n_0:,.0f}       {mean_length:,.0f}        {n_long_reads_0:,.0f}")   
     print(f"person1        {n_1:,.0f}       {mean_length_0:,.0f}        {n_long_reads_1:,.0f}")
     print(f"Full sample    {len(df):,.0f}       {mean_length_1:,.0f}        {n_long_reads_0 + n_long_reads_1:,.0f}")
-    
-# Create bins
-def create_bins():
+
     # Parameters
     bins = []
 
@@ -112,6 +118,9 @@ def create_bins():
     # Gap
     bin_agg_length = n_bins * bin_length
     gap = total_length - bin_agg_length
+    print("")
+    print(f"*** Adjustment for Last Bin ***")
+    print("")
     print(f"Total length:         {total_length:,.0f}")
     print(f"Bin aggregate length: {bin_agg_length:,.0f}")
     print(f"Difference:              {gap:,.0f}")
@@ -123,20 +132,24 @@ def create_bins():
 
     # Adjust last bin length
     bins[-1][1]=bins[-1][0]+last_bin_length-1
+    print("")
+    print("Done Creating Bins.")
     
     return bins
+    
 
-def assign_reads_to_bins(df, selected_person):
+# Assign Reads to Bins
+def assign_reads_to_bins(df, bins, selected_person):
 # Returns person_reads with the 'bin' column of bin membership
     
-    reads_0 = df[df['sample']==0]
-    reads_1 = df[df['sample']==1]
-    
-    print(f"Selected person: person{selected_person}")
+    print("")
+    print(f"ASSIGNING READS TO BINS: PERSON {selected_person}.")
 
     if   selected_person == 0:
+        reads_0 = df[df['sample']==0]
         person_reads = reads_0.copy()
     elif selected_person == 1:
+        reads_1 = df[df['sample']==1]
         person_reads = reads_1.copy()
 
     # Count empty bins
@@ -152,7 +165,6 @@ def assign_reads_to_bins(df, selected_person):
         return read
 
     # Add bin membership column to person_reads df
-
     for n, bin in enumerate(bins):
 
         # Get reads in bin
@@ -166,23 +178,30 @@ def assign_reads_to_bins(df, selected_person):
         if overlaps_bin.sum() == 0:
             empty_bins = empty_bins + 1
             empty_bins_list.append(n)
-#             print(f'Empty bin: {n}')
             continue
 
         # Append bin number to bin column
         person_reads.loc[overlaps_bin].apply(lambda x: append_bin(x, n), axis=1)
 
-    print(f"Reads with no assigned bin: {person_reads['bin'].isna().sum()}")
+    print(f"Done. Reads with no assigned bin: {person_reads['bin'].isna().sum()}")
     print(f"There are {empty_bins} empty bins: {empty_bins_list}")
     
     return person_reads
 
+
+# Create Long Reads
+
 def create_long_reads(person_reads):
 # Populated the person_reads dataframe with the long_read column
-
-    # List bins to ignore in last stages of the loop
-    ignore_bin_list = []
     
+    print("")
+    print("CREATING LONG READS.")
+    
+    n_bins = max(person_reads['bin'].max())
+    
+    # List of bins to iterate over
+    search_bins = list(range(n_bins))
+
     # Initialize long read membership
     person_reads['long_read'] = np.nan
     # Track reads that are already assigned
@@ -190,67 +209,154 @@ def create_long_reads(person_reads):
 
     long_read_number = 0
 
-    while person_reads['assigned'].sum() < len(person_reads):
+    n_unassigned = len(person_reads)
+    
+    while n_unassigned > 0:
         # While there are unassigned reads
 
         n_unassigned = len(person_reads) - person_reads['assigned'].sum()
         progress = (1-n_unassigned/len(person_reads))*100
 
-        for n, bin in enumerate(bins):
-            if n in ignore_bin_list:
-                continue
+        for n in search_bins:
         # Run bin loop assigning reads
-            print(f"\rLong read: {long_read_number:3.0f}. Bin: {n:3.0f}. Unassigned: {n_unassigned:5.0f}. Progress: {progress:3.0f}%", end="", flush=True)
-    #         print(f"Bin number: {n}")
 
             # Get reads in bin
             bin_reads_boolean = person_reads.apply(lambda x: n in x['bin'], axis=1)
 
+            # If all reads in bin have been assigned, skip and ignore bin in the future
+            if (bin_reads_boolean & ~person_reads['assigned']).any() == False:
+                search_bins.remove(n)
+                continue
+                
+            print(f"\rLong read: {long_read_number:3.0f}. Bin: {n:3.0f}. Unassigned: {n_unassigned:5.0f}. Progress: {progress:3.0f}%", end="", flush=True)
+            
             # Get reads in bin that are not assigned
             bin_reads = person_reads.loc[bin_reads_boolean & ~person_reads['assigned']]
 
-            # Get first read, assign it to long read
-            try:
-                selected_index = bin_reads.index[0]
-            except: # The bin is empty
-    #             print(f'Empty bin: {n}')
-                if n not in ignore_bin_list:
-                    ignore_bin_list.append(n)
-                continue
-
-            person_reads.loc[selected_index, 'long_read'] = long_read_number
-    #         bin_reads.loc[0, 'long_read'] = long_read_number
+            # Get first read_id
+            first_read_id = bin_reads['read_id'].unique()[0]
+            
+            # Assign first read_id (with all STRs) to long read
+            person_reads.loc[person_reads['read_id']==first_read_id, 'long_read'] = long_read_number
 
             # Record assignment
-            person_reads.loc[selected_index, 'assigned'] = True
-
-            # Add check of already assigned
-
-            # Check previous selected read
-
-            #Store end position of last read for next loop
-
+            person_reads.loc[person_reads['read_id']==first_read_id, 'assigned'] = True
+        
         # Go to the next long read
         long_read_number += 1
-
+        
     print("")
     print("Done.")
     
     return person_reads
+
+
+# Trim Long Reads
+
+def trim_long_reads(person0_reads, person1_reads, desired_n_long_reads, n0_extract=None, n1_extract=None, ratio='manual'):
     
+    print("")
+    print("TRIMMING LONG READS")
+
+    # Set defaults for number of reads to be created
+    if ratio == 'manual':
+        # Default Option 1: Set manually
+        n0_extract_default = 15
+        n1_extract_default = 10
+    elif ratio == 'proportional':
+        # Default Option 2: Proportional to read counts
+        n_long_reads0 = len(person0_reads)
+        n_long_reads1 = len(person1_reads)
+        n_long_reads = n_long_reads0 + n_long_reads1
+        share_long_reads0 = n_long_reads0/n_long_reads
+        share_long_reads1 = n_long_reads1/n_long_reads
+        n0_extract_default = round(share_long_reads0*desired_n_long_reads)
+        n1_extract_default = desired_n_long_reads - n0_extract_default
+        print(f'Proportional ratio: {n0_extract_default}, {n1_extract_default}.')
+    
+    if n0_extract is None:
+        n0_extract = n0_extract_default
+    if n1_extract is None:
+        n1_extract = n1_extract_default
+        
+    # Raise error
+    if desired_n_long_reads != n0_extract + n1_extract:
+        raise ValueError(f'n0_extract and n1_extract should add up to {desired_n_long_reads}')
+
+    # Extract reads
+    extract_list0 = list(person0_reads['long_read'].value_counts().iloc[:n0_extract].index)
+    extract_list1 = list(person1_reads['long_read'].value_counts().iloc[:n1_extract].index)
+    person0_reads_trim = person0_reads.loc[person0_reads['long_read'].isin(extract_list0)]
+    person1_reads_trim = person1_reads.loc[person1_reads['long_read'].isin(extract_list1)]
+    
+    print("Done.")
+    
+    return person0_reads_trim, person1_reads_trim
+
+
+# Fill in gaps between long reads within person
+
+def fill_gaps_within_person(person_reads_trim):
+    
+    print("")
+    print("FILLING DIFFERENCES IN LONG READS WITHIN PERSON")
+    # Get longest long_read
+    longest_read_n = person_reads_trim['long_read'].value_counts().index[0]
+    longest_read =   person_reads_trim.loc[person_reads_trim['long_read']==longest_read_n]
+    
+    # Get all STRs in longest long_read
+    longest_read_strs = set(longest_read['str_id'].unique())
+
+    # Loop prep: Get total number of long reads
+    n_long_reads = person_reads_trim['long_read'].nunique()
+    # Loop prep: initialize dataframe to populate
+    person_reads_full_within = person_reads_trim.copy()
+    
+    for long_read_n in range(1,n_long_reads):
+
+        # Get nth longest long_read
+        nth_longest_read_n = person_reads_trim['long_read'].value_counts().index[long_read_n]
+        nth_longest_read   = person_reads_trim.loc[person_reads_trim['long_read']==nth_longest_read_n]
+
+        # Get all reads in nth longest long_read
+        nth_longest_read_strs = set(nth_longest_read['str_id'].unique())
+
+        # Calculate difference with longest read
+        str_difference = longest_read_strs.difference(nth_longest_read_strs)
+
+        # Get missing reads
+        new_reads = longest_read.loc[longest_read['str_id'].isin(str_difference)].copy()
+        new_reads['long_read'] = nth_longest_read_n
+
+        # Add to dataframe
+        person_reads_full_within = pd.concat([person_reads_full_within, new_reads])
+    
+    print("Done.")
+    return person_reads_full_within
+
+
+# Plot Long Reads
+
 def plot_long_reads(person_reads):
-    # Get effective number of long reads
-    n_long_reads = int(person_reads['long_read'].max() + 1)
+    
+    print("Drawing points in long reads.")
+    
+    # Loop prep: Get list and number of long reads
+    long_reads_list = list(person_reads['long_read'].unique())
+    n_long_reads = int(person_reads['long_read'].nunique())
+    long_read_counter = 1
 
-    # long_read_binary = list(np.zeros(total_length))
+    # Loop prep: Initialize long read collection
     long_read_collection = []
-    print("Identifying points to plot long reads.")
-    print(f"Total number of long reads: {n_long_reads}")
 
-    for long_read_n in range(n_long_reads):
+    # Loop prep: Calculate total_length
+    total_length = max(person_reads['end_pos'])
+    
+    for long_read_n in long_reads_list:
+        
         long_read_binary = []
 
-        print(f"\rProcessing long read: {long_read_n}", end="", flush=True)
+        print(f"\rProcessing long read: {long_read_counter} of {n_long_reads}", end="", flush=True)
 
         selected_long = person_reads.loc[person_reads['long_read']==long_read_n].copy()
 
@@ -263,40 +369,52 @@ def plot_long_reads(person_reads):
             long_read_binary.append(value_to_append)
 
         long_read_collection.append(long_read_binary)
+        
+        long_read_counter += 1
 
-    #     if is_in_read:
-    #         long_read_binary[point]=1
 
     print("")
     print("Plotting.")
-    # print(f"Length of read to plot: {len(long_read_binary)}")
 
     plt.subplots(figsize=(20,10))
     x = range(len(long_read_collection[0]))
 
-    # for i in range(len(long_read_collection)):
-    for i in range(100):
+    for i in range(len(long_read_collection)):
         long_read_binary = [x * (i+1) for x in long_read_collection[i]]
         plt.scatter(x, long_read_binary)
         
         
 # Implementation
 # -----------------------------------------------------------------------------
-descriptive_stats(df)
 
-bins = create_bins()
-
+# Create Bins
+bins = create_bins(df)
+        
+# Assign Reads to Bins and Create Long Reads
 selected_person = 0
-person_reads0 = assign_reads_to_bins(df, selected_person)
-person_reads0 = create_long_reads(person_reads0)
+person0_reads = assign_reads_to_bins(df, bins, selected_person)
+person0_reads = create_long_reads(person0_reads)
+
 selected_person = 1
-person_reads1 = assign_reads_to_bins(df, selected_person)
-person_reads1 = create_long_reads(person_reads1)
+person1_reads = assign_reads_to_bins(df, bins, selected_person)
+person1_reads = create_long_reads(person1_reads)
 
+print("")
+print(f"Person 0 long reads: {person0_reads['long_read'].max():,.0f}")
+print(f"Person 1 long reads: {person1_reads['long_read'].max():,.0f}")
 
-# Create output 
+# Trim Long Reads
+person0_reads_trim, person1_reads_trim = trim_long_reads(person0_reads, person1_reads, 25, 15, 10)
+
+# Fill in gaps within person
+person0_reads_full_within = fill_gaps_within_person(person0_reads_trim)
+person1_reads_full_within = fill_gaps_within_person(person1_reads_trim)
+
+# Concatenate output
+person_reads = pd.concat([person0_reads_full_within, person1_reads_full_within])
+
+# Create Output File
 # -----------------------------------------------------------------------------
-person_reads = pd.concat([person_reads0, person_reads1])
 
 # Rename and keep columns as original file
 person_reads_out = person_reads.copy()
@@ -315,3 +433,5 @@ person_reads_out = person_reads_out[original_columns]
 # Save
 # -----------------------------------------------------------------------------
 person_reads_out.to_csv(f'{datadir}/{run_number}_{chrom}_long_tagged_reads.csv', index=None)
+print("")
+print(f'Saved: {datadir}/{run_number}_{chrom}_long_tagged_reads.csv')
