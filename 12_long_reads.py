@@ -62,8 +62,6 @@ df['sample'] = df['samplename'].str[-1].astype(int)
 
 # Create Bins
 def create_bins(df):
-    print("")
-    print("CREATING BINS")
     total_length = max(df['end_pos'])
     reads_0 = df[df['sample']==0]
     reads_1 = df[df['sample']==1]
@@ -88,8 +86,45 @@ def create_bins(df):
     # Bins in person1
     n_long_reads_1 = n_1/n_bins
     
+    # Force at least 10 long_reads
+    n_long_read_threshold = 10
+    if n_long_reads_0<n_long_read_threshold:
+        n_long_reads_0=n_long_read_threshold
+        n_bins_0 = round(n_0/n_long_reads_0)
+        
+    if n_long_reads_1<n_long_read_threshold:
+        n_long_reads_1=n_long_read_threshold
+        n_bins_1 = round(n_1/n_long_reads_1)
+        
+    try:
+        if n_bins_0 < n_bins_1:
+            n_bins = n_bins_0
+            bin_length = round(total_length/n_bins)
+            n_bins_exact = total_length/bin_length 
+            print(f"Too few reads for person0. Setting n_bins={n_bins} to get at least {n_long_read_threshold} long reads.")
+        elif n_bins_0 > n_bins_1:
+            n_bins = n_bins_1
+            bin_length = round(total_length/n_bins)
+            n_bins_exact = total_length/bin_length 
+            print(f"Too few reads for person1. Setting n_bins={n_bins} to get at least {n_long_read_threshold} long reads.")
+    except:
+        try:
+            n_bins = n_bins_0
+            bin_length = round(total_length/n_bins)
+            n_bins_exact = total_length/bin_length 
+            print(f"Too few reads for person0. Setting n_bins={n_bins} to get at least {n_long_read_threshold} long reads.")
+        except:
+            try:
+                n_bins = n_bins_1
+                bin_length = round(total_length/n_bins)
+                n_bins_exact = total_length/bin_length 
+                print(f"Too few reads for person1. Setting n_bins={n_bins} to get at least {n_long_read_threshold} long reads.")
+            except:
+                pass
+    
+            
     print("")
-    print(f"*** Optimal Bin Size and Number ***")
+    print(f"OPTIMAL BIN SIZE AND NUMBER")
     print("")
     print(f"Total length of region:     {total_length:,.0f}")
     print(f"Avg read length:               {mean_length:,.2f}")
@@ -98,7 +133,7 @@ def create_bins(df):
     print(f"total_length/bin_length:           {n_bins_exact:,.2f}")
     print(f"Number of bins:                    {n_bins:,.2f} --> last bin is {'shorter' if (n_bins>n_bins_exact) else 'longer'}.")
     print("")
-    print(f"*** Estimated # of Long Reads per Person ***")
+    print(f"ESTIMATED # OF LONG READS PER PERSON")
     print("")
     print(f"               Count       Avg Length    N of long reads (est)")
     print(f"person0        {n_0:,.0f}       {mean_length:,.0f}        {n_long_reads_0:,.0f}")   
@@ -108,7 +143,7 @@ def create_bins(df):
     # Parameters
     bins = []
 
-    last_bin_end = 0
+    last_bin_end = -1
     for i in range(int(np.floor(n_bins))):
         bin_start = last_bin_end + 1
         bin_end   = bin_start + bin_length - 1
@@ -119,7 +154,7 @@ def create_bins(df):
     bin_agg_length = n_bins * bin_length
     gap = total_length - bin_agg_length
     print("")
-    print(f"*** Adjustment for Last Bin ***")
+    print(f"ADJUSTMENT FOR LAST BIN")
     print("")
     print(f"Total length:         {total_length:,.0f}")
     print(f"Bin aggregate length: {bin_agg_length:,.0f}")
@@ -132,8 +167,6 @@ def create_bins(df):
 
     # Adjust last bin length
     bins[-1][1]=bins[-1][0]+last_bin_length-1
-    print("")
-    print("Done Creating Bins.")
     
     return bins
     
@@ -187,7 +220,7 @@ def assign_reads_to_bins(df, bins, selected_person):
     print(f"There are {empty_bins} empty bins: {empty_bins_list}")
     
     return person_reads
-
+    
 
 # Create Long Reads
 
@@ -195,12 +228,12 @@ def create_long_reads(person_reads):
 # Populated the person_reads dataframe with the long_read column
     
     print("")
-    print("CREATING LONG READS.")
+    print("Creating long reads.")
     
-    n_bins = max(person_reads['bin'].max())
+    max_bin_n = max(person_reads['bin'].max())
     
     # List of bins to iterate over
-    search_bins = list(range(n_bins))
+    search_bins = list(range(max_bin_n+1))
 
     # Initialize long read membership
     person_reads['long_read'] = np.nan
@@ -238,7 +271,6 @@ def create_long_reads(person_reads):
             
             # Assign first read_id (with all STRs) to long read
             person_reads.loc[person_reads['read_id']==first_read_id, 'long_read'] = long_read_number
-
             # Record assignment
             person_reads.loc[person_reads['read_id']==first_read_id, 'assigned'] = True
         
