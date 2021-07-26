@@ -13,7 +13,7 @@
 #   List of read IDs for each person: e.g. run1_chr11_person0_uniqueids.txt
 import sys
 print('')
-print('----------------------------------------------------------------------')
+print('------------------------------------------------------------------------------------------')
 print(f'06 - ASSIGN READS ({__file__})')
 print(f"Run: {sys.argv[1]}, disease: {sys.argv[2]}.")
 print('')

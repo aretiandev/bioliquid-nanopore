@@ -13,7 +13,7 @@
 #   reference genome without gaps: e.g. run1_chr11_reference_genome.json
 args = commandArgs(trailingOnly=TRUE)
 print('')
-print('----------------------------------------------------------------------')
+print('------------------------------------------------------------------------------------------')
 print('11 - TAG READS (11_tag_reads.R)')
 print(paste0("Run: ", args[1], ", disease: ", args[2]))
 print('')

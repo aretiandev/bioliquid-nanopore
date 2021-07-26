@@ -19,7 +19,7 @@
 #   reference genome without gaps: e.g. run1_chr11_reference_genome.json
 import sys
 print('')
-print('----------------------------------------------------------------------')
+print('------------------------------------------------------------------------------------------')
 print(f'04 - REMOVE GAPS ({__file__})')
 print(f"Run: {sys.argv[1]}, disease: {sys.argv[2]}.")
 print('')

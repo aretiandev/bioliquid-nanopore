@@ -11,7 +11,7 @@
 #   cluster results: datadir/run_chr_kmeans_clusters.csv'
 args = commandArgs(trailingOnly=TRUE)
 print('')
-print('----------------------------------------------------------------------')
+print('------------------------------------------------------------------------------------------')
 print('14 - STR CLUSTERING (14_str_clustering.R)')
 print(paste0("Run: ", args[1], ", disease: ", args[2]))
 print('')

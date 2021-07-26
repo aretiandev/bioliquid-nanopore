@@ -12,7 +12,7 @@
 #   BED and fasta files needed to run STRspy
 import sys
 print('')
-print('----------------------------------------------------------------------')
+print('------------------------------------------------------------------------------------------')
 print(f'08 - STRSPY CONFIG ({__file__})')
 print(f"Run: {sys.argv[1]}, disease: {sys.argv[2]}.")
 print('')

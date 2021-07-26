@@ -11,7 +11,7 @@
 #   VCF file with STRs present: {datadir}/{run_number}_{chrom}_person_full.txt
 import sys
 print('')
-print('----------------------------------------------------------------------')
+print('------------------------------------------------------------------------------------------')
 print(f'10 - ADD STRS ({__file__})')
 print(f"Run: {sys.argv[1]}, disease: {sys.argv[2]}.")
 print('')
@@ -58,11 +58,15 @@ datadir=f"{rootdir}/{run_number}"
 # Add necessary columns
 # -----------------------------------------------------------------------------
 def complete_str_df(person):
+    print(f'{person}: Adding motif and full STR columns.')
+
     # Load STRspy output
+    print(f'Reading STRspy output from: {datadir}/strspy/{dis}/output/Countings/{run_number}_{chrom}_{person}_strs.txt')
     strspy_df = pd.read_csv(f'{datadir}/strspy/{dis}/output/Countings/{run_number}_{chrom}_{person}_strs.txt', sep='\t')
     strspy_df.columns = ['name', 'count', 'normcount']
 
     # Load Full STR list
+    print(f'Loading STR list from:      {rootdir}/hg38.hipstr_reference_full_strs.bed')
     df = pd.read_csv(f'{rootdir}/hg38.hipstr_reference_full_strs.bed', sep='\t', header=None)
     df.columns=['chr','start','end','NA','repeats','name','motif','str']
 
@@ -71,11 +75,11 @@ def complete_str_df(person):
     output = output[['name','count','chr','start','end','motif', 'str']]
 
     # Save
+    print('Done.')
+    print("")
     return output
     
-print('Person0: Adding motif and full STR columns.')
 output0 = complete_str_df('person0')
-print('Person1: Adding motif and full STR columns.')
 output1 = complete_str_df('person1')
 
 # Save

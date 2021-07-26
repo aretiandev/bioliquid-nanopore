@@ -11,7 +11,7 @@
 #   recall scores: e.g. datadir/run_chr_recall_score.csv
 import sys
 print('')
-print('----------------------------------------------------------------------')
+print('------------------------------------------------------------------------------------------')
 print(f'15 - SCORE ({__file__})')
 print(f"Run: {sys.argv[1]}, disease: {sys.argv[2]}.")
 print('')

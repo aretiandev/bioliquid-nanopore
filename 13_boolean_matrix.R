@@ -16,8 +16,8 @@
 #   boolean matrix of tagged reads: e.g. datadir/run_chr_bool_tagged_reads.csv'
 args = commandArgs(trailingOnly=TRUE)
 print('')
-print('----------------------------------------------------------------------')
-print('13 - BOOLEAN MATRIX (12_boolean_matrix.R)')
+print('------------------------------------------------------------------------------------------')
+print('13 - BOOLEAN MATRIX (13_boolean_matrix.R)')
 print(paste0("Run: ", args[1], ", disease: ", args[2]))
 print('')
 print('')

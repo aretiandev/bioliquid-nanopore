@@ -17,7 +17,7 @@
 #   Clustered reads with windows: run1_chr11_read_clusters.txt
 import sys
 print('')
-print('----------------------------------------------------------------------')
+print('------------------------------------------------------------------------------------------')
 print(f'05 - CLUSTERING ({__file__})')
 print(f"Run: {sys.argv[1]}, disease: {sys.argv[2]}.")
 print('')

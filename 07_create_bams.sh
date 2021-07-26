@@ -11,15 +11,17 @@
 # 
 # OUTPUTS:
 #   BAM files: e.g. run1_chr11_person0.bam" 
-echo ''
-echo "07 - CREATE BAMS"
+echo ""
+echo "------------------------------------------------------------------------------------------"
+echo "07 - CREATE BAMS (${0})"
+echo "Run: ${1}, disease: ${2}"
+echo ""
+echo ""
 
 # Input variables
 # -----------------------------------------------------------------------------
 run_number="run${1}"
 dis=$2
-echo "Run: ${1}, disease: $dis"
-echo ''
 source src/setup_variables.sh $dis
 
 # Create bam files
