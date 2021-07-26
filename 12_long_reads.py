@@ -263,6 +263,7 @@ def trim_long_reads(person0_reads, person1_reads, desired_n_long_reads, n0_extra
         # Default Option 1: Set manually
         n0_extract_default = 15
         n1_extract_default = 10
+        print(f'Trimmed long reads: person0: {n0_extract_default}, person1: {n1_extract_default}.')
     elif ratio == 'proportional':
         # Default Option 2: Proportional to read counts
         n_long_reads0 = len(person0_reads)
@@ -272,7 +273,7 @@ def trim_long_reads(person0_reads, person1_reads, desired_n_long_reads, n0_extra
         share_long_reads1 = n_long_reads1/n_long_reads
         n0_extract_default = round(share_long_reads0*desired_n_long_reads)
         n1_extract_default = desired_n_long_reads - n0_extract_default
-        print(f'Proportional ratio: {n0_extract_default}, {n1_extract_default}.')
+        print(f'Proportional ratio: person0: {n0_extract_default}, person1 {n1_extract_default}.')
     
     if n0_extract is None:
         n0_extract = n0_extract_default
@@ -404,7 +405,8 @@ print(f"Person 0 long reads: {person0_reads['long_read'].max():,.0f}")
 print(f"Person 1 long reads: {person1_reads['long_read'].max():,.0f}")
 
 # Trim Long Reads
-person0_reads_trim, person1_reads_trim = trim_long_reads(person0_reads, person1_reads, 25, 15, 10)
+person0_reads_trim, person1_reads_trim = trim_long_reads(person0_reads, person1_reads, 25, ratio='proportional')
+# person0_reads_trim, person1_reads_trim = trim_long_reads(person0_reads, person1_reads, 25, 15, 10)
 
 # Fill in gaps within person
 person0_reads_full_within = fill_gaps_within_person(person0_reads_trim)
