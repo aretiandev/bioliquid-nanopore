@@ -273,7 +273,7 @@ def trim_long_reads(person0_reads, person1_reads, desired_n_long_reads, n0_extra
         share_long_reads1 = n_long_reads1/n_long_reads
         n0_extract_default = round(share_long_reads0*desired_n_long_reads)
         n1_extract_default = desired_n_long_reads - n0_extract_default
-        print(f'Proportional ratio: person0: {n0_extract_default}, person1 {n1_extract_default}.')
+        print(f'Proportional ratio: person0: {n0_extract_default}, person1: {n1_extract_default}.')
     
     if n0_extract is None:
         n0_extract = n0_extract_default
