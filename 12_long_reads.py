@@ -447,6 +447,27 @@ person1_reads_full_within = fill_gaps_within_person(person1_reads_trim)
 # Concatenate output
 person_reads = pd.concat([person0_reads_full_within, person1_reads_full_within])
 
+# Plot
+print("")
+print("Creating plots of long reads.")
+print("")
+
+# Person0
+long_reads0_plot = plot_long_reads(person0_reads_full_within)
+filename_out0 = f'{run_number}_{chrom}_long_reads_person0.png'
+plt.savefig(f'cluster_plots/{filename_out0}', bbox_inches='tight')
+plt.savefig(f'{datadir}/{filename_out0}'    , bbox_inches='tight')
+
+# Person1
+long_reads1_plot = plot_long_reads(person1_reads_full_within)
+filename_out1 = f'{run_number}_{chrom}_long_reads_person1.png'
+plt.savefig(f'cluster_plots/{filename_out1}', bbox_inches='tight')
+plt.savefig(f'{datadir}/{filename_out1}'    , bbox_inches='tight')
+
+print(f"Saved: {datadir}/{filename_out0}")
+print(f"Saved: {datadir}/{filename_out1}")
+print("Created copies in cluster_plots/ folder.")
+
 # Create Output File
 # -----------------------------------------------------------------------------
 
