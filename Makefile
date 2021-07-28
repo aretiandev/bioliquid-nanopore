@@ -36,7 +36,7 @@ boolean_matrix := $(datadir)/$(run_number)_$(chrom)_bool_tagged_reads.csv
 str_cluster    := $(datadir)/$(run_number)_$(chrom)_kmeans_clusters.csv
 score          := $(datadir)/$(run_number)_$(chrom)_recall_score.csv
 
-.PHONY: all all_log basecall align get_ref extract_ref extract_reads remove_gaps clean_remove_gaps cluster clean_cluster assign create_bams strspy_config strspy clean_strspy str_list add_strs tag_reads long_reads boolean_matrix str_cluster score
+.PHONY: all all_log basecall align get_ref extract_ref extract_reads clean_extract_reads remove_gaps clean_remove_gaps cluster clean_cluster assign create_bams strspy_config strspy clean_strspy str_list add_strs tag_reads long_reads boolean_matrix str_cluster score
 
 all: score
 
@@ -77,6 +77,9 @@ extract_reads: $(extract_reads)
 $(extract_reads): 03_extract_reads.sh
 	@bash 03_extract_reads.sh $(run) $(dis)
 
+clean_extract_reads: 
+	rm $(extract_reads)
+    
 remove_gaps: $(remove_gaps)
 $(remove_gaps): $(extract_ref) $(extract_reads) 04_remove_gaps.py
 	@/home/fer/miniconda3/envs/genomics/bin/python3 04_remove_gaps.py $(run) $(dis)
