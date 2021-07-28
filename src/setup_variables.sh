@@ -17,6 +17,7 @@
 location_padding=2000000
 
 dis=$1
+
 case $dis in
     cf)
         chrom="chr7"
@@ -26,20 +27,32 @@ case $dis in
         chrom="chr11"
         location=5227002
         ;;
-    sma)
+    sma1)
         chrom="chr5"
-        location=
+        location=$(( (70924941 + 70953015)/2 ))
         ;;
-    thal)
+    sma2)
+        chrom="chr5"
+        location=$(( (70049523 + 70077595)/2 ))
+        ;;
+    thal1)
         chrom="chr16"
-        location=
+        location=$(( (176680   + 177522)/2  )) 
+        ;;
+    thal2)
+        chrom="chr16"
+        location=$(( (172876   + 173710)/2  ))
+        ;;
+    thal3)
+        chrom="chr11"
+        location=$(( (5225464  + 5227071)/2 ))
         ;;
     pompe)
         chrom="chr17"
         location=25000000
         ;;
     *)
-        echo "Disease should be in disease list: cf, sca, sma, thal, pompe."
+        echo "Disease should be in disease list: cf, sca, sma1/2, thal1/2/3, pompe."
         exit 1
 esac
 
