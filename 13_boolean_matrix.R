@@ -39,8 +39,8 @@ run_number=paste0("run",run_num)
 
 dis_params = data.frame('disease' = c('sca', 'cystic', 'spinal1', 'spinal2', 'thal1', 'thal2', 'thal3', 'pompe'),
                     'chr' = c('chr11','chr7','chr5', 'chr5', 'chr16', 'chr16', 'chr16', 'chr17'),
-                    'start' = c(5227002, 117559590, 70924941, 70049523, 176680, 172876, 5225464, 0),
-                    'end'   = c(5227002, 117559590, 70953015, 70077595, 177522, 173710, 5227071, 0))
+                    'start' = c(5227002, 117559590, 70924941, 70049523, 176680, 172876, 5225464, 25000000),
+                    'end'   = c(5227002, 117559590, 70953015, 70077595, 177522, 173710, 5227071, 25000000))
 
 chr = dis_params %>% filter(disease == dis) %>% select(chr) %>% pull
 

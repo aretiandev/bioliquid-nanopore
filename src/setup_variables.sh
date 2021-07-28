@@ -20,7 +20,7 @@ dis=$1
 case $dis in
     cf)
         chrom="chr7"
-        location=
+        location=117559590
         ;;
     sca)
         chrom="chr11"
