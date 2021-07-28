@@ -185,47 +185,49 @@ print("")
 print(f"Iterations: ", end="")
 
 results_file = open(results_file_path,"w")
+islands_list = nanopore_reads['islandID'].unique()
+n_islands = len(islands_list)
+
 iter = 0
 empty_count = 0
-threshold = 5
-islands_list = nanopore_reads['islandID'].unique()
+islands_counter = 0
+progress_threshold = 5
 
 for current_islandID in islands_list:
+    
+    # Show progress
+    islands_counter += 1
+    progress = (islands_counter/n_islands)*100
+    if progress > progress_threshold:
+        progress_threshold += 5
+        print(f" {round(progress):.0f}% ", end="")
+        
     island_reads = nanopore_reads.loc[nanopore_reads['islandID']==current_islandID].copy()
 
     island_width = max(island_reads['END_POS'])- min(island_reads['POS'])+1
-#     number_of_jumps = (island_width - window_width + 1) / jump_width
-    number_of_windows = np.ceil( (island_width - window_width) / jump_width ) + 1
     
+    if window_width > island_width:
+        number_of_windows = 1
+    else:
+        number_of_windows = np.ceil( (island_width - window_width) / jump_width ) + 1
+        
     window_number=1
     
     is_first_window=1
-
+    
     for left_bound in range(min(island_reads['POS']),max(island_reads['END_POS']),jump_width):
-    # for left_bound in range(950000,970000,jump_width):
 
-#         print(f"window number: {window_number}")
-#         print(f"iter: {iter}")
-#         print(f"is_first_window: {is_first_window}")
-              
         is_last_window = ( window_number == number_of_windows )
         
         if is_last_window:
             # Adjust left_bound
             left_bound = max(island_reads['END_POS']) - window_width + 1
             
-        window_number += 1
+            if left_bound < 0:
+                left_bound = 0
 
         iter+=1
-        # Print progress in jumps of 5%
-        progress = iter/total_jumps*100
-        if progress>=threshold:
-            print(f'{threshold}%', end="")
-            threshold = threshold+5
-
-    #     if round(progress*1000)%50==0:
-    #         print(f" {round(progress*100):.0f}% ", end="", flush=True)
-
+        
         right_bound = left_bound+window_width
         window_ref_genome = ref_genome[left_bound:left_bound+window_width]
 
@@ -235,12 +237,7 @@ for current_islandID in islands_list:
 
         # Get them
         window_reads = island_reads.loc[island_reads['read_filter']==True] 
-    #     print(f" {window_reads['ID'].unique()}-", end="")
         window_reads = window_reads.reset_index()
-
-        # Display feedback to user every 100 empty windows
-    #     if empty_count%100 == 0:
-    #         print(empty_count)
 
         if len(window_reads) == 0:
             # There are no nanopore reads in this window (next window)
@@ -252,7 +249,9 @@ for current_islandID in islands_list:
             empty_window_reads = pd.DataFrame(data)
 
             empty_window_reads.apply(lambda x: write_results_to_file(x, is_first_window, results_file), axis=1) # write results to file
+            
             is_first_window=0
+            window_number += 1
             continue 
 
         elif len(window_reads) == 1:
@@ -264,7 +263,9 @@ for current_islandID in islands_list:
             window_reads['window_num']=iter
             window_reads['kmeans_cls2']=0
             window_reads.apply(lambda x: write_results_to_file(x, is_first_window, results_file), axis=1) # write results to file
+            
             is_first_window=0
+            window_number += 1
             continue
 
         # More than one read in window. Proceeding to padding and clustering
@@ -279,11 +280,8 @@ for current_islandID in islands_list:
     #     window_reads['one_hot_read_V1'] = window_reads['final_padded_read'].apply(lambda x: nucleotide_to_one_hot(x).flatten())  # apply one-hot encoding V1
 
     #     One hot encoding
-    #     unique_reads = []
-    #     for index, read in window_reads.iterrows(): # TODO: TRY TO USE LAMBDA FUNCTION IF POSSIBLE
-    #         unique_reads.append(list(read['final_padded_read']))
-
         unique_reads = [list(row) for row in window_reads['final_padded_read']]
+        
         X_onehot = encoder.fit_transform(unique_reads).toarray()
 
         # PCA
@@ -310,6 +308,7 @@ for current_islandID in islands_list:
         window_reads.apply(lambda x: write_results_to_file(x, is_first_window, results_file), axis=1) # write results to file
 
         is_first_window=0
+        window_number += 1
             
         print(f"*", end="", flush=True)
 
@@ -320,7 +319,7 @@ for current_islandID in islands_list:
 results_file.close()
 print("")
 print("Done padding and clustering.")
-read_clusters_df = pd.read_csv(f'{datadir}/{run_number}_{chrom}_read_clusters.txt', header=None)
+read_clusters_df = pd.read_csv(results_file_path, header=None)
 read_clusters_df.columns = ['ID', 'kmeans_cls2', 'window_num','is_first_window']
 cluster0_size = (read_clusters_df['kmeans_cls2']==0).sum()
 cluster1_size = (read_clusters_df['kmeans_cls2']==1).sum()
