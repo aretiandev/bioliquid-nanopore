@@ -37,7 +37,7 @@ suppressMessages(library(reshape2))
 # print('Setting parameters.')
 run_number=paste0("run",run_num)
 
-dis_params = data.frame('disease' = c('sca', 'cystic', 'spinal1', 'spinal2', 'thal1', 'thal2', 'thal3', 'pompe'),
+dis_params = data.frame('disease' = c('sca', 'cf', 'sma1', 'sma2', 'thal1', 'thal2', 'thal3', 'pompe'),
                     'chr' = c('chr11','chr7','chr5', 'chr5', 'chr16', 'chr16', 'chr11', 'chr17'),
                     'start' = c(5227002, 117559590, 70924941, 70049523, 176680, 172876, 5225464, 25000000),
                     'end'   = c(5227002, 117559590, 70953015, 70077595, 177522, 173710, 5227071, 25000000))
@@ -71,7 +71,7 @@ booldf <- unmeltdf(df)
 # Save
 # -----------------------------------------------------------------------------
 write.csv(booldf, paste0(datadir, '/',run_number,'_',chr,'_',dis,'_bool_tagged_reads.csv'), row.names = FALSE)
-write.csv(booldf,'bool_tagged_reads/',run_number,'_',chr,'_',dis,'_bool_tagged_reads.csv'), row.names = FALSE)
+write.csv(booldf, paste0('bool_tagged_reads/',run_number,'_',chr,'_',dis,'_bool_tagged_reads.csv'), row.names = FALSE)
 
 print(paste0('Saved:               ', datadir,'/',run_number,'_',chr,'_',dis,'_bool_tagged_reads.csv'))
 print('Saved copy in bool_tagged_reads/ folder in homedir.')
