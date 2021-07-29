@@ -39,6 +39,7 @@ except:
 run_number=f"run{run_num}"
 chrom_dis=f"{chrom}_{dis}"
 datadir=f"{rootdir}/{run_number}"
+strspydir=f"/home/fer/genomics/strspy"
 
 # Individual BED and Fasta files
 # -----------------------------------------------------------------------------
@@ -103,3 +104,21 @@ if not os.path.exists(f"{datadir}/strspy/{dis}/input/regions"):
 	os.makedirs(f"{datadir}/strspy/{dis}/input/regions")
 selected_strs.to_csv(f'{datadir}/strspy/{dis}/input/regions/all_strs.bed', header=False, index=False, sep='\t')
 print(f'Saved single BED file for all STRs: {datadir}/strspy/{dis}/input/regions/all_strs.bed' )
+
+# Create STRspy config file
+# -----------------------------------------------------------------------------
+linesout=[
+    f"INPUT_DIR={datadir}/strspy/{dis}/input\n",
+    f"INPUT_BAM=yes\n",
+    f"READ_TYPE=ont\n",
+    f"STR_FASTA={datadir}/strspy/{dis}/input/db\n",
+    f"STR_BED={datadir}/strspy/{dis}/input/db\n",
+    f"REGION_BED={datadir}/strspy/{dis}/input/regions/all_strs.bed\n",
+    f"NORM_CUTOFF=0.4\n",
+    f"OUTPUT_DIR={datadir}/strspy/{dis}/output",
+    ]
+
+with open(f'{strspydir}/config/{run_number}_{chrom_dis}_inputconfig.txt', 'w') as f:
+    f.writelines(linesout)
+    
+print(f'Created STRspy config file: {strspydir}/config/{run_number}_{chrom_dis}_inputconfig.txt')
