@@ -34,7 +34,7 @@ end=$(expr $location + $location_padding)
 # Extract location of interest
 # -----------------------------------------------------------------------------
 echo "Extracting location $chrom:$begin-$end from $run_reads"
-/home/fer/miniconda3/envs/genomics/bin/samtools view -b $run_reads "chr11:$begin-$end" > $output
+/home/fer/miniconda3/envs/genomics/bin/samtools view -b $run_reads $chrom:$begin-$end > $output
 # Index
 /home/fer/miniconda3/envs/genomics/bin/samtools index $output
 
