@@ -12,7 +12,7 @@
 args = commandArgs(trailingOnly=TRUE)
 print('')
 print('------------------------------------------------------------------------------------------')
-print('16 - DISEASE DIAGNOSTIC (16_disease_diagnostic.R)')
+print('17 - DISEASE DIAGNOSTIC (17_disease_diagnostic.R)')
 print(paste0("Run: ", args[1], ", disease: ", args[2]))
 print('')
 print('')
@@ -76,11 +76,13 @@ gr <- GRanges(seqnames = chr,
               ranges = IRanges(start = snp_start, end = snp_end))
 params <- ScanBamParam(which = gr, what = scanBamWhat())
 
+
 # Person 0
 aln <- scanBam(person0bam, param = params)
 reads <- data.frame('startpos' = aln[[1]]$pos, 
-                    'read' = aln[[1]]$seq)
-reads2 <- reads                                                        %>%
+                    'read'     = aln[[1]]$seq)
+tryCatch({ 
+    reads2 <- reads                                                    %>%
     mutate(length         = nchar(read)                   ,
            snp_start_0    = snp_start - startpos          ,
            snp_end_0      = snp_end   - startpos          ,
@@ -90,17 +92,24 @@ reads2 <- reads                                                        %>%
            snp_start      = snp_start                     ,
            snp_end        = snp_end                       )            %>%
     select(snp_start, snp_end, left_padding,  segment, right_padding)  %>%
-    sample_n(20)
-
-write.csv(reads2, paste0(datadir,'/',run_number,'_',chr,'_',dis,'person0_diagnostic_reads.csv'), row.names = FALSE)
-write.csv(reads2, paste0('disease_diagnostic/',run_number,'_',chr,'_',dis,'person0_diagnostic_reads.csv'), row.names = FALSE)
+    sample_n(10)
+    
+    write.csv(reads2, paste0(datadir,'/',run_number,'_',chr,'_',dis,'person0_diagnostic_reads.csv'), row.names = FALSE)
+    write.csv(reads2, paste0('disease_diagnostic/',run_number,'_',chr,'_',dis,'person0_diagnostic_reads.csv'), row.names = FALSE)
+    print(paste0('Saved: ',datadir,'/',run_number,'_',chr,'_',dis,'person0_diagnostic_reads.csv'))
+    print('Saved copies of each csv in disease_diagnostic/ folder in homedir.')    
+    }, 
+    error=function(cond){
+        print(paste0('There are no reads in location ', chr,':',snp_start,'-',snp_end))
+    })
 
 # Person 1
 aln <- scanBam(person1bam, param = params)
 reads <- data.frame('startpos' = aln[[1]]$pos, 
                     'read' = aln[[1]]$seq)
 
-reads2 <- reads                                                        %>%
+tryCatch({ 
+    reads2 <- reads                                                    %>%
     mutate(length         = nchar(read)                   ,
            snp_start_0    = snp_start - startpos          ,
            snp_end_0      = snp_end   - startpos          ,
@@ -110,11 +119,14 @@ reads2 <- reads                                                        %>%
            snp_start      = snp_start                     ,
            snp_end        = snp_end                       )            %>%
     select(snp_start, snp_end, left_padding,  segment, right_padding)  %>%
-    sample_n(20)
+    sample_n(10)
+    
+    write.csv(reads2, paste0(datadir,'/',run_number,'_',chr,'_',dis,'person1_diagnostic_reads.csv'), row.names = FALSE)
+    write.csv(reads2, paste0('disease_diagnostic/',run_number,'_',chr,'_',dis,'person1_diagnostic_reads.csv'), row.names = FALSE)
 
-write.csv(reads2, paste0(datadir,'/',run_number,'_',chr,'_',dis,'person1_diagnostic_reads.csv'), row.names = FALSE)
-write.csv(reads2, paste0('disease_diagnostic/',run_number,'_',chr,'_',dis,'person1_diagnostic_reads.csv'), row.names = FALSE)
-
-print(paste0('Saved: ',datadir,'/',run_number,'_',chr,'_',dis,'person0_diagnostic_reads.csv'))
-print(paste0('Saved: ',datadir,'/',run_number,'_',chr,'_',dis,'person1_diagnostic_reads.csv'))
-print('Saved copies of each csv in disease_diagnostic/ folder in homedir.')
+    print(paste0('Saved: ',datadir,'/',run_number,'_',chr,'_',dis,'person1_diagnostic_reads.csv'))
+    print('Saved copies of each csv in disease_diagnostic/ folder in homedir.')
+    }, 
+    error=function(cond){
+        print(paste0('There are no reads in location ', chr,':',snp_start,'-',snp_end))
+    })
