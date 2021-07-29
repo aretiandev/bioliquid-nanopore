@@ -41,8 +41,8 @@ datadir=f"{rootdir}/{run_number}"
 
 # Load data
 # -----------------------------------------------------------------------------
-print(f'Reading clustering results: {datadir}/{run_number}_{chrom}_kmeans_clusters.csv')
-df = pd.read_csv(f'{datadir}/{run_number}_{chrom}_kmeans_clusters.csv')
+print(f'Reading clustering results: {datadir}/{run_number}_{chrom_dis}_kmeans_clusters.csv')
+df = pd.read_csv(f'{datadir}/{run_number}_{chrom_dis}_kmeans_clusters.csv')
 df = df[['sample','kmeans_clusters']]
 df.columns = ['true','predicted']
 
@@ -59,7 +59,7 @@ recall1 = recall_score(df['true'],df['predicted'], pos_label=1)
 print(f"The recall score for cluster 1 is {recall1}")
 
 # Save results
-with open(f'{datadir}/{run_number}_{chrom}_recall_score.csv', 'w') as f:
+with open(f'{datadir}/{run_number}_{chrom_dis}_recall_score.csv', 'w') as f:
     f.write(f"{recall0},{recall1}")
     
-print(f'Saved score results:       {datadir}/{run_number}_{chrom}_recall_score.csv')
+print(f'Saved score results:       {datadir}/{run_number}_{chrom_dis}_recall_score.csv')

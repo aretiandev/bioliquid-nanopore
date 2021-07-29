@@ -23,20 +23,20 @@ get_ref        := $(rootdir)/GCA_000001405.15_GRCh38_no_alt_analysis_set.fna.gz
 extract_ref    := $(rootdir)/$(chrom)_selected.fa
 extract_reads  := $(datadir)/$(run_number)_$(chrom)_$(dis).sam
 remove_gaps    := $(datadir)/$(run_number)_$(chrom)_$(dis)_clean.csv
-cluster        := $(datadir)/$(run_number)_$(chrom)_read_clusters.txt
-assign         := $(datadir)/$(run_number)_$(chrom)_person0_uniqueids.txt
-create_bams    := $(datadir)/strspy/$(dis)/input/$(run_number)_$(chrom)_person0.bam
+cluster        := $(datadir)/$(run_number)_$(chrom)_$(dis)_read_clusters.txt
+assign         := $(datadir)/$(run_number)_$(chrom)_$(dis)_person0_uniqueids.txt
+create_bams    := $(datadir)/strspy/$(dis)/input/$(run_number)_$(chrom)_$(dis)_person0.bam
 str_list       := $(rootdir)/hg38.hipstr_reference_full_strs.bed
 strspy_config  := $(datadir)/strspy/$(dis)/input/regions/all_strs.bed
-strspy         := $(datadir)/strspy/$(dis)/output/Countings/run${run}_${chrom}_person0_strs.txt
-add_strs       := $(datadir)/$(run_number)_$(chrom)_person_full.txt
-tag_reads      := $(datadir)/$(run_number)_$(chrom)_tagged_reads.csv
-long_reads     := $(datadir)/$(run_number)_$(chrom)_long_tagged_reads.csv
-boolean_matrix := $(datadir)/$(run_number)_$(chrom)_bool_tagged_reads.csv
-str_cluster    := $(datadir)/$(run_number)_$(chrom)_kmeans_clusters.csv
+strspy         := $(datadir)/strspy/$(dis)/output/Countings/run${run}_${chrom_dis}_person0_strs.txt
+add_strs       := $(datadir)/$(run_number)_$(chrom_dis)_person_full.txt
+tag_reads      := $(datadir)/$(run_number)_$(chrom_dis)_tagged_reads.csv
+long_reads     := $(datadir)/$(run_number)_$(chrom_dis)_long_tagged_reads.csv
+boolean_matrix := $(datadir)/$(run_number)_$(chrom_dis)_bool_tagged_reads.csv
+str_cluster    := $(datadir)/$(run_number)_$(chrom_dis)_kmeans_clusters.csv
 score          := $(datadir)/$(run_number)_$(chrom)_recall_score.csv
 
-.PHONY: all all_log basecall align get_ref extract_ref extract_reads clean_extract_reads remove_gaps clean_remove_gaps cluster clean_cluster assign create_bams strspy_config strspy clean_strspy str_list add_strs tag_reads long_reads boolean_matrix str_cluster score
+.PHONY: all all_log basecall align get_ref extract_ref extract_reads clean_extract_reads remove_gaps clean_remove_gaps cluster clean_cluster assign create_bams str_list strspy_config strspy clean_strspy add_strs tag_reads long_reads boolean_matrix str_cluster score
 
 all: score
 
@@ -137,12 +137,12 @@ str_cluster: $(str_cluster)
 $(str_cluster): $(boolean_matrix) 14_str_clustering.R
 	@/usr/bin/Rscript 14_str_clustering.R $(run) $(dis)
 	@mkdir -p /home/fer/genomics/bioliquid-nanopore/cluster_plots
-	@cp $(datadir)/$(run_number)_$(chrom)_assigned_kmeans_clusters.png /home/fer/genomics/bioliquid-nanopore/cluster_plots/
-	@cp $(datadir)/$(run_number)_$(chrom)_real_sample_labels.png       /home/fer/genomics/bioliquid-nanopore/cluster_plots/
+	@cp $(datadir)/$(run_number)_$(chrom)_$(dis)_assigned_kmeans_clusters.png /home/fer/genomics/bioliquid-nanopore/cluster_plots/
+	@cp $(datadir)/$(run_number)_$(chrom)_$(dis)_real_sample_labels.png       /home/fer/genomics/bioliquid-nanopore/cluster_plots/
 	@echo Copying plots to home folder.
 	@mkdir -p /home/fer/genomics/bioliquid-nanopore/cluster_plots
-	@echo Saved: /home/fer/genomics/bioliquid-nanopore/cluster_plots/$(run_number)_$(chrom)_assigned_kmeans_clusters.png
-	@echo Saved: /home/fer/genomics/bioliquid-nanopore/cluster_plots/$(run_number)_$(chrom)_real_sample_labels.png 
+	@echo Saved: /home/fer/genomics/bioliquid-nanopore/cluster_plots/$(run_number)_$(chrom)_$(dis)_assigned_kmeans_clusters.png
+	@echo Saved: /home/fer/genomics/bioliquid-nanopore/cluster_plots/$(run_number)_$(chrom)_$(dis)_real_sample_labels.png 
 
 score: $(score)
 $(score): $(str_cluster) 15_score.py

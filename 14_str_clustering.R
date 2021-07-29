@@ -57,9 +57,9 @@ constfunc <- function(x) {
 
 # Load data
 # -----------------------------------------------------------------------------
-print(paste0('Loading Boolean Matrix:                 ',datadir,'/',run_number,'_',chr,'_bool_tagged_reads.csv'))
+print(paste0('Loading Boolean Matrix:                 ',datadir,'/',run_number,'_',chr,'_',dis,'_bool_tagged_reads.csv'))
 
-data <- read.csv(paste0(datadir,'/',run_number,'_',chr,'_bool_tagged_reads.csv'), stringsAsFactors = FALSE)
+data <- read.csv(paste0(datadir,'/',run_number,'_',chr,'_',dis,'_bool_tagged_reads.csv'), stringsAsFactors = FALSE)
 data$sample <- unlist(lapply(data$read_id, mysplit))
 
 data$sample <- as.factor(data$sample)
@@ -81,9 +81,9 @@ set.seed(123)
 kres <- kmeans(data_nolabels_noconstants, centers = 2)
 
 
-print(paste0('Generating plot with assigned clusters: ',datadir,'/',run_number,'_',chr,'_assigned_kmeans_clusters.png'))
+print(paste0('Generating plot with assigned clusters: ',datadir,'/',run_number,'_',chr,'_',dis,'_assigned_kmeans_clusters.png'))
 
-png(file=paste0(datadir,'/',run_number,'_',chr,'_assigned_kmeans_clusters.png'))
+png(file=paste0(datadir,'/',run_number,'_',chr,'_',dis,'_assigned_kmeans_clusters.png'))
 fviz_cluster(kres, data = data_nolabels_noconstants, labelsize = 0,
              ellipse = TRUE, ellipse.type = "convex",
               ellipse.level = 0.95, ellipse.alpha = 0.2,
@@ -99,9 +99,9 @@ dev.off()
 kres_lab <- kres # color by real group
 kres_lab$cluster <- data$sample
 
-print(paste0('Generating plot with real clusters:     ',datadir,'/',run_number,'_',chr,'_real_sample_labels.png'))
+print(paste0('Generating plot with real clusters:     ',datadir,'/',run_number,'_',chr,'_',dis,'_real_sample_labels.png'))
 
-png(file=paste0(datadir,'/',run_number,'_',chr,'_real_sample_labels.png'))
+png(file=paste0(datadir,'/',run_number,'_',chr,'_',dis,'_real_sample_labels.png'))
 fviz_cluster(kres_lab, data = data_nolabels_noconstants, labelsize = 0,
              ellipse = TRUE, ellipse.type = "convex",
               ellipse.level = 0.95, ellipse.alpha = 0.2,
@@ -115,5 +115,5 @@ fviz_cluster(kres_lab, data = data_nolabels_noconstants, labelsize = 0,
 dev.off()
 
 data$kmeans_clusters <- kres$cluster
-write.csv(data, paste0(datadir,'/',run_number,'_',chr,'_kmeans_clusters.csv'), row.names = FALSE)
-print(paste0('Saved:                                  ',datadir,'/',run_number,'_',chr,'_kmeans_clusters.csv'))
+write.csv(data, paste0(datadir,'/',run_number,'_',chr,'_',dis,'_kmeans_clusters.csv'), row.names = FALSE)
+print(paste0('Saved:                                  ',datadir,'/',run_number,'_',chr,'_',dis,'_kmeans_clusters.csv'))

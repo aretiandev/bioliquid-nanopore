@@ -46,10 +46,10 @@ chr = dis_params %>% filter(disease == dis) %>% select(chr) %>% pull
 
 datadir = paste0('/mnt/aretian/genomics/nanopore/',run_number)
 
-P0bam <- paste0(datadir,'/strspy/',dis,'/input/',run_number,'_', chr,'_','person0.bam')
-P0ind <- paste0(datadir,'/strspy/',dis,'/input/',run_number,'_', chr,'_','person0.bam.bai')
-P1bam <- paste0(datadir,'/strspy/',dis,'/input/',run_number,'_', chr,'_','person1.bam')
-P1ind <- paste0(datadir,'/strspy/',dis,'/input/',run_number,'_', chr,'_','person1.bam.bai')
+P0bam <- paste0(datadir,'/strspy/',dis,'/input/',run_number,'_',chr,'_',dis,'_','person0.bam')
+P0ind <- paste0(datadir,'/strspy/',dis,'/input/',run_number,'_',chr,'_',dis,'_','person0.bam.bai')
+P1bam <- paste0(datadir,'/strspy/',dis,'/input/',run_number,'_',chr,'_',dis,'_','person1.bam')
+P1ind <- paste0(datadir,'/strspy/',dis,'/input/',run_number,'_',chr,'_',dis,'_','person1.bam.bai')
 
 Person0Bam <- BamFile(file = P0bam, index = P0ind)
 Person1Bam <- BamFile(file = P1bam, index = P1ind)
@@ -57,9 +57,9 @@ samples <- c(Person0Bam, Person1Bam)
 
 # Load data
 # -----------------------------------------------------------------------------
-print(paste0('Loading STRspy output: ',datadir,'/',run_number,'_',chr,'_person_full.txt'))
+print(paste0('Loading STRspy output: ',datadir,'/',run_number,'_',chr,'_',dis,'_person_full.txt'))
 
-vcf_filepath <- paste0(datadir,'/',run_number,'_',chr,'_person_full.txt')
+vcf_filepath <- paste0(datadir,'/',run_number,'_',chr,'_',dis,'_person_full.txt')
 vcf <- read.table(vcf_filepath, sep = '\t', stringsAsFactors = FALSE)
 # x <- readLines(vcf_filepath)
 
@@ -195,7 +195,7 @@ for (str in c(1:nrow(vcf))) { #
 print("")
 print(paste0('Concatenating and removing all individual files.'))
 input = paste0(datadir,'/strs/str[[:digit:]]*.csv')
-output = paste0(datadir,'/',run_number,'_',chr,'_tagged_reads.csv')
+output = paste0(datadir,'/',run_number,'_',chr,'_',dis,'_tagged_reads.csv')
 
 concatenate_cmd = paste0("awk 'FNR==1 && NR!=1{next;}{print}' ", input, ' > ', output)
 system(concatenate_cmd)

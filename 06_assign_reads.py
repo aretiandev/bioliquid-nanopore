@@ -45,10 +45,10 @@ datadir=f"{rootdir}/{run_number}"
 # -----------------------------------------------------------------------------
 
 # Load read_clusters
-print(f'Reading clusters from:             {datadir}/{run_number}_{chrom}_read_clusters.txt')
+print(f'Reading clusters from:             {datadir}/{run_number}_{chrom_dis}_read_clusters.txt')
 print(f'Reading clean Nanopore reads from: {datadir}/{run_number}_{chrom_dis}_clean.csv')
 
-results_file = pd.read_csv(f"{datadir}/{run_number}_{chrom}_read_clusters.txt")
+results_file = pd.read_csv(f"{datadir}/{run_number}_{chrom_dis}_read_clusters.txt")
 
 results_file.columns = ['ID', 'kmeans_cls2', 'window_num', 'is_first_window']
 
@@ -353,5 +353,5 @@ for person in [0,1]:
     # Get IDs of Person
     personuniqueids = nanopore_reads.loc[nanopore_reads['individual']==person, 'uniqueid']
     # Save to text file
-    np.savetxt(f"{datadir}/{run_number}_{chrom}_person{person}_uniqueids.txt", personuniqueids.values , fmt='%s')
-    print(f"Saved: {datadir}/{run_number}_{chrom}_person{person}_uniqueids.txt")
+    np.savetxt(f"{datadir}/{run_number}_{chrom_dis}_person{person}_uniqueids.txt", personuniqueids.values , fmt='%s')
+    print(f"Saved: {datadir}/{run_number}_{chrom_dis}_person{person}_uniqueids.txt")

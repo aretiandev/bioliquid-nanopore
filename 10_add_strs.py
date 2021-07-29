@@ -61,8 +61,8 @@ def complete_str_df(person):
     print(f'{person}: Adding motif and full STR columns.')
 
     # Load STRspy output
-    print(f'Reading STRspy output from: {datadir}/strspy/{dis}/output/Countings/{run_number}_{chrom}_{person}_strs.txt')
-    strspy_df = pd.read_csv(f'{datadir}/strspy/{dis}/output/Countings/{run_number}_{chrom}_{person}_strs.txt', sep='\t')
+    print(f'Reading STRspy output from: {datadir}/strspy/{dis}/output/Countings/{run_number}_{chrom_dis}_{person}_strs.txt')
+    strspy_df = pd.read_csv(f'{datadir}/strspy/{dis}/output/Countings/{run_number}_{chrom_dis}_{person}_strs.txt', sep='\t')
     strspy_df.columns = ['name', 'count', 'normcount']
 
     # Load Full STR list
@@ -84,14 +84,14 @@ output1 = complete_str_df('person1')
 
 # Save
 # -----------------------------------------------------------------------------
-output0.to_csv(f'{datadir}/{run_number}_{chrom}_person0_full.txt', index=None, header=None, sep='\t')
-output1.to_csv(f'{datadir}/{run_number}_{chrom}_person1_full.txt', index=None, header=None, sep='\t')
-print(f'Saved: {datadir}/{run_number}_{chrom}_person0_full.txt')
-print(f'Saved: {datadir}/{run_number}_{chrom}_person1_full.txt')
+output0.to_csv(f'{datadir}/{run_number}_{chrom_dis}_person0_full.txt', index=None, header=None, sep='\t')
+output1.to_csv(f'{datadir}/{run_number}_{chrom_dis}_person1_full.txt', index=None, header=None, sep='\t')
+print(f'Saved: {datadir}/{run_number}_{chrom_dis}_person0_full.txt')
+print(f'Saved: {datadir}/{run_number}_{chrom_dis}_person1_full.txt')
 
 # Combine person0 and person1 into single vcf file
 output = pd.concat([output0,output1])
 output=output.sort_values(by='name')
 output = output.drop_duplicates(subset=['name'])
-output.to_csv(f'{datadir}/{run_number}_{chrom}_person_full.txt', index=None, header=None, sep='\t')
-print(f'Saved: {datadir}/{run_number}_{chrom}_person_full.txt')
+output.to_csv(f'{datadir}/{run_number}_{chrom_dis}_person_full.txt', index=None, header=None, sep='\t')
+print(f'Saved: {datadir}/{run_number}_{chrom_dis}_person_full.txt')

@@ -50,7 +50,7 @@ except:
 run_number=f"run{run_num}"
 chrom_dis=f"{chrom}_{dis}"
 datadir=f"{rootdir}/{run_number}"
-results_file_path = f"{datadir}/{run_number}_{chrom}_read_clusters.txt"
+results_file_path = f"{datadir}/{run_number}_{chrom_dis}_read_clusters.txt"
 
 # Import data
 # -----------------------------------------------------------------------------
@@ -60,8 +60,8 @@ nanopore_reads_path = f'{datadir}/{run_number}_{chrom_dis}_clean.csv'
 nanopore_reads = pd.read_csv(nanopore_reads_path)
 
 # Import reference genome for the location of interest without gaps
-print(f'Reading Reference Genome from:     {datadir}/{run_number}_{chrom}_reference_genome.json')
-with open(f'{datadir}/{run_number}_{chrom}_reference_genome.json', 'r') as f:
+print(f'Reading Reference Genome from:     {datadir}/{run_number}_{chrom_dis}_reference_genome.json')
+with open(f'{datadir}/{run_number}_{chrom_dis}_reference_genome.json', 'r') as f:
     ref_genome_json = json.load(f)
     
 ref_genome = ref_genome_json['reference_genome']
@@ -325,4 +325,4 @@ cluster0_size = (read_clusters_df['kmeans_cls2']==0).sum()
 cluster1_size = (read_clusters_df['kmeans_cls2']==1).sum()
 print(f"Cluster 0: {cluster0_size} reads ({cluster0_size/len(read_clusters_df)*100:.1f}%)")
 print(f"Cluster 1: {cluster1_size} reads ({cluster1_size/len(read_clusters_df)*100:.1f}%)")
-print(f"Saved results: {datadir}/{run_number}_{chrom}_read_clusters.txt")
+print(f"Saved results: {results_file_path}")

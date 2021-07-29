@@ -28,22 +28,23 @@ source src/setup_variables.sh $dis
 # -----------------------------------------------------------------------------
 cd $datadir
 echo "Extracting SAM files for person0 and person1 out of ${run_number}_${chrom_dis}.bam"
-/home/fer/miniconda3/envs/genomics/bin/samtools view "${run_number}_${chrom_dis}.bam" | grep -f "${run_number}_${chrom}_person0_uniqueids.txt" > "${run_number}_${chrom}_person0_reads.sam"
-/home/fer/miniconda3/envs/genomics/bin/samtools view "${run_number}_${chrom_dis}.bam" | grep -f "${run_number}_${chrom}_person1_uniqueids.txt" > "${run_number}_${chrom}_person1_reads.sam"
+/home/fer/miniconda3/envs/genomics/bin/samtools view "${run_number}_${chrom_dis}.bam" | grep -f "${run_number}_${chrom_dis}_person0_uniqueids.txt" > "${run_number}_${chrom_dis}_person0_reads.sam"
+/home/fer/miniconda3/envs/genomics/bin/samtools view "${run_number}_${chrom_dis}.bam" | grep -f "${run_number}_${chrom_dis}_person1_uniqueids.txt" > "${run_number}_${chrom_dis}_person1_reads.sam"
 # Get header
-/home/fer/miniconda3/envs/genomics/bin/samtools view -H "${run_number}_${chrom_dis}.bam" > "${run_number}_${chrom}_person_header.txt"
+/home/fer/miniconda3/envs/genomics/bin/samtools view -H "${run_number}_${chrom_dis}.bam" > "${run_number}_${chrom_dis}_person_header.txt"
 # Concatenate
-cat "${run_number}_${chrom}_person_header.txt" "${run_number}_${chrom}_person0_reads.sam" > "${run_number}_${chrom}_person0.sam"
-cat "${run_number}_${chrom}_person_header.txt" "${run_number}_${chrom}_person1_reads.sam" > "${run_number}_${chrom}_person1.sam"
-echo "Saved: ${datadir}/${run_number}_${chrom}_person0.sam"
-echo "Saved: ${datadir}/${run_number}_${chrom}_person1.sam"
+cat "${run_number}_${chrom_dis}_person_header.txt" "${run_number}_${chrom_dis}_person0_reads.sam" > "${run_number}_${chrom_dis}_person0.sam"
+cat "${run_number}_${chrom_dis}_person_header.txt" "${run_number}_${chrom_dis}_person1_reads.sam" > "${run_number}_${chrom_dis}_person1.sam"
+echo "Saved: ${datadir}/${run_number}_${chrom_dis}_person0.sam"
+echo "Saved: ${datadir}/${run_number}_${chrom_dis}_person1.sam"
 # Convert to bam file
+echo "Converting to SAM to BAM."
 mkdir -p strspy/${dis}/input
-/home/fer/miniconda3/envs/genomics/bin/samtools view -b "${run_number}_${chrom}_person0.sam" > "strspy/${dis}/input/${run_number}_${chrom}_person0.bam"
-/home/fer/miniconda3/envs/genomics/bin/samtools view -b "${run_number}_${chrom}_person1.sam" > "strspy/${dis}/input/${run_number}_${chrom}_person1.bam"
+/home/fer/miniconda3/envs/genomics/bin/samtools view -b "${run_number}_${chrom_dis}_person0.sam" > "strspy/${dis}/input/${run_number}_${chrom_dis}_person0.bam"
+/home/fer/miniconda3/envs/genomics/bin/samtools view -b "${run_number}_${chrom_dis}_person1.sam" > "strspy/${dis}/input/${run_number}_${chrom_dis}_person1.bam"
 # Index bam file
-/home/fer/miniconda3/envs/genomics/bin/samtools index "strspy/${dis}/input/${run_number}_${chrom}_person0.bam"
-/home/fer/miniconda3/envs/genomics/bin/samtools index "strspy/${dis}/input/${run_number}_${chrom}_person1.bam"
-echo "Saved: ${datadir}/strspy/${dis}/input/${run_number}_${chrom}_person0.bam"
-echo "Saved: ${datadir}/strspy/${dis}/input/${run_number}_${chrom}_person1.bam"
+/home/fer/miniconda3/envs/genomics/bin/samtools index "strspy/${dis}/input/${run_number}_${chrom_dis}_person0.bam"
+/home/fer/miniconda3/envs/genomics/bin/samtools index "strspy/${dis}/input/${run_number}_${chrom_dis}_person1.bam"
+echo "Saved: ${datadir}/strspy/${dis}/input/${run_number}_${chrom_dis}_person0.bam"
+echo "Saved: ${datadir}/strspy/${dis}/input/${run_number}_${chrom_dis}_person1.bam"
 echo "Indexed BAM files."

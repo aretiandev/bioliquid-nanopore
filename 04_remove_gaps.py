@@ -200,7 +200,7 @@ print(f"Final genome length after collapsing gaps:      {len(final_genome):,} bp
 # Save Reference Genome
 initial_position = min(nanopore_reads['ORIG_POS'])
 final_genome_dict = {'initial_position':initial_position, 'reference_genome': final_genome}
-with open(f'{datadir}/{run_number}_{chrom}_reference_genome.json', 'w') as f:
+with open(f'{datadir}/{run_number}_{chrom_dis}_reference_genome.json', 'w') as f:
     json.dump(final_genome_dict,f)
 
 # Save Nanopore Reads
@@ -208,5 +208,5 @@ nanopore_reads.to_csv(f'{datadir}/{run_number}_{chrom_dis}_clean.csv', index=Fal
 
 # Save original confirmed gaps
 
-print(f'Saved: {datadir}/{run_number}_{chrom}_reference_genome.json')
+print(f'Saved: {datadir}/{run_number}_{chrom_dis}_reference_genome.json')
 print(f'Saved: {datadir}/{run_number}_{chrom_dis}_clean.csv')

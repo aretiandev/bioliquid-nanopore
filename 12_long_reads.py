@@ -47,8 +47,8 @@ datadir=f"{rootdir}/{run_number}"
 
 # Load Data
 # -----------------------------------------------------------------------------
-print(f'Loading tagged reads from: {datadir}/{run_number}_{chrom}_tagged_reads.csv')
-df = pd.read_csv(f'{datadir}/{run_number}_{chrom}_tagged_reads.csv')
+print(f'Loading tagged reads from: {datadir}/{run_number}_{chrom_dis}_tagged_reads.csv')
+df = pd.read_csv(f'{datadir}/{run_number}_{chrom_dis}_tagged_reads.csv')
 original_columns = df.columns
 df = df.rename(columns={'startpos':'orig_pos'})
 shift = min(df['orig_pos'])
@@ -454,13 +454,13 @@ print("")
 
 # Person0
 long_reads0_plot = plot_long_reads(person0_reads_full_within)
-filename_out0 = f'{run_number}_{chrom}_long_reads_person0.png'
+filename_out0 = f'{run_number}_{chrom_dis}_long_reads_person0.png'
 plt.savefig(f'cluster_plots/{filename_out0}', bbox_inches='tight')
 plt.savefig(f'{datadir}/{filename_out0}'    , bbox_inches='tight')
 
 # Person1
 long_reads1_plot = plot_long_reads(person1_reads_full_within)
-filename_out1 = f'{run_number}_{chrom}_long_reads_person1.png'
+filename_out1 = f'{run_number}_{chrom_dis}_long_reads_person1.png'
 plt.savefig(f'cluster_plots/{filename_out1}', bbox_inches='tight')
 plt.savefig(f'{datadir}/{filename_out1}'    , bbox_inches='tight')
 
@@ -487,6 +487,6 @@ person_reads_out = person_reads_out[original_columns]
 
 # Save
 # -----------------------------------------------------------------------------
-person_reads_out.to_csv(f'{datadir}/{run_number}_{chrom}_long_tagged_reads.csv', index=None)
+person_reads_out.to_csv(f'{datadir}/{run_number}_{chrom_dis}_long_tagged_reads.csv', index=None)
 print("")
-print(f'Saved: {datadir}/{run_number}_{chrom}_long_tagged_reads.csv')
+print(f'Saved: {datadir}/{run_number}_{chrom_dis}_long_tagged_reads.csv')

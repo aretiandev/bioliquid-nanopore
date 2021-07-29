@@ -48,7 +48,7 @@ datadir = paste0('/mnt/aretian/genomics/nanopore/',run_number)
 
 # Load Data
 # -----------------------------------------------------------------------------
-df <- read.csv(paste0(datadir,'/', run_number,'_',chr,'_long_tagged_reads.csv'), stringsAsFactors = FALSE)
+df <- read.csv(paste0(datadir,'/', run_number,'_',chr,'_',dis,'_long_tagged_reads.csv'), stringsAsFactors = FALSE)
 
 # Helper Functions
 # -----------------------------------------------------------------------------
@@ -64,11 +64,11 @@ unmeltdf <- function(data) {
 # Implementation
 # -----------------------------------------------------------------------------
 print('Creating Boolean Matrix.')
-print(paste0('Loaded tagged reads: ',datadir,'/', run_number,'_',chr,'_tagged_reads.csv'))
+print(paste0('Loaded tagged reads: ',datadir,'/', run_number,'_',chr,'_',dis,'_tagged_reads.csv'))
 booldf <- unmeltdf(df)
 
 # Save
 # -----------------------------------------------------------------------------
-write.csv(booldf, paste0(datadir,'/',run_number,'_',chr,'_bool_tagged_reads.csv'), row.names = FALSE)
+write.csv(booldf, paste0(datadir,'/',run_number,'_',chr,'_',dis,'_bool_tagged_reads.csv'), row.names = FALSE)
 
-print(paste0('Saved:               ', datadir,'/',run_number,'_',chr,'_bool_tagged_reads.csv'))
+print(paste0('Saved:               ', datadir,'/',run_number,'_',chr,'_',dis,'_bool_tagged_reads.csv'))
