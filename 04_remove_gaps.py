@@ -31,6 +31,7 @@ import numpy as np
 import pandas as pd
 import json
 import os
+import csv
 
 # Set Variables
 # ---------------------------------------------------------------------------------------------------
@@ -64,7 +65,10 @@ with open(f'{rootdir}/reference_genome_{chrom}.fa') as f: # update path if neede
 # ---------------------------------------------------------------------------------------------------
 # Read Sam file
 print(f'Reading Nanopore reads from:   {datadir}/{run_number}_{chrom_dis}.sam')
-nanopore_reads = pd.read_csv(f'{datadir}/{run_number}_{chrom_dis}.sam',sep='\t',header=None,error_bad_lines=False, warn_bad_lines=False)
+usecols_list = list(range(11))
+nanopore_reads = pd.read_csv(f'{datadir}/{run_number}_{chrom_dis}.sam',usecols=usecols_list, sep='\t',header=None, quoting=csv.QUOTE_NONE)
+# nanopore_reads = pd.read_csv(f'{datadir}/{run_number}_{chrom_dis}.sam',usecols=usecols_list, sep='\t',header=None)
+# nanopore_reads = pd.read_csv(f'{datadir}/{run_number}_{chrom_dis}.sam', sep='\t',header=None,error_bad_lines=False, warn_bad_lines=False)
 
 # Clean Reads
 nanopore_reads = nanopore_reads.iloc[:,:11]
