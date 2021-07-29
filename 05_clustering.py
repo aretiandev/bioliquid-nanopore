@@ -167,6 +167,13 @@ def write_results_to_file(read, is_first_window, results_file):
 
 # Main Loop: padding and clustering
 # -----------------------------------------------------------------------------
+# Calculate total number of windows in region to report progress
+islands_df = nanopore_reads.groupby(['islandID']).agg({'POS':'min','END_POS':'max'})
+islands_df['width'] = islands_df['END_POS']-islands_df['POS']+1
+islands_df['n_windows']=1
+islands_df.loc[islands_df['width'] > window_width, 'n_windows']=np.ceil((islands_df['width']- window_width)/jump_width)+1
+total_n_windows = islands_df['n_windows'].sum()
+
 print("")
 print('Performing padding and clustering.')
 # User feedback
@@ -174,7 +181,7 @@ print(f"Total range: {max(nanopore_reads['END_POS']):,}")
 print(f"Window width: {window_width}")
 print(f"Jump width: {jump_width}")
 total_jumps = round(max(nanopore_reads['END_POS'])/jump_width)
-print(f"Number of iterations required: {total_jumps}")
+print(f"Number of iterations required: {total_n_windows:,.0f}")
 print(f"Reading Nanopore reads from: {nanopore_reads_path}")
 print(f"Writing results to file:     {results_file_path}")
 print("")
@@ -186,25 +193,26 @@ print(" %: Progress.")
 print("")
 print(f"Iterations:", end="")
 
+# Initialize variables before loop
 results_file = open(results_file_path,"w")
 islands_list = nanopore_reads['islandID'].unique()
-n_islands = len(islands_list)
-
 iter = 0
 empty_count = 0
-islands_counter = 0
+n_islands = len(islands_list)
+progress_counter = 0
 progress_threshold = 5
+
+# Calculate total number of windows in region to report progress
+islands_df = nanopore_reads.groupby(['islandID']).agg({'POS':'min','END_POS':'max'})
+islands_df['width'] = islands_df['END_POS']-islands_df['POS']+1
+islands_df['n_windows']=1
+islands_df.loc[islands_df['width'] > window_width, 'n_windows']=np.ceil((islands_df['width']- window_width)/jump_width)+1
+total_n_windows = islands_df['n_windows'].sum()
 
 for current_islandID in islands_list:
     
     print(" ", end="")
-    # Show progress
-    islands_counter += 1
-    progress = (islands_counter/n_islands)*100
-    if progress > progress_threshold:
-        progress_threshold += 5
-        print(f"{round(progress):.0f}%", end="")
-        
+    
     # Get island reads
     island_reads = nanopore_reads.loc[nanopore_reads['islandID']==current_islandID].copy()
 
@@ -228,6 +236,13 @@ for current_islandID in islands_list:
     
     for left_bound in range(island_start,left_bound_max,jump_width):
 
+        # Show progress
+        progress_counter += 1
+        progress = (progress_counter/total_n_windows)*100
+        if progress > progress_threshold:
+            progress_threshold += 5
+            print(f"{round(progress):.0f}%", end="")
+            
         is_last_window = ( window_number == number_of_windows )
         
         if is_last_window:
