@@ -81,7 +81,7 @@ nanopore_reads = nanopore_reads.reset_index()
 nanopore_reads['ID'] = nanopore_reads.index
 # Calculate length and end position
 nanopore_reads['SEQ_LEN'] = nanopore_reads['SEQ'].apply(lambda x: len(x))
-nanopore_reads['END_POS'] = nanopore_reads['POS']+nanopore_reads['SEQ_LEN']
+nanopore_reads['END_POS'] = nanopore_reads['POS']+nanopore_reads['SEQ_LEN']-1
 
 # Collapse Gaps
 # ---------------------------------------------------------------------------------------------------
