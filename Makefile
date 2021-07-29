@@ -75,7 +75,7 @@ $(extract_ref): $(get_ref) 0_extract_reference.sh
 	@bash 0_extract_reference.sh $(run) $(dis)
 
 extract_reads: $(extract_reads) 
-$(extract_reads): 03_extract_reads.sh
+$(extract_reads): $(extract_ref) 03_extract_reads.sh
 	@bash 03_extract_reads.sh $(run) $(dis)
 
 clean_extract_reads: 
