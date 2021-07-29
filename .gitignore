@@ -2,6 +2,7 @@
 /cluster_plots/
 /*.log
 /logs/
+/bool_tagged_reads/
 
 # Created by https://www.toptal.com/developers/gitignore/api/jupyternotebooks
 # Edit at https://www.toptal.com/developers/gitignore?templates=jupyternotebooks
