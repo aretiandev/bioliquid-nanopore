@@ -45,6 +45,7 @@ dis_params = data.frame('disease' = c('sca', 'cystic', 'spinal1', 'spinal2', 'th
 chr = dis_params %>% filter(disease == dis) %>% select(chr) %>% pull
 
 datadir = paste0('/mnt/aretian/genomics/nanopore/',run_number)
+homedir = '/home/fer/genomics/bioliquid-nanopore'
 
 # Load Data
 # -----------------------------------------------------------------------------
@@ -70,5 +71,7 @@ booldf <- unmeltdf(df)
 # Save
 # -----------------------------------------------------------------------------
 write.csv(booldf, paste0(datadir,'/',run_number,'_',chr,'_',dis,'_bool_tagged_reads.csv'), row.names = FALSE)
+write.csv(booldf, paste0(homedir,'/bool_tagged_reads/',run_number,'_',chr,'_',dis,'_bool_tagged_reads.csv'), row.names = FALSE)
 
 print(paste0('Saved:               ', datadir,'/',run_number,'_',chr,'_',dis,'_bool_tagged_reads.csv'))
+print('Saved copy in bool_tagged_reads/ folder in homedir.')
