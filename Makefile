@@ -21,7 +21,7 @@ datadir        := /mnt/aretian/genomics/nanopore/$(run_number)
 
 # Targets
 get_ref        := $(rootdir)/GCA_000001405.15_GRCh38_no_alt_analysis_set.fna.gz 
-extract_ref    := $(rootdir)/$(chrom)_selected.fa
+extract_ref    := $(rootdir)/reference_genome_$(chrom).fa
 extract_reads  := $(datadir)/$(run_number)_$(chrom_dis).sam
 remove_gaps    := $(datadir)/$(run_number)_$(chrom_dis)_clean.csv
 cluster        := $(datadir)/$(run_number)_$(chrom_dis)_read_clusters.txt

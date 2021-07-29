@@ -12,7 +12,7 @@
 #   run_number
 #   disease
 #   nanopore reads for location: e.g. run1_chr11_sca.sam
-#   reference genome fasta for location: e.g. chr11_selected.fa
+#   reference genome fasta for location: e.g. reference_genome_chr11.fa
 # 
 # OUTPUTS:
 #   reads without gaps: e.g. run1_chr11_sca_clean.csv
@@ -50,14 +50,14 @@ datadir=f"{rootdir}/{run_number}"
 
 # Load and Clean Reference Genome
 # ---------------------------------------------------------------------------------------------------
-print(f'Reading Reference Genome from: {rootdir}/{chrom}_selected.fa')
+print(f'Reading Reference Genome from: {rootdir}/reference_genome_{chrom}.fa')
 # Read in fasta file: remove line breaks and header
 def read_fasta_genome(fasta_file,chromosome_header):
     clean_data = fasta_file.read().replace("\n", "")
     clean_data = clean_data.replace(chromosome_header,"") # get rid of header
     return clean_data
 
-with open(f'{rootdir}/{chrom}_selected.fa') as f: # update path if needed
+with open(f'{rootdir}/reference_genome_{chrom}.fa') as f: # update path if needed
     ref_genome = read_fasta_genome(f,f'>{chrom}')
 
 # Load and Clean Reads

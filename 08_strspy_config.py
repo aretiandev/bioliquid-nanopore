@@ -5,7 +5,7 @@
 # INPUTS:
 #   run_number
 #   disease
-#   reference genome fasta for location: e.g. chr11_selected.fa
+#   reference genome fasta for location: e.g. reference_genome_chr11.fa
 #   Full list of STRs
 # 
 # OUTPUTS:
@@ -45,7 +45,7 @@ strspydir=f"/home/fer/genomics/strspy"
 # -----------------------------------------------------------------------------
 # Get reference genome
 # Read in fasta file: remove line breaks and header
-print(f'Reading Reference Genome:           {rootdir}/{chrom}_selected.fa')
+print(f'Reading Reference Genome:           {rootdir}/reference_genome_{chrom}.fa')
 
 def read_fasta_genome(fasta_file,chromosome_header):
     clean_data = fasta_file.read().replace("\n", "")
@@ -53,7 +53,7 @@ def read_fasta_genome(fasta_file,chromosome_header):
 
     return clean_data
 
-with open(f'{rootdir}/{chrom}_selected.fa') as f: # update path if needed
+with open(f'{rootdir}/reference_genome_{chrom}.fa') as f: # update path if needed
     ref_genome = read_fasta_genome(f,f'>{chrom}')
     
 # print(f"Unique characters: {list(set(ref_genome))}") 
