@@ -178,11 +178,13 @@ print(f"Number of iterations required: {total_jumps}")
 print(f"Reading Nanopore reads from: {nanopore_reads_path}")
 print(f"Writing results to file:     {results_file_path}")
 print("")
-print("0: Found 0 reads in window. Saving empty window.")
-print("1: Found 1 read in window. Applying arbitrary cluster 0.")
-print("*: Found more than 1 read in window and ran clustering. Saving clusters.")
+print(" 0: Found 0 reads in window.           -->   Save empty window.")
+print(" 1: Found 1 read in window.            -->   Apply arbitrary cluster 0.")
+print(" *: Found more than 1 read in window.  -->   Run clustering. Save clusters.")
+print("  : Island end.")
+print(" %: Progress.")
 print("")
-print(f"Iterations: ", end="")
+print(f"Iterations:", end="")
 
 results_file = open(results_file_path,"w")
 islands_list = nanopore_reads['islandID'].unique()
@@ -195,27 +197,36 @@ progress_threshold = 5
 
 for current_islandID in islands_list:
     
+    print(" ", end="")
     # Show progress
     islands_counter += 1
     progress = (islands_counter/n_islands)*100
     if progress > progress_threshold:
         progress_threshold += 5
-        print(f" {round(progress):.0f}% ", end="")
+        print(f"{round(progress):.0f}%", end="")
         
+    # Get island reads
     island_reads = nanopore_reads.loc[nanopore_reads['islandID']==current_islandID].copy()
 
+    # Set last window position for each loop
     island_width = max(island_reads['END_POS'])- min(island_reads['POS'])+1
+    island_start = min(island_reads['POS'])
+    island_end   = max(island_reads['END_POS'])
     
+    # If island is narrow, set last window position so loop runs only once
     if window_width > island_width:
         number_of_windows = 1
+        left_bound_max = island_start + 1
+    # For normal islands, limit last window position to not to overshoot to the right
     else:
         number_of_windows = np.ceil( (island_width - window_width) / jump_width ) + 1
+        left_bound_max = island_end - window_width + 1
         
+    # Initialize counters before loop
     window_number=1
-    
     is_first_window=1
     
-    for left_bound in range(min(island_reads['POS']),max(island_reads['END_POS']),jump_width):
+    for left_bound in range(island_start,left_bound_max,jump_width):
 
         is_last_window = ( window_number == number_of_windows )
         
@@ -228,8 +239,8 @@ for current_islandID in islands_list:
 
         iter+=1
         
-        right_bound = left_bound+window_width
-        window_ref_genome = ref_genome[left_bound:left_bound+window_width]
+        right_bound = left_bound+window_width-1
+        window_ref_genome = ref_genome[left_bound:right_bound+1]
 
         # Identify if each read is in the window: True/False
     #     print("Identifying if each read is in the window...")
@@ -271,7 +282,7 @@ for current_islandID in islands_list:
         # More than one read in window. Proceeding to padding and clustering
 
     #     Padding
-        window_reads['left_padded'] = window_reads.apply(lambda x: left_pad_read(x), axis=1) # fill reference genome on the left of the read
+        window_reads['left_padded']  = window_reads.apply(lambda x: left_pad_read(x) , axis=1) # fill reference genome on the left of the read
         window_reads['right_padded'] = window_reads.apply(lambda x: right_pad_read(x), axis=1) # fill reference genome on the right of the read
         window_reads['final_padded_read'] = window_reads['right_padded']
         window_reads['FINAL_SEQ_LEN'] = window_reads['final_padded_read'].apply(lambda x: len(x)) # should always be 5k
