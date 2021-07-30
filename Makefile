@@ -36,9 +36,9 @@ long_reads     := $(datadir)/$(run_number)_$(chrom_dis)_long_tagged_reads.csv
 boolean_matrix := $(datadir)/$(run_number)_$(chrom_dis)_bool_tagged_reads.csv
 str_cluster    := $(datadir)/$(run_number)_$(chrom_dis)_kmeans_clusters.csv
 score          := $(datadir)/$(run_number)_$(chrom_dis)_recall_score.csv
-disease_diag   := $(datadir)/$(run_number)_$(chrom_dis)_person0_diagnostic_reads.csv
+sample_id      := $(datadir)/$(run_number)_$(chrom_dis)_sample_id_read_shares.csv
 
-.PHONY: all all_log basecall align get_ref extract_ref extract_reads clean_extract_reads remove_gaps clean_remove_gaps cluster clean_cluster assign create_bams str_list strspy_config strspy clean_strspy add_strs tag_reads long_reads boolean_matrix str_cluster score disease_diag
+.PHONY: all all_log basecall align get_ref extract_ref extract_reads clean_extract_reads remove_gaps clean_remove_gaps cluster clean_cluster assign create_bams str_list strspy_config strspy clean_strspy add_strs tag_reads long_reads boolean_matrix str_cluster score sample_id disease_diag
 
 all: disease_diag
 
@@ -149,7 +149,10 @@ $(str_cluster): $(boolean_matrix) 14_str_clustering.R
 score: $(score)
 $(score): $(str_cluster) 15_score.py
 	@/home/fer/miniconda3/envs/genomics/bin/python3 15_score.py $(run) $(dis)
+    
+sample_id: $(sample_id)
+$(sample_id): $(score) 16_sample_id.py
+	@/home/fer/miniconda3/envs/genomics/bin/python3 16_sample_id.py $(run) $(dis)
 
-disease_diag: $(disease_diag)
-$(disease_diag): $(score) 16_disease_diagnostic.R
-	@/usr/bin/Rscript 16_disease_diagnostic.R $(run) $(dis)
+disease_diag: $(sample_id) 17_disease_diagnostic.R
+	@/usr/bin/Rscript 17_disease_diagnostic.R $(run) $(dis)
