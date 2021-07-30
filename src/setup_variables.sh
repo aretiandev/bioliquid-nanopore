@@ -49,7 +49,8 @@ case $dis in
         ;;
     pompe)
         chrom="chr17"
-        location=25000000
+#         location=25000000
+        location=$(( (80101535 + 80119881)/2 ))
         ;;
     *)
         echo "Disease should be in disease list: cf, sca, sma1/2, thal1/2/3, pompe."
