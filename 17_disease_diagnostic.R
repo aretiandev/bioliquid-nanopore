@@ -37,8 +37,10 @@ run_number=paste0("run",run_num)
 
 dis_params = data.frame('disease' = c('sca', 'cf', 'sma1', 'sma2', 'thal1', 'thal2', 'thal3', 'pompe'),
                     'chr' = c('chr11','chr7','chr5', 'chr5', 'chr16', 'chr16', 'chr11', 'chr17'),
-                    'start' = c(5227002, 117559590, 70924941, 70049523, 176680, 172876, 5225464, 25000000),
-                    'end'   = c(5227002, 117559590, 70953015, 70077595, 177522, 173710, 5227071, 25000000))
+#                     'start' = c(5227002, 117559590, 70924941, 70049523, 176680, 172876, 5225464, 25000000),
+#                     'end'   = c(5227002, 117559590, 70953015, 70077595, 177522, 173710, 5227071, 25000000))
+                    'start' = c(5227002, 117559590, 70924941, 70049523, 176680, 172876, 5225464, 80101535),
+                    'end'   = c(5227002, 117559590, 70953015, 70077595, 177522, 173710, 5227071, 80119881))
 
 chr       = dis_params %>% filter(disease == dis) %>% select(chr)   %>% pull
 snp_start = dis_params %>% filter(disease == dis) %>% select(start) %>% pull
@@ -59,6 +61,10 @@ datadir = paste0('/mnt/aretian/genomics/nanopore/',run_number)
 # -----------------------------------------------------------------------------
 print('Loading data.')
 
+mytable_path <- paste0(datadir, '/',run_number,'_',chr,'_',dis,'_sample_id_str_shares.csv')
+mydf <- read.csv(mytable_path)
+child_identifier = mydf %>% filter(is_child == 1) %>% select(person)   %>% pull
+
 person0bam <- BamFile(
                 file  = paste0(datadir,'/strspy/',dis,'/input/',run_number,'_',chr,'_',dis,'_person0.bam'    ), 
                 index = paste0(datadir,'/strspy/',dis,'/input/',run_number,'_',chr,'_',dis,'_person0.bam.bai'))
@@ -75,7 +81,6 @@ print('Extracting reads containing the relevant SNP.')
 gr <- GRanges(seqnames = chr,
               ranges = IRanges(start = snp_start, end = snp_end))
 params <- ScanBamParam(which = gr, what = scanBamWhat())
-
 
 # Person 0
 aln <- scanBam(person0bam, param = params)
@@ -94,13 +99,18 @@ tryCatch({
     select(snp_start, snp_end, left_padding,  segment, right_padding)  %>%
     sample_n(10)
     
-    write.csv(reads2, paste0(datadir,'/',run_number,'_',chr,'_',dis,'person0_diagnostic_reads.csv'), row.names = FALSE)
-    write.csv(reads2, paste0('disease_diagnostic/',run_number,'_',chr,'_',dis,'person0_diagnostic_reads.csv'), row.names = FALSE)
-    print(paste0('Saved: ',datadir,'/',run_number,'_',chr,'_',dis,'person0_diagnostic_reads.csv'))
+    filename_out = 'person0'
+    if (child_identifier == 'person0'){
+        filename_out = 'child'
+    }
+    write.csv(reads2, paste0(          datadir,'/',run_number,'_',chr,'_',dis,'_',filename_out,'_diagnostic_reads.csv'), row.names = FALSE)
+    write.csv(reads2, paste0('disease_diagnostic/',run_number,'_',chr,'_',dis,'_',filename_out,'_diagnostic_reads.csv'), row.names = FALSE)
+
+    print(paste0('Saved: ',datadir,'/',run_number,'_',chr,'_',dis,'_',filename_out,'_diagnostic_reads.csv'))
     print('Saved copies of each csv in disease_diagnostic/ folder in homedir.')    
     }, 
     error=function(cond){
-        print(paste0('There are no reads in location ', chr,':',snp_start,'-',snp_end))
+        print(paste0('Person0: There are no reads in location ', chr,':',snp_start,'-',snp_end))
     })
 
 # Person 1
@@ -121,12 +131,16 @@ tryCatch({
     select(snp_start, snp_end, left_padding,  segment, right_padding)  %>%
     sample_n(10)
     
-    write.csv(reads2, paste0(datadir,'/',run_number,'_',chr,'_',dis,'person1_diagnostic_reads.csv'), row.names = FALSE)
-    write.csv(reads2, paste0('disease_diagnostic/',run_number,'_',chr,'_',dis,'person1_diagnostic_reads.csv'), row.names = FALSE)
+    filename_out = 'person1'
+    if (child_identifier == 'person1'){
+        filename_out = 'child'
+    }
+    write.csv(reads2, paste0(          datadir,'/',run_number,'_',chr,'_',dis,'_',filename_out,'_diagnostic_reads.csv'), row.names = FALSE)
+    write.csv(reads2, paste0('disease_diagnostic/',run_number,'_',chr,'_',dis,'_',filename_out,'_diagnostic_reads.csv'), row.names = FALSE)
 
-    print(paste0('Saved: ',datadir,'/',run_number,'_',chr,'_',dis,'person1_diagnostic_reads.csv'))
+    print(paste0('Saved: ',datadir,'/',run_number,'_',chr,'_',dis,'_',filename_out,'_diagnostic_reads.csv'))
     print('Saved copies of each csv in disease_diagnostic/ folder in homedir.')
     }, 
     error=function(cond){
-        print(paste0('There are no reads in location ', chr,':',snp_start,'-',snp_end))
+        print(paste0('Person1: There are no reads in location ', chr,':',snp_start,'-',snp_end))
     })
