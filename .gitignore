@@ -3,6 +3,7 @@
 /*.log
 /logs/
 /bool_tagged_reads/
+/disease_diagnostic/
 
 # Created by https://www.toptal.com/developers/gitignore/api/jupyternotebooks
 # Edit at https://www.toptal.com/developers/gitignore?templates=jupyternotebooks
