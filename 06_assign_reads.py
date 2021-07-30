@@ -24,6 +24,7 @@ print('')
 import pandas as pd
 import numpy as np
 import os
+import matplotlib.pyplot as plt
 
 # Set Variables
 # -----------------------------------------------------------------------------
@@ -340,6 +341,24 @@ individual0_size = nanopore_reads[nanopore_reads['individual']==0].__len__()
 individual1_size = nanopore_reads[nanopore_reads['individual']==1].__len__()
 print(f"Assigned {individual0_size} reads to individual 0.")
 print(f"Assigned {individual1_size} reads to individual 1.")
+
+# Plot
+# -----------------------------------------------------------------------------
+print("Plotting depth and read assignment.")
+fig, ax = plt.subplots(figsize=(10,6))
+ax.plot(results_file.groupby('window_num').count()['ID'])
+ax.set_xlabel('Position within region of interest (thousands)')
+ax.set_xlabel('Depth')
+plt.savefig(f'cluster_plots/{run_number}_{chrom_dis}_depth.png', bbox_inches='tight', dpi=100)
+print(f"Saved: cluster_plots/{run_number}_{chrom_dis}_depth.png")
+
+# View read assignment
+fig, ax = plt.subplots(figsize=(20,2))
+plt.scatter(results_file['ID'], results_file['individual'])
+ax.set_xlabel('Read ID within region')
+ax.set_xlabel('Cluster Assignment')
+plt.savefig(f'cluster_plots/{run_number}_{chrom_dis}_cluster_assignment.png', bbox_inches='tight', dpi=100)
+print(f"Saved: cluster_plots/{run_number}_{chrom_dis}_cluster_assignment.png")
 
 # Get list of IDs
 # -----------------------------------------------------------------------------
