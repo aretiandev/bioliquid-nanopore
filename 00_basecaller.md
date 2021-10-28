@@ -82,12 +82,21 @@ Concatenate all files
 cat /home/fer/genomics/basecall-latest/pass/*fastq > /home/fer/genomics/basecall-latest/bioliquid_run4.fastq
 ```
 
+## Align, index and sort
+```
+cd ~/genomics/bioliquid-nanopore
+make align run=4
+```
+
 ## Run Qualimap
 ```
+cd ~/genomics
 docker run --rm -v $PWD:/data pegi3s/qualimap qualimap bamqc -bam /data/bioliquid_run1.bam
 ```
+
 If you get an “Out of memory error” try:
 ````
 docker run --rm -v $PWD:/data pegi3s/qualimap qualimap bamqc -bam /data/bioliquid_run1.bam --java-mem-size=50G
 ```
+
 Where 50G is the max memory. Try using 70-80% of your total memory.
