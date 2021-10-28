@@ -51,13 +51,13 @@ all_log:
 	@echo "Log file: logs/$(run_number)_$(dis)_$(shell date '+%Y-%m-%d-%Hh').log"
 	@$(MAKE) all run=$(run) dis=$(dis) 2>&1 | tee logs/$(run_number)_$(dis)_$(shell date '+%Y-%m-%d-%Hh').log
 
-# BASECALL: run from aretian-genomics-gpu server. First get fast5 files from s3.
+# BASECALL: run from GPU server. First get fast5 files from s3.
+# $make basecall run=4
 basecall:
-	@bash 00_basecaller.sh gpu /home/fer/genomics/fast5 /home/fer/genomics/basecall-latest
-	@cat /home/fer/genomics/basecall-latest/pass/*fastq > /home/fer/genomics/basecall-latest/bioliquid_$(run_number).fastq
+	bash 00_basecaller.sh gpu ~/genomics/fast5 ~/genomics/basecall-latest
+	cat ~/genomics/basecall-latest/pass/*fastq > ~/genomics/basecall-latest/bioliquid_$(run_number).fastq
 
-# ALIGN: Run from Linode GPU
-# $cd ~/genomics
+# ALIGN: run from GPU server.
 # $make align run=4
 align:
 	/opt/ont-guppy/bin/minimap2 -x map-ont -a ~/genomics/GCA_000001405.15_GRCh38_no_alt_analysis_set.fna.gz ~/genomics/basecall-latest/bioliquid_$(run_number).fastq > ~/genomics/bioliquid_$(run_number).sam
