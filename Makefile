@@ -13,6 +13,7 @@
 # Routines will only be run if dependencies have been updated. The full list is under 'Targets' below.
 
 # Set variables
+dis            ?= sca
 chrom          := $(shell bash src/get_chrom.sh $(dis))
 chrom_dis      := $(chrom)_$(dis)
 run_number     := run$(run)
