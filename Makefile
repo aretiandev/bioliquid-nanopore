@@ -60,11 +60,11 @@ basecall:
 # $cd ~/genomics
 # $make align run=4
 align:
-	@/opt/ont-guppy/bin/minimap2 -x map-ont -a ~/genomics/GCA_000001405.15_GRCh38_no_alt_analysis_set.fna.gz ~/genomics/basecall-latest/bioliquid_$(run_number).fastq > ~/genomics/bioliquid_$(run_number).sam
-	@/opt/conda/bin/samtools view -bSh  ~/genomics/bioliquid_$(run_number).sam          > ~/genomics/bioliquid_$(run_number)_unsorted.bam
-	@/opt/conda/bin/samtools sort -@ 32 ~/genomics/bioliquid_$(run_number)_unsorted.bam > ~/genomics/bioliquid_$(run_number).bam
-	@/opt/conda/bin/samtools index      ~/genomics/bioliquid_$(run_number).bam
-	@/opt/conda/bin/samtools flagstat   ~/genomics/bioliquid_$(run_number).bam          > ~/genomics/bioliquid_$(run_number).bam.flag
+	/opt/ont-guppy/bin/minimap2 -x map-ont -a ~/genomics/GCA_000001405.15_GRCh38_no_alt_analysis_set.fna.gz ~/genomics/basecall-latest/bioliquid_$(run_number).fastq > ~/genomics/bioliquid_$(run_number).sam
+	/opt/conda/bin/samtools view -bSh  ~/genomics/bioliquid_$(run_number).sam          > ~/genomics/bioliquid_$(run_number)_unsorted.bam
+	/opt/conda/bin/samtools sort -@ 32 ~/genomics/bioliquid_$(run_number)_unsorted.bam > ~/genomics/bioliquid_$(run_number).bam
+	/opt/conda/bin/samtools index      ~/genomics/bioliquid_$(run_number).bam
+	/opt/conda/bin/samtools flagstat   ~/genomics/bioliquid_$(run_number).bam          > ~/genomics/bioliquid_$(run_number).bam.flag
 
 get_ref: $(get_ref) 
 $(get_ref): 0_get_reference.sh
