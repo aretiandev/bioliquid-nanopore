@@ -1,9 +1,13 @@
-# Setup
+# Setup Instructions
 
-Instructions to setup a Linode GPU to run basecalling with guppy_basecaller.
+Instructions to 
+- Setup a Linode GPU to run basecalling with guppy_basecaller.
+- Setup a remote Jupyterlab instance.
+- Install Python, R and Strspy.
 
-# Linode GPU Setup
+# Setup a Linode GPU to run basecalling
 
+## Setup GPU
 - Create a GPU VM with Ubuntu 18.04
 - Check GPU is available
 ``` 
@@ -23,15 +27,7 @@ sudo sh cuda_11.3.1_465.19.01_linux.run
 nvidia-smi
 ```
 
-# Data, Github repository and Docker image
-
-### Clone Bioliquid Nanopore repository
-```
-cd ~
-git clone https://github.com/aretiandev/bioliquid-nanopore.git
-```
-
-### Get data
+## Get data
 Data should be inside a fast5 folder in the data folder.
 ```
 mkdir ~/data
@@ -39,8 +35,32 @@ cd ~/data
 s3cmd get -r [data_filepath]
 ```
 
-### Docker
+## Clone Bioliquid Nanopore repository
+```
+cd ~
+git clone https://github.com/aretiandev/bioliquid-nanopore.git
+```
+
+## Setup Docker
 - Install Docker
+```
+sudo apt-get update
+sudo apt-get install \
+    ca-certificates \
+    curl \
+    gnupg \
+    lsb-release
+curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg
+echo \
+  "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/ubuntu \
+  $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+sudo apt-get update
+sudo apt-get install docker-ce docker-ce-cli containerd.io
+sudo groupadd docker
+sudo usermod -aG docker fer
+newgrp docker 
+```
+
 - Pull image
 ``` 
 docker pull yufernando/bioaretian:guppy-gpu
@@ -56,16 +76,16 @@ docker run -d -v "$PWD":/home/jovyan/work -e GRANT_SUDO=yes --user root --name b
 docker exec -it bioaretian /bin/bash
 ```
 
-# Samtols
+### Samtols
 ```
 sudo apt install samtools
 ```
 
-# Guppy
+## Run Guppy Basecaller
 
 Run guppy basecaller from the Makefile recipe.
 
-# Qualimap
+## Run Qualimap
 ```
 docker run --rm -v $PWD:/data pegi3s/qualimap qualimap bamqc -bam /data/bioliquid_run1.bam
 ```
