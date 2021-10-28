@@ -35,11 +35,12 @@ then
     /opt/ont-guppy/bin/guppy_basecaller \
         --input_path $fast5_folder \
         --save_path $output_folder \
-        --flowcell FLO-MIN111 --kit SQK-LSK110 \
         --min_qscore 7 -r \
         --records_per_fastq 0 \
         --device 'auto' \
-        --chunks_per_runner 512
+        --chunks_per_runner 512 \
+	-c dna_r9.4.1_450bps_hac.cfg
+        # --flowcell FLO-MIN111 --kit SQK-LSK110 \
 else
     echo 'Running the guppy basecaller with the high accuracy algorithm.'
 	echo 'Input folder: /home/fer/genomics/fast5'
