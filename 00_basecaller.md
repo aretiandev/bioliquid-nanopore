@@ -83,6 +83,11 @@ cat /home/fer/genomics/basecall-latest/pass/*fastq > /home/fer/genomics/basecall
 ```
 
 ## Align, index and sort
+Install samtools
+```
+sudo apt install samtools
+```
+Align, index and sort
 ```
 cd ~/genomics/bioliquid-nanopore
 make align run=4
