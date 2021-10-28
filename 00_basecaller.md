@@ -96,7 +96,7 @@ make align run=4
 ## Run Qualimap
 ```
 cd ~/genomics
-docker run --rm -v $PWD:/data pegi3s/qualimap qualimap bamqc -bam /data/bioliquid_run1.bam
+docker run --rm -v $PWD:/data pegi3s/qualimap qualimap bamqc -bam /data/bioliquid_run4.bam
 ```
 
 If you get an “Out of memory error” try:
