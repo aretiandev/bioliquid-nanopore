@@ -39,7 +39,7 @@ str_cluster    := $(datadir)/$(run_number)_$(chrom_dis)_kmeans_clusters.csv
 score          := $(datadir)/$(run_number)_$(chrom_dis)_recall_score.csv
 sample_id      := $(datadir)/$(run_number)_$(chrom_dis)_sample_id_read_shares.csv
 
-.PHONY: all all_log basecall align get_ref extract_ref extract_reads clean_extract_reads remove_gaps clean_remove_gaps cluster clean_cluster assign create_bams str_list strspy_config strspy clean_strspy add_strs tag_reads long_reads boolean_matrix str_cluster score sample_id disease_diag
+.PHONY: all all_log basecall align qc get_ref extract_ref extract_reads clean_extract_reads remove_gaps clean_remove_gaps cluster clean_cluster assign create_bams str_list strspy_config strspy clean_strspy add_strs tag_reads long_reads boolean_matrix str_cluster score sample_id disease_diag
 
 all: disease_diag
 
@@ -51,21 +51,27 @@ all_log:
 	@echo "Log file: logs/$(run_number)_$(dis)_$(shell date '+%Y-%m-%d-%Hh').log"
 	@$(MAKE) all run=$(run) dis=$(dis) 2>&1 | tee logs/$(run_number)_$(dis)_$(shell date '+%Y-%m-%d-%Hh').log
 
-# BASECALL: run from GPU server. First get fast5 files from s3.
-# $make basecall run=4
+# BASECALL: run from GPU server. First get fast5 files into ~/genomics/fast5
+# $make basecall run=6
 basecall:
 	bash 00_basecaller.sh gpu ~/genomics/fast5 ~/genomics/basecall-latest
 	cat ~/genomics/basecall-latest/pass/*fastq > ~/genomics/basecall-latest/bioliquid_$(run_number).fastq
 
 # ALIGN: run from GPU server.
-# $make align run=4
+# $make align run=6
 align:
-	/opt/ont-guppy/bin/minimap2 -x map-ont -a ~/genomics/GCA_000001405.15_GRCh38_no_alt_analysis_set.fna.gz ~/genomics/basecall-latest/bioliquid_$(run_number).fastq > ~/genomics/bioliquid_$(run_number).sam
-	/opt/conda/bin/samtools view -bSh -@ 32 ~/genomics/bioliquid_$(run_number).sam          > ~/genomics/bioliquid_$(run_number)_unsorted.bam
-	/opt/conda/bin/samtools sort -@ 32 ~/genomics/bioliquid_$(run_number)_unsorted.bam > ~/genomics/bioliquid_$(run_number).bam
-	/opt/conda/bin/samtools index -@ 32 ~/genomics/bioliquid_$(run_number).bam
-	/opt/conda/bin/samtools flagstat   ~/genomics/bioliquid_$(run_number).bam          > ~/genomics/bioliquid_$(run_number).bam.flag
+	/opt/ont-guppy/bin/minimap2 -t 8 -x map-ont -a ~/genomics/GCA_000001405.15_GRCh38_no_alt_analysis_set.fna.gz ~/genomics/basecall-latest/bioliquid_$(run_number).fastq > ~/genomics/bioliquid_$(run_number).sam
+	samtools view -@ 32 -bSh ~/genomics/bioliquid_$(run_number).sam          > ~/genomics/bioliquid_$(run_number)_unsorted.bam
+	samtools sort -@ 32      ~/genomics/bioliquid_$(run_number)_unsorted.bam > ~/genomics/bioliquid_$(run_number).bam
+	samtools index -@ 32     ~/genomics/bioliquid_$(run_number).bam
+	samtools flagstat        ~/genomics/bioliquid_$(run_number).bam          > ~/genomics/bioliquid_$(run_number).bam.flag
 
+# QUALIMAP:
+# $make qc run=6
+qc:
+	docker run --rm -v /home/fer/genomics:/data pegi3s/qualimap qualimap bamqc -bam /data/bioliquid_$(run_number).bam
+	s3cmd put -r ~/genomics/bioliquid_$(run_number)_stats s3://aretian-genomics/nanopore/$(run_number)/
+	
 get_ref: $(get_ref) 
 $(get_ref): 0_get_reference.sh
 	@bash 0_get_reference.sh $(run) $(dis)
