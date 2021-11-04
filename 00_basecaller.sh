@@ -51,9 +51,16 @@ then
         # --flowcell FLO-MIN111 --kit SQK-LSK110 \
 else
     echo 'Running the guppy basecaller with the high accuracy algorithm.'
-	echo 'Input folder: /home/fer/genomics/fast5'
-	echo 'Output folder: /home/fer/genomics/basecall-latest'
-    guppy_basecaller --input_path /home/fer/genomics/fast5 --save_path /home/fer/genomics/basecall-latest --flowcell FLO-MIN111 --kit SQK-LSK110 --min_qscore 7 -r --records_per_fastq 0 --cpu_threads_per_caller $cpu_threads_per_caller --num_callers $num_callers
+	echo 'Input folder: /mnt/aretian/genomics/nanopore/fast5'
+	echo 'Output folder: /mnt/aretian/genomics/nanopore/basecall-latest'
+    /opt/ont-guppy-cpu/bin/guppy_basecaller \
+        --input_path /mnt/aretian/genomics/nanopore/fast5 \
+        --save_path /mnt/aretian/genomics/nanopore/basecall-latest \
+        --min_qscore 7 -r \
+        --records_per_fastq 0 \
+        --cpu_threads_per_caller $cpu_threads_per_caller \
+        --num_callers $num_callers \
+        -c dna_r9.4.1_450bps_hac.cfg
 fi
 
 # Script Templates

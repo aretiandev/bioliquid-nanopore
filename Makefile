@@ -54,23 +54,23 @@ all_log:
 # BASECALL: run from GPU server. First get fast5 files into ~/genomics/fast5
 # $make basecall run=6
 basecall:
-	bash 00_basecaller.sh gpu ~/genomics/fast5 ~/genomics/basecall-latest
-	cat ~/genomics/basecall-latest/pass/*fastq > ~/genomics/basecall-latest/bioliquid_$(run_number).fastq
+	bash 00_basecaller.sh /mnt/aretian/genomics/nanopore/fast5 /mnt/aretian/genomics/nanopore/basecall-latest
+	cat /mnt/aretian/genomics/nanopore/basecall-latest/pass/*fastq > /mnt/aretian/genomics/nanopore/basecall-latest/bioliquid_$(run_number).fastq
 
 # ALIGN: run from GPU server.
 # $make align run=6
 align:
-	/opt/ont-guppy/bin/minimap2 -t 8 -x map-ont -a ~/genomics/GCA_000001405.15_GRCh38_no_alt_analysis_set.fna.gz ~/genomics/basecall-latest/bioliquid_$(run_number).fastq > ~/genomics/bioliquid_$(run_number).sam
-	samtools view -@ 32 -bSh ~/genomics/bioliquid_$(run_number).sam          > ~/genomics/bioliquid_$(run_number)_unsorted.bam
-	samtools sort -@ 32      ~/genomics/bioliquid_$(run_number)_unsorted.bam > ~/genomics/bioliquid_$(run_number).bam
-	samtools index -@ 32     ~/genomics/bioliquid_$(run_number).bam
-	samtools flagstat        ~/genomics/bioliquid_$(run_number).bam          > ~/genomics/bioliquid_$(run_number).bam.flag
+	/opt/ont-guppy-cpu/bin/minimap2 -t 8 -x map-ont -a /mnt/aretian/genomics/nanopore/GCA_000001405.15_GRCh38_no_alt_analysis_set.fna.gz /mnt/aretian/genomics/nanopore/basecall-latest/bioliquid_$(run_number).fastq > /mnt/aretian/genomics/nanopore/bioliquid_$(run_number).sam
+	samtools view -@ 32 -bSh /mnt/aretian/genomics/nanopore/bioliquid_$(run_number).sam          > /mnt/aretian/genomics/nanopore/bioliquid_$(run_number)_unsorted.bam
+	samtools sort -@ 32      /mnt/aretian/genomics/nanopore/bioliquid_$(run_number)_unsorted.bam > /mnt/aretian/genomics/nanopore/bioliquid_$(run_number).bam
+	samtools index -@ 32     /mnt/aretian/genomics/nanopore/bioliquid_$(run_number).bam
+	samtools flagstat        /mnt/aretian/genomics/nanopore/bioliquid_$(run_number).bam          > /mnt/aretian/genomics/nanopore/bioliquid_$(run_number).bam.flag
 
 # QUALIMAP:
 # $make qc run=6
 qc:
-	docker run --rm -v /home/fer/genomics:/data pegi3s/qualimap qualimap bamqc -bam /data/bioliquid_$(run_number).bam
-	s3cmd put -r ~/genomics/bioliquid_$(run_number)_stats s3://aretian-genomics/nanopore/$(run_number)/
+	docker run --rm -v /mnt/aretian/genomics/nanopore:/data pegi3s/qualimap qualimap bamqc -bam /data/bioliquid_$(run_number).bam
+	# s3cmd put -r /mnt/aretian/genomics/nanopore/bioliquid_$(run_number)_stats s3://aretian-genomics/nanopore/$(run_number)/
 	
 get_ref: $(get_ref) 
 $(get_ref): 0_get_reference.sh
