@@ -39,7 +39,7 @@ str_cluster    := $(datadir)/$(run_number)_$(chrom_dis)_kmeans_clusters.csv
 score          := $(datadir)/$(run_number)_$(chrom_dis)_recall_score.csv
 sample_id      := $(datadir)/$(run_number)_$(chrom_dis)_sample_id_read_shares.csv
 
-.PHONY: all all_log basecall align qc get_ref extract_ref extract_reads clean_extract_reads remove_gaps clean_remove_gaps cluster clean_cluster assign create_bams str_list strspy_config strspy clean_strspy add_strs tag_reads long_reads boolean_matrix str_cluster score sample_id disease_diag
+.PHONY: all all_log basecall align qc get_ref extract_ref clean_extract_ref extract_reads clean_extract_reads remove_gaps clean_remove_gaps cluster clean_cluster assign create_bams str_list strspy_config strspy clean_strspy add_strs tag_reads long_reads boolean_matrix str_cluster score sample_id disease_diag
 
 all: disease_diag
 
@@ -80,6 +80,9 @@ extract_ref: $(extract_ref)
 $(extract_ref): $(get_ref) 0_extract_reference.sh
 	@bash 0_extract_reference.sh $(run) $(dis)
 
+clean_extract_ref: 
+	rm $(extract_ref)
+    
 extract_reads: $(extract_reads) 
 $(extract_reads): $(extract_ref) 03_extract_reads.sh
 	@bash 03_extract_reads.sh $(run) $(dis)
@@ -89,7 +92,7 @@ clean_extract_reads:
     
 remove_gaps: $(remove_gaps)
 $(remove_gaps): $(extract_ref) $(extract_reads) 04_remove_gaps.py
-	@/home/fer/miniconda3/envs/genomics/bin/python3 04_remove_gaps.py $(run) $(dis)
+	@python3 04_remove_gaps.py $(run) $(dis)
     
 clean_remove_gaps: 
 	@rm $(remove_gaps)

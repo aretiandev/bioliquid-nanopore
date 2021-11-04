@@ -34,15 +34,15 @@ end=$(expr $location + $location_padding)
 # Extract location of interest
 # -----------------------------------------------------------------------------
 echo "Extracting location $chrom:$begin-$end from $run_reads"
-/home/fer/miniconda3/envs/genomics/bin/samtools view -b $run_reads $chrom:$begin-$end > $output
+samtools view -b $run_reads $chrom:$begin-$end > $output
 # Index
-/home/fer/miniconda3/envs/genomics/bin/samtools index $output
+samtools index $output
 
 # Convert to Sam
 # -----------------------------------------------------------------------------
 output="${datadir}/${run_number}_${chrom_dis}.bam"
 output_sam="${datadir}/${run_number}_${chrom_dis}.sam"
-/home/fer/miniconda3/envs/genomics/bin/samtools view $output > $output_sam
+samtools view $output > $output_sam
 echo "Created $output"
 echo "Created $output_sam"
 echo "Done extracting location."
