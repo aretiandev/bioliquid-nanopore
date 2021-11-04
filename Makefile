@@ -77,7 +77,7 @@ $(get_ref): 0_get_reference.sh
 	@bash 0_get_reference.sh $(run) $(dis)
 
 extract_ref: $(extract_ref) 
-$(extract_ref): $(get_ref) 0_extract_reference.sh
+$(extract_ref): 0_extract_reference.sh
 	@bash 0_extract_reference.sh $(run) $(dis)
 
 clean_extract_ref: 
